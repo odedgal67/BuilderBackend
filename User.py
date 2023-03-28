@@ -3,21 +3,28 @@ from Utils.Exceptions import *
 
 
 class User:
-    def __init__(self, username: str, password, id: str):
+    def __init__(self, username: str, password: str):
+        self.__check_password(password)
+        self.__check_username(username)
         self.username = username
         self.hashed_password = hash_password(password)
-        self.id = id
-        self.logged_in: bool = False
+        self.logged_in = False
 
-    def is_correct_password(self, password: str):
-        """Compares the password with the hashed password of the user"""
-        return hash_password(password) == self.hashed_password
+    def __check_password(self, password: str) -> str:
+        upperandlower = password.isupper() or password.islower()
+        if len(password) < 8 or len(password) > 20 or upperandlower:
+            raise IllegalPasswordException()
+        return password
 
-    def is_logged(self):
-        return self.logged_in
+    def __check_username(self, username: str) -> str:
+        if len(username) < 6 or len(username) > 20:
+            raise IllegalUsernameException(username)
+        return username
 
-    def login(self):
-        """Logs the user in. If the user is already logged in raises AlreadyLoggedException"""
-        if self.is_logged():
+    def login(self, password: str) -> bool:
+        if self.logged_in:
             raise AlreadyLoggedException(self.username)
-        self.is_logged = True
+        if not compare_password(password, self.hashed_password):
+            raise IncorrectPasswordException()
+        self.logged_in = True
+        return True
