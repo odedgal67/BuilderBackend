@@ -1,5 +1,6 @@
 import unittest
 
+
 class MyTestCase(unittest.TestCase):
     def test_something(self):
         self.assertEqual(True, True, "Fail message")  # add assertion here
@@ -8,5 +9,5 @@ class MyTestCase(unittest.TestCase):
         return "Unit test description to show in case of fail"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
