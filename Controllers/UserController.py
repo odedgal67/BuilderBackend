@@ -1,3 +1,6 @@
+from Mission import Mission
+from Project import Project
+from Stage import Stage
 from User import User
 from Utils.Exceptions import *
 
@@ -24,6 +27,23 @@ class UserController:
         self.users.update({username: user})
         return user
 
+    def add_project(self, project_name: str, username: str) -> Project:
+        user = self.__get_user_by_user_name(username)
+        new_project: Project = user.add_project(project_name)
+        return new_project
+
+    def add_stage(self, project_name: str, stage_name: str, username: str) -> Stage:
+        user = self.__get_user_by_user_name(username)
+        project: Project = user.get_project(project_name)
+        new_stage: Stage = project.add_stage(stage_name)
+        return new_stage
+
+    def add_mission(self, project_name: str, stage_name: str, mission_name: str, username: str) -> Mission:
+        user = self.__get_user_by_user_name(username)
+        project: Project = user.get_project(project_name)
+        new_mission: Mission = project.add_mission(stage_name, mission_name)
+        return new_mission
+
     def __get_user_by_user_name(self, username: str) -> User:
         if not (username in self.users):
             raise UsernameDoesntExistException(username)
@@ -35,3 +55,14 @@ class UserController:
             raise MissingUserID(userid)
         else:
             return self.connected_users.get(userid)
+
+
+
+
+
+
+
+
+
+
+
