@@ -17,7 +17,7 @@ class User:
         return password
 
     def __check_username(self, username: str) -> str:
-        if len(username) < 6 or len(username) > 20:
+        if len(username) != 9 or not username.isnumeric():
             raise IllegalUsernameException(username)
         return username
 

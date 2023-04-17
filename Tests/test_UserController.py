@@ -34,6 +34,22 @@ class RegisterUserName(unittest.TestCase):
             legal_password,
         )
 
+    def test_bad_username1(self):
+        self.assertRaises(
+            IllegalUsernameException,
+            onetime_uc.register,
+            "12345678a",
+            legal_password,
+        )
+
+    def test_bad_username2(self):
+        self.assertRaises(
+            IllegalUsernameException,
+            onetime_uc.register,
+            "12345678 ",
+            legal_password,
+        )
+
 
 class RegisterPassword(unittest.TestCase):
     def test_empty_password(self):
