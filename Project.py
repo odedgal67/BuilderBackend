@@ -33,5 +33,24 @@ class Project:
             raise StageDoesntExistException
         return self.stages[stage_name]
 
+    def edit_name(self, new_project_name):
+        self.name = self.__check_project_name(new_project_name)
+
+    def edit_stage_name(self, stage_name: str, new_stage_name: str):
+        if self.__is_stage_name_exists(new_stage_name):
+            raise DuplicateStageNameException(new_stage_name)
+        stage: Stage = self.get_stage(stage_name)
+        stage.edit_name(new_stage_name)
+
+    def edit_mission_name(self, stage_name, mission_name, new_mission_name):
+        stage: Stage = self.get_stage(stage_name)
+        stage.edit_mission_name(mission_name, new_mission_name)
+
+    def set_mission_status(self, stage_name, mission_name, new_status, username):
+        stage: Stage = self.get_stage(stage_name)
+        return stage.set_mission_status(mission_name, new_status, username)
+
+
+
 
 

@@ -1,3 +1,5 @@
+from Mission import Mission
+from Stage import Stage
 from Utils.PasswordHasher import *
 from Utils.Exceptions import *
 from Project import Project
@@ -45,3 +47,29 @@ class User:
         if not self.__is_project_name_exists(project_name):
             raise ProjectDoesntExistException
         return self.projects[project_name]
+
+    def edit_stage_name(self, project_name: str, stage_name: str, new_stage_name: str):
+        project: Project = self.get_project(project_name)
+        project.edit_stage_name(stage_name, new_stage_name)
+
+    def edit_project_name(self, project_name: str, new_project_name: str):
+        project: Project = self.get_project(project_name)
+        if self.__is_project_name_exists(new_project_name):
+            raise DuplicateProjectNameException(new_project_name)
+        project.edit_name(new_project_name)
+
+    def edit_mission_name(self, project_name: str, stage_name: str, mission_name: str, new_mission_name: str):
+        project: Project = self.get_project(project_name)
+        project.edit_mission_name(stage_name, mission_name, new_mission_name)
+
+    def add_mission(self, project_name: str, stage_name: str, mission_name: str) -> Mission:
+        project: Project = self.get_project(project_name)
+        return project.add_mission(stage_name, mission_name)
+
+    def add_stage(self, project_name: str, stage_name: str) -> Stage:
+        project: Project = self.get_project(project_name)
+        return project.add_stage(stage_name)
+
+    def set_mission_status(self, project_name, stage_name, mission_name, new_status, username):
+        project: Project = self.get_project(project_name)
+        return project.set_mission_status(stage_name, mission_name, new_status, username)

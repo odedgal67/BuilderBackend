@@ -34,15 +34,30 @@ class UserController:
 
     def add_stage(self, project_name: str, stage_name: str, username: str) -> Stage:
         user = self.__get_user_by_user_name(username)
-        project: Project = user.get_project(project_name)
-        new_stage: Stage = project.add_stage(stage_name)
-        return new_stage
+        return user.add_stage(project_name, stage_name)
 
     def add_mission(self, project_name: str, stage_name: str, mission_name: str, username: str) -> Mission:
         user = self.__get_user_by_user_name(username)
-        project: Project = user.get_project(project_name)
-        new_mission: Mission = project.add_mission(stage_name, mission_name)
-        return new_mission
+        return user.add_mission(project_name, stage_name, mission_name)
+
+    def edit_project_name(self, project_name: str, new_project_name: str, username: str) -> str:
+        user: User = self.__get_user_by_user_name(username)
+        user.edit_project_name(project_name, new_project_name)
+        return new_project_name
+
+    def edit_stage_name(self, project_name: str, stage_name: str, new_stage_name: str, username: str) -> str:
+        user: User = self.__get_user_by_user_name(username)
+        user.edit_stage_name(project_name, stage_name, new_stage_name)
+        return new_stage_name
+
+    def edit_mission_name(self, project_name: str, stage_name: str, mission_name: str, new_mission_name: str, username: str) -> str:
+        user: User = self.__get_user_by_user_name(username)
+        user.edit_mission_name(project_name, stage_name, mission_name, new_mission_name)
+        return new_mission_name
+
+    def set_mission_status(self, project_name: str, stage_name: str, mission_name: str, new_status, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.set_mission_status(project_name, stage_name, mission_name, new_status, username)
 
     def __get_user_by_user_name(self, username: str) -> User:
         if not (username in self.users):
@@ -55,6 +70,10 @@ class UserController:
             raise MissingUserID(userid)
         else:
             return self.connected_users.get(userid)
+
+
+
+
 
 
 

@@ -22,6 +22,13 @@ class StageDoesntExistException(Exception):
         super().__init__(self.message)
 
 
+class MissionDoesntExistException(Exception):
+    def __init__(self, mission_name: str):
+        self.mission_name = mission_name
+        self.message = f"Mission name {self.mission_name} doesn't exist"
+        super().__init__(self.message)
+
+
 class IllegalUsernameException(Exception):
     def __init__(self, username: str):
         self.username = username
