@@ -1,4 +1,4 @@
-from Controllers.UserController import UserController
+from Controllers.Controller import Controller
 import Mission
 import User
 import Project
@@ -11,7 +11,7 @@ from Utils.PermissionType import PermissionType
 
 class Facade:
     def __init__(self):
-        self.user_controller = UserController()
+        self.user_controller = Controller()
 
     def login(self, username: str, password: str) -> User:
         return self.user_controller.login(username, password)

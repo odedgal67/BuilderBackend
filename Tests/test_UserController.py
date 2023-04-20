@@ -1,6 +1,6 @@
 import unittest
 
-from Controllers.UserController import UserController
+from Controllers.Controller import Controller
 from Utils.Exceptions import (
     IllegalUsernameException,
     IllegalPasswordException,
@@ -12,7 +12,7 @@ from Utils.Exceptions import (
 
 legal_password = "QWEasdzxc"
 legal_username = "208542449"
-onetime_uc = UserController()
+onetime_uc = Controller()
 
 
 class RegisterUserName(unittest.TestCase):
@@ -57,32 +57,32 @@ class RegisterPassword(unittest.TestCase):
 
 class Register(unittest.TestCase):
     def test_register_same_user(self):
-        uc = UserController()
+        uc = Controller()
         uc.register(legal_username, legal_password)
         self.assertRaises(
             DuplicateUserName, uc.register, legal_username, legal_password
         )
 
     def test_register_and_login_simple(self):
-        uc = UserController()
+        uc = Controller()
         uc.register(legal_username, legal_password)
         self.assertIsNotNone(uc.login(legal_username, legal_password))
 
 
 class Login(unittest.TestCase):
     def test_login_bad_user(self):
-        uc = UserController()
+        uc = Controller()
         self.assertRaises(UsernameDoesntExistException, uc.login, "bla", "somePassword")
 
     def test_login_bad_password(self):
-        uc = UserController()
+        uc = Controller()
         uc.register(legal_username, legal_password)
         self.assertRaises(
             IncorrectPasswordException, uc.login, legal_username, "somePassword"
         )
 
     def test_login_twice(self):
-        uc = UserController()
+        uc = Controller()
         uc.register(legal_username, legal_password)
         uc.login(legal_username, legal_password)
         self.assertRaises(

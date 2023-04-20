@@ -8,7 +8,7 @@ from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
 
 
-class UserController:
+class Controller:
     def __init__(self):
         self.users: dict[str, User] = dict()
         self.user_id = 0
