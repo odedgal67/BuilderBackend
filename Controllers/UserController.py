@@ -5,6 +5,7 @@ from Project import Project
 from Stage import Stage
 from User import User
 from Utils.Exceptions import *
+from Utils.PermissionType import PermissionType
 
 
 class UserController:
@@ -76,6 +77,11 @@ class UserController:
             raise MissingUserID(userid)
         else:
             return self.connected_users.get(userid)
+
+    def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str):
+        assigning_user: User = self.__get_user_by_user_name(assigning_username)
+        user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
+        assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
 
 
 

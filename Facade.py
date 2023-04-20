@@ -6,6 +6,7 @@ import Stage
 from uuid import UUID
 
 # TODO : Return Data Objects instead of real objects
+from Utils.PermissionType import PermissionType
 
 
 class Facade:
@@ -41,3 +42,6 @@ class Facade:
 
     def get_all_missions(self, project_id: UUID, stage_id: UUID, username: str):
         return self.user_controller.get_all_missions(project_id, stage_id, username)
+
+    def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str):
+        return self.user_controller.assign_project_to_user(project_id, permission_type, assigning_username, username_to_assign)

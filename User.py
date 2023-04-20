@@ -1,10 +1,12 @@
 from uuid import UUID
 
 from Mission import Mission
+from Permissions.Permissions import *
 from Stage import Stage
 from Utils.PasswordHasher import *
 from Utils.Exceptions import *
 from Project import Project
+from Utils.PermissionType import PermissionType
 
 
 class User:
@@ -15,6 +17,7 @@ class User:
         self.hashed_password = hash_password(password)
         self.logged_in = False
         self.projects: dict[UUID, Project] = dict()  # dict<project_id, Project>
+        self.projects_permissions: dict[UUID, AbstractPermission] = dict()  # dict<project_id, AbstractPermission>
 
     def __check_password(self, password: str) -> str:
         upperandlower = password.isupper() or password.islower()
@@ -45,7 +48,9 @@ class User:
         if self.__is_project_name_exists(project_name):
             raise DuplicateProjectNameException(project_name)
         new_project: Project = Project(name=project_name)
+        new_project_permission: AbstractPermission = ContractorPermission()
         self.projects[new_project.id] = new_project
+        self.projects[new_project.id] = new_project_permission
         return new_project
 
     def get_project(self, project_id: UUID) -> Project:
@@ -85,3 +90,31 @@ class User:
 
     def __is_project_id_exists(self, project_id):
         return project_id in self.projects.keys()
+
+    def assign_project_to_user(self, project_id, permission_type: PermissionType, user_to_assign):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        project_permission.assign_project_to_user(project, permission_type, user_to_assign)
+
+    def assign_project(self, project: Project, permission_type: PermissionType):
+        project_permission: AbstractPermission = self.build_permission(permission_type)
+        self.projects[project.id] = project
+        self.projects_permissions[project.id] = project_permission
+
+    def get_project_permission(self, project_id: UUID):
+        if not self.__is_project_id_exists_in_permissions(project_id):
+            raise ProjectDoesntExistException
+        return self.projects_permissions[project_id]
+
+    def __is_project_id_exists_in_permissions(self, project_id: UUID):
+        return project_id in self.projects_permissions.keys()
+
+    def build_permission(self, permission_type):
+        if permission_type == PermissionType.WORK_MANAGER:
+            return WorkManagerPermission()
+        if permission_type == PermissionType.PROJECT_MANAGER:
+            return ProjectManagerPermission()
+        if permission_type == PermissionType.CONTRACTOR:
+            return ContractorPermission()
+        raise Exception()
+
