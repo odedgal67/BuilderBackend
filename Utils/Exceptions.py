@@ -9,23 +9,20 @@ class UsernameDoesntExistException(Exception):
 
 
 class ProjectDoesntExistException(Exception):
-    def __init__(self, project_name: str):
-        self.project_name = project_name
-        self.message = f"Project name {self.project_name} doesn't exist"
+    def __init__(self):
+        self.message = f"Project name doesn't exist"
         super().__init__(self.message)
 
 
 class StageDoesntExistException(Exception):
-    def __init__(self, stage_name: str):
-        self.stage_name = stage_name
-        self.message = f"Stage name {self.stage_name} doesn't exist"
+    def __init__(self):
+        self.message = f"Stage name doesn't exist"
         super().__init__(self.message)
 
 
 class MissionDoesntExistException(Exception):
-    def __init__(self, mission_name: str):
-        self.mission_name = mission_name
-        self.message = f"Mission name {self.mission_name} doesn't exist"
+    def __init__(self):
+        self.message = f"Mission name doesn't exist"
         super().__init__(self.message)
 
 

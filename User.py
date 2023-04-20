@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from Mission import Mission
 from Stage import Stage
 from Utils.PasswordHasher import *
@@ -12,7 +14,7 @@ class User:
         self.username = username
         self.hashed_password = hash_password(password)
         self.logged_in = False
-        self.projects: dict[str, Project] = dict()  # dict<project_name, Project>
+        self.projects: dict[UUID, Project] = dict()  # dict<project_id, Project>
 
     def __check_password(self, password: str) -> str:
         upperandlower = password.isupper() or password.islower()
@@ -26,7 +28,10 @@ class User:
         return username
 
     def __is_project_name_exists(self, project_name: str) -> bool:
-        return project_name in self.projects.keys()
+        for project in self.projects.values():
+            if project.name == project_name:
+                return True
+        return False
 
     def login(self, password: str) -> bool:
         if self.logged_in:
@@ -40,40 +45,43 @@ class User:
         if self.__is_project_name_exists(project_name):
             raise DuplicateProjectNameException(project_name)
         new_project: Project = Project(name=project_name)
-        self.projects[project_name] = new_project
+        self.projects[new_project.id] = new_project
         return new_project
 
-    def get_project(self, project_name: str) -> Project:
-        if not self.__is_project_name_exists(project_name):
+    def get_project(self, project_id: UUID) -> Project:
+        if not self.__is_project_id_exists(project_id):
             raise ProjectDoesntExistException
-        return self.projects[project_name]
+        return self.projects[project_id]
 
-    def edit_stage_name(self, project_name: str, stage_name: str, new_stage_name: str):
-        project: Project = self.get_project(project_name)
-        project.edit_stage_name(stage_name, new_stage_name)
+    def edit_stage_name(self, project_id: UUID, stage_id: UUID, new_stage_name: str):
+        project: Project = self.get_project(project_id)
+        project.edit_stage_name(stage_id, new_stage_name)
 
-    def edit_project_name(self, project_name: str, new_project_name: str):
-        project: Project = self.get_project(project_name)
+    def edit_project_name(self, project_id: UUID, new_project_name: str):
+        project: Project = self.get_project(project_id)
         if self.__is_project_name_exists(new_project_name):
             raise DuplicateProjectNameException(new_project_name)
         project.edit_name(new_project_name)
 
-    def edit_mission_name(self, project_name: str, stage_name: str, mission_name: str, new_mission_name: str):
-        project: Project = self.get_project(project_name)
-        project.edit_mission_name(stage_name, mission_name, new_mission_name)
+    def edit_mission_name(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_mission_name: str):
+        project: Project = self.get_project(project_id)
+        project.edit_mission_name(stage_id, mission_id, new_mission_name)
 
-    def add_mission(self, project_name: str, stage_name: str, mission_name: str) -> Mission:
-        project: Project = self.get_project(project_name)
-        return project.add_mission(stage_name, mission_name)
+    def add_mission(self, project_id: UUID, stage_id: UUID, mission_name: str) -> Mission:
+        project: Project = self.get_project(project_id)
+        return project.add_mission(stage_id, mission_name)
 
-    def add_stage(self, project_name: str, stage_name: str) -> Stage:
-        project: Project = self.get_project(project_name)
+    def add_stage(self, project_id: UUID, stage_name: str) -> Stage:
+        project: Project = self.get_project(project_id)
         return project.add_stage(stage_name)
 
-    def set_mission_status(self, project_name, stage_name, mission_name, new_status, username):
-        project: Project = self.get_project(project_name)
-        return project.set_mission_status(stage_name, mission_name, new_status, username)
+    def set_mission_status(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_status, username):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_status(stage_id, mission_id, new_status, username)
 
-    def get_all_missions(self, project_name: str, stage_name: str):
-        project: Project = self.get_project(project_name)
-        return project.get_all_missions(stage_name)
+    def get_all_missions(self, project_id: UUID, stage_id: UUID):
+        project: Project = self.get_project(project_id)
+        return project.get_all_missions(stage_id)
+
+    def __is_project_id_exists(self, project_id):
+        return project_id in self.projects.keys()

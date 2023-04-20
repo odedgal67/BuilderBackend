@@ -1,5 +1,6 @@
+import uuid
 from datetime import datetime
-
+from uuid import UUID
 from Mission import Mission
 from Utils.Status import Status
 from Utils.Exceptions import *
@@ -10,7 +11,8 @@ class Stage:
         self.name = self.__check_stage_name(name)
         self.completion_date = None
         self.status = Status.TO_DO
-        self.missions: dict[str, Mission] = dict()
+        self.missions: dict[UUID, Mission] = dict()  # mission_id, Mission
+        self.id = uuid.uuid1()
 
     def __check_stage_name(self, stage_name: str) -> str:
         if len(stage_name) < 3 or len(stage_name) > 25:
@@ -18,32 +20,35 @@ class Stage:
         return stage_name
 
     def __is_mission_name_exists(self, mission_name: str) -> bool:
-        return mission_name in self.missions.keys()
+        for mission in self.missions.values():
+            if mission.name == mission_name:
+                return True
+        return False
 
     def add_mission(self, mission_name: str) -> Mission:
         if self.__is_mission_name_exists(mission_name):
             raise DuplicateMissionNameException(mission_name)
         new_mission: Mission = Mission(mission_name)
-        self.missions[mission_name] = new_mission
+        self.missions[new_mission.id] = new_mission
         return new_mission
 
     def edit_name(self, new_stage_name: str):
         self.name = self.__check_stage_name(new_stage_name)
 
-    def get_mission(self, mission_name: str) -> Mission:
-        if not self.__is_mission_name_exists(mission_name):
-            raise MissionDoesntExistException(mission_name)
-        return self.missions[mission_name]
+    def get_mission(self, mission_id: UUID) -> Mission:
+        if not self.__is_mission_id_exists(mission_id):
+            raise MissionDoesntExistException
+        return self.missions[mission_id]
 
-    def edit_mission_name(self, mission_name, new_mission_name):
+    def edit_mission_name(self, mission_id: UUID, new_mission_name):
         if self.__is_mission_name_exists(new_mission_name):
             raise DuplicateMissionNameException(new_mission_name)
 
-        mission: Mission = self.get_mission(mission_name)
+        mission: Mission = self.get_mission(mission_id)
         mission.edit_name(new_mission_name)
 
-    def set_mission_status(self, mission_name, new_status, username):
-        mission: Mission = self.get_mission(mission_name)
+    def set_mission_status(self, mission_id: UUID, new_status, username):
+        mission: Mission = self.get_mission(mission_id)
         mission.set_status(new_status, username)
         self.update_status()
 
@@ -58,7 +63,7 @@ class Stage:
             self.status = Status.IN_PROGRESS
 
     def get_all_missions(self):
-        return self.missions.values()
+        return list(self.missions.values())
 
     def __complete(self):
         self.completion_date = datetime.now()
@@ -84,6 +89,9 @@ class Stage:
             if curr_mission.status != Status.DONE:
                 return False
         return True
+
+    def __is_mission_id_exists(self, mission_id):
+        return mission_id in self.missions.keys()
 
 
 

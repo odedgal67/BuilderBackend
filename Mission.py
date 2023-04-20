@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from Utils.Status import Status
 from Utils.Exceptions import *
@@ -13,6 +14,7 @@ class Mission:
         self.completion_date: datetime = None
         self.completing_user: str = ""
         self.comment: str = ""
+        self.id = uuid.uuid1()
 
     def __check_mission_name(self, mission_name):
         if len(mission_name) < 3 or len(mission_name) > 25:
