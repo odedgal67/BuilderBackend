@@ -42,10 +42,6 @@ class Stage:
         mission: Mission = self.get_mission(mission_name)
         mission.edit_name(new_mission_name)
 
-    def complete(self):
-        self.completion_date = datetime.now()
-        self.status = Status.DONE
-
     def set_mission_status(self, mission_name, new_status, username):
         mission: Mission = self.get_mission(mission_name)
         mission.set_status(new_status, username)
@@ -53,13 +49,20 @@ class Stage:
 
     def update_status(self):
         if self.__all_missions_done():
-            self.complete()
+            self.__complete()
         elif self.__has_invalid_mission():
             self.status = Status.INVALID
         elif self.__all_missions_todo():
             self.status = Status.TO_DO
         else:
             self.status = Status.IN_PROGRESS
+
+    def get_all_missions(self):
+        return self.missions.values()
+
+    def __complete(self):
+        self.completion_date = datetime.now()
+        self.status = Status.DONE
 
     def __has_invalid_mission(self) -> bool:
         for mission_name in self.missions.keys():
@@ -81,6 +84,8 @@ class Stage:
             if curr_mission.status != Status.DONE:
                 return False
         return True
+
+
 
 
 

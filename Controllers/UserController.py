@@ -59,6 +59,10 @@ class UserController:
         user: User = self.__get_user_by_user_name(username)
         return user.set_mission_status(project_name, stage_name, mission_name, new_status, username)
 
+    def get_all_missions(self, project_name: str, stage_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.get_all_missions(project_name, stage_name)
+
     def __get_user_by_user_name(self, username: str) -> User:
         if not (username in self.users):
             raise UsernameDoesntExistException(username)

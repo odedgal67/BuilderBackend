@@ -73,3 +73,7 @@ class User:
     def set_mission_status(self, project_name, stage_name, mission_name, new_status, username):
         project: Project = self.get_project(project_name)
         return project.set_mission_status(stage_name, mission_name, new_status, username)
+
+    def get_all_missions(self, project_name: str, stage_name: str):
+        project: Project = self.get_project(project_name)
+        return project.get_all_missions(stage_name)

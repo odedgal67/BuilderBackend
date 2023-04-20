@@ -37,3 +37,6 @@ class Facade:
 
     def set_mission_status(self, project_name: str, stage_name: str, mission_name: str, new_status, username: str):
         return self.user_controller.set_mission_status(project_name, stage_name, mission_name, new_status, username)
+
+    def get_all_missions(self, project_name: str, stage_name: str, username: str):
+        return self.user_controller.get_all_missions(project_name, stage_name, username)

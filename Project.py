@@ -50,6 +50,10 @@ class Project:
         stage: Stage = self.get_stage(stage_name)
         return stage.set_mission_status(mission_name, new_status, username)
 
+    def get_all_missions(self, stage_name):
+        stage: Stage = self.get_stage(stage_name)
+        return stage.get_all_missions()
+
 
 
 
