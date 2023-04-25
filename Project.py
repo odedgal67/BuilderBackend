@@ -60,8 +60,33 @@ class Project:
         stage: Stage = self.get_stage(stage_id)
         return stage.get_all_missions()
 
+    def edit_comment_in_mission(self, stage_id: UUID, mission_id: UUID, comment: str):
+        stage: Stage = self.get_stage(stage_id)
+        return stage.edit_comment_in_mission(mission_id, comment)
+
+    def get_all_stages(self):
+        return list(self.stages.values())
+
+    def is_mission_invalid(self, stage_id: UUID, mission_id: UUID) -> bool:
+        stage: Stage = self.get_stage(stage_id)
+        return stage.is_mission_invalid(mission_id)
+
+    def remove_stage(self, stage_id: UUID):
+        if not self.__is_stage_id_exists(stage_id):
+            raise StageDoesntExistException
+        self.stages.pop(stage_id)
+
+    def remove_mission(self, stage_id: UUID, mission_id: UUID):
+        stage: Stage = self.get_stage(stage_id)
+        return stage.remove_mission(mission_id)
+
+    def set_green_building(self, stage_id: UUID, mission_id: UUID, is_green_building: bool):
+        stage: Stage = self.get_stage(stage_id)
+        return stage.set_green_building(mission_id, is_green_building)
+
     def __is_stage_id_exists(self, stage_id: UUID):
         return stage_id in self.stages.keys()
+
 
 
 

@@ -93,6 +93,23 @@ class Stage:
     def __is_mission_id_exists(self, mission_id):
         return mission_id in self.missions.keys()
 
+    def edit_comment_in_mission(self, mission_id: UUID, comment: str):
+        mission: Mission = self.get_mission(mission_id)
+        return mission.set_comment(comment)
+
+    def is_mission_invalid(self, mission_id) -> bool:
+        mission: Mission = self.get_mission(mission_id)
+        return mission.is_mission_invalid()
+
+    def remove_mission(self, mission_id: UUID):
+        if not self.__is_mission_id_exists(mission_id):
+            raise MissionDoesntExistException
+        self.missions.pop(mission_id)
+
+    def set_green_building(self, mission_id: UUID, is_green_building: bool):
+        mission: Mission = self.get_mission(mission_id)
+        return mission.set_green_building(is_green_building)
+
 
 
 

@@ -11,23 +11,26 @@ from Utils.PermissionType import PermissionType
 class Controller:
     def __init__(self):
         self.users: dict[str, User] = dict()
-        self.user_id = 0
-        self.connected_users: dict[int, User] = dict()
+        self.connected_users: dict[str, User] = dict()
 
     def login(self, username: str, password: str) -> User:
-        user = self.__get_user_by_user_name(username)
+        user: User = self.__get_user_by_user_name(username)
         user.login(password)
+        self.connected_users[username] = user
         return user
 
-    def __register_user_userid(self, user: User):
-        self.connected_users.update({self.user_id: user})
-        self.user_id += 1
+    def logout(self, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        if username not in self.connected_users.keys():
+            raise UserNotLoggedInException(username)
+        user.logout()
+        self.connected_users.pop(username)
 
     def register(self, username: str, password: str) -> User:
         if username in self.users:
             raise DuplicateUserName(username)
         user = User(username, password)
-        self.users.update({username: user})
+        self.users[username] = user
         return user
 
     def add_project(self, project_name: str, username: str) -> Project:
@@ -81,7 +84,28 @@ class Controller:
     def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str):
         assigning_user: User = self.__get_user_by_user_name(assigning_username)
         user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
-        assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
+        return assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
+
+    def edit_comment_in_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, comment: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_comment_in_mission(project_id, stage_id, mission_id, comment)
+
+    def get_all_stages(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.get_all_stages(project_id)
+
+    def remove_stage(self, project_id: UUID, stage_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.remove_stage(project_id, stage_id)
+
+    def remove_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.remove_mission(project_id, stage_id, mission_id)
+
+    def set_green_building(self, project_id, stage_id, mission_id, is_green_building, username):
+        user: User = self.__get_user_by_user_name(username)
+        return user.set_green_building(project_id, stage_id, mission_id, is_green_building)
+
 
 
 

@@ -1,6 +1,13 @@
 # Custom Exceptions Implementations
 
 
+class UserNotLoggedInException(Exception):
+    def __init__(self, username: str):
+        self.username = username
+        self.message = f"User {self.username} is not logged in"
+        super().__init__(self.message)
+
+
 class UsernameDoesntExistException(Exception):
     def __init__(self, username: str):
         self.username = username

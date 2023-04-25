@@ -37,6 +37,16 @@ class Mission:
             self.completion_date = None
             self.status = new_status
 
+    def set_comment(self, comment: str):
+        self.comment = comment
+        return comment
+
+    def is_mission_invalid(self):
+        return self.status == Status.INVALID
+
+    def set_green_building(self, is_green_building: bool):
+        self.green_building = is_green_building
+
 
 
 
