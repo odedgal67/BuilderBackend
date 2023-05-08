@@ -3,12 +3,13 @@ from Stage import Stage
 from Utils.Exceptions import *
 import uuid
 from uuid import UUID
+from Title import Title
 
 
 class Project:
     def __init__(self, name: str):
         self.name = self.__check_project_name(name)
-        self.stages: dict[UUID, Stage] = dict()  # dict<stage_id, Stage>
+        self.titles: dict[UUID, Title] = dict()  # dict<title_id, Title>
         self.id = uuid.uuid1()
 
     def __check_project_name(self, project_name: str) -> str:
@@ -21,6 +22,9 @@ class Project:
             if stage.name == stage_name:
                 return True
         return False
+
+    def add_title(self, title_name: str, title_type: int):
+
 
     def add_stage(self, stage_name: str) -> Stage:
         if self.__is_stage_name_exists(stage_name):
