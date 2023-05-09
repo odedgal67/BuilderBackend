@@ -9,9 +9,12 @@ from Utils.Exceptions import (
     IncorrectPasswordException,
     AlreadyLoggedException,
 )
+from Utils.PermissionType import PermissionType
 
 legal_password = "QWEasdzxc"
 legal_username = "208542449"
+legal_project_name = "project 1"
+legal_username2 = "318546280"
 onetime_uc = Controller()
 
 
@@ -103,6 +106,36 @@ class Login(unittest.TestCase):
         uc.login(legal_username, legal_password)
         self.assertRaises(
             AlreadyLoggedException, uc.login, legal_username, legal_password
+        )
+
+
+class remove_user(unittest.TestCase):
+    def test_remove_user_from_project(self):
+        uc = Controller()
+        uc.register(legal_username, legal_password)
+        uc.login(legal_username, legal_password)
+        uc.register(legal_username2, legal_password)
+        uc.login(legal_username2, legal_password)
+        project = uc.add_project(legal_project_name, legal_username)
+        uc.assign_project_to_user(
+            project_id=project.id,
+            permission_type=PermissionType.PROJECT_MANAGER,
+            assigning_username=legal_username,
+            username_to_assign=legal_username2,
+        )
+        self.assertIsNotNone(
+            uc.add_stage(
+                project_id=project.id, stage_name="some stage", username=legal_username2
+            ),
+            "bug in adding stage flow",
+        )
+        uc.remove_user_from_project(
+            project_id=project.id,
+            username_to_remove=legal_username2,
+            removing_user=legal_username,
+        )
+        self.assertRaises(
+            Exception, uc.add_stage, project.id, "some stage2", legal_username2
         )
 
 
