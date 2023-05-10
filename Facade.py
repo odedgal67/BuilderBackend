@@ -7,6 +7,7 @@ from uuid import UUID
 
 # TODO : Return Data Objects instead of real objects
 from Utils.PermissionType import PermissionType
+from Utils.Status import Status
 
 
 class Facade:
@@ -27,6 +28,9 @@ class Facade:
 
     def add_stage(self, project_id: UUID, stage_name: str, username: str) -> Stage:
         return self.controller.add_stage(project_id, stage_name, username)
+
+    def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str, username: str):
+        return self.controller.add_stage(project_id, title_id, apartment_number, stage_name, username)
 
     def add_mission(self, project_id: UUID, stage_id: UUID, mission_name: str, username: str) -> Mission:
         return self.controller.add_mission(project_id, stage_id, mission_name, username)
@@ -63,3 +67,12 @@ class Facade:
 
     def set_green_building(self, project_id: UUID, stage_id: UUID, mission_id: UUID, is_green_building: bool, username: str):
         return self.controller.set_green_building(project_id, stage_id, mission_id, is_green_building, username)
+
+    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, username: str):
+        return self.controller.set_stage_status(project_id, title_id, stage_id, new_status)
+
+    def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
+        return self.controller.get_all_assigned_users_in_project(project_id, username)
+
+    def set_urgency(self, project_id: UUID, title_id: int, building_fault_id: UUID, new_urgency, username: str):
+        return self.controller.set_urgency(project_id, title_id, building_fault_id, new_urgency, username)

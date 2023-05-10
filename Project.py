@@ -9,7 +9,7 @@ from Title import Title
 class Project:
     def __init__(self, name: str):
         self.name = self.__check_project_name(name)
-        self.titles: dict[UUID, Title] = dict()  # dict<title_id, Title>
+        self.titles: dict[int, Title] = dict()  # dict<title_id, Title>
         self.id = uuid.uuid1()
 
     def __check_project_name(self, project_name: str) -> str:
@@ -23,15 +23,16 @@ class Project:
                 return True
         return False
 
-    def add_title(self, title_name: str, title_type: int):
-
-
     def add_stage(self, stage_name: str) -> Stage:
         if self.__is_stage_name_exists(stage_name):
             raise DuplicateStageNameException(stage_name)
         new_stage: Stage = Stage(stage_name)
         self.stages[new_stage.id] = new_stage
         return new_stage
+
+    def add_stage(self, title_id: int, apartment_number: int, stage_name: str):
+        title: Title = self.__get_title(title_id)
+        return title.add_stage(apartment_number, stage_name)
 
     def add_mission(self, stage_id: UUID, mission_name: str) -> Mission:
         stage: Stage = self.get_stage(stage_id)
@@ -88,9 +89,21 @@ class Project:
         stage: Stage = self.get_stage(stage_id)
         return stage.set_green_building(mission_id, is_green_building)
 
+    def set_stage_status(self, title_id: int, stage_id: UUID, new_status):
+        title: Title = self.__get_title(title_id)
+        return title.set_stage_status(stage_id, new_status)
+
+    def set_urgency(self, title_id: int, building_fault_id: UUID, new_urgency):
+        title: Title = self.__get_title(title_id)
+        return title.set_urgency(building_fault_id, new_urgency)
+
     def __is_stage_id_exists(self, stage_id: UUID):
         return stage_id in self.stages.keys()
 
+    def __get_title(self, title_id: int):
+        if title_id not in self.titles.keys():
+            raise TitleDoesntExistException()
+        return self.titles[title_id]
 
 
 

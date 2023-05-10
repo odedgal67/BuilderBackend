@@ -85,6 +85,11 @@ class User:
         project: Project = self.get_project(project_id)
         return project.add_stage(stage_name)
 
+    def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_stage(project, title_id, apartment_number, stage_name)
+
     def set_mission_status(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_status, username):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
@@ -149,6 +154,25 @@ class User:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.set_green_building(project, stage_id, mission_id, is_green_building)
+
+    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.set_stage_status(project, title_id, stage_id, new_status)
+
+    def check_contractor_permission(self, project_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.check_contractor_permission(project)
+
+    def is_project_exist(self, project_id: UUID):
+        return project_id in self.projects.keys()
+
+    def set_urgency(self, project_id, title_id, building_fault_id, new_urgency):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.set_urgency(project, title_id, building_fault_id, new_urgency)
+
 
 
 

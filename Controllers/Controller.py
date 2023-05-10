@@ -6,6 +6,7 @@ from Stage import Stage
 from User import User
 from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
+from Utils.Status import Status
 
 
 class Controller:
@@ -42,6 +43,10 @@ class Controller:
         user = self.__get_user_by_user_name(username)
         return user.add_stage(project_id, stage_name)
 
+    def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.add_stage(project_id, title_id, apartment_number, stage_name)
+
     def add_mission(self, project_id: UUID, stage_id: UUID, mission_name: str, username: str) -> Mission:
         user = self.__get_user_by_user_name(username)
         return user.add_mission(project_id, stage_id, mission_name)
@@ -61,7 +66,7 @@ class Controller:
         user.edit_mission_name(project_id, stage_id, mission_id, new_mission_name)
         return new_mission_name
 
-    def set_mission_status(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_status, username: str):
+    def set_mission_status(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_status: Status, username: str):
         user: User = self.__get_user_by_user_name(username)
         return user.set_mission_status(project_id, stage_id, mission_id, new_status, username)
 
@@ -105,6 +110,24 @@ class Controller:
     def set_green_building(self, project_id, stage_id, mission_id, is_green_building, username):
         user: User = self.__get_user_by_user_name(username)
         return user.set_green_building(project_id, stage_id, mission_id, is_green_building)
+
+    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.set_stage_status(project_id, title_id, stage_id, new_status)
+
+    def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        user.check_contractor_permission(project_id)
+        assigned_users: list = list()
+        for current_user in self.users.values():
+            if current_user.is_project_exist(project_id):
+                assigned_users.append(current_user)
+        return assigned_users
+
+    def set_urgency(self, project_id: UUID, title_id: int, building_fault_id: UUID, new_urgency, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.set_urgency(project_id, title_id, building_fault_id, new_urgency)
+
 
 
 
