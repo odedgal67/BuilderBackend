@@ -14,10 +14,10 @@ class AbstractPermission(ABC):
     def assign_project_to_user(self, project: Project, permission_type: PermissionType, user_to_assign):
         pass
 
-    def set_mission_status(self, project, stage_id, mission_id, new_status, username):
+    def set_mission_status(self, project, title_id, stage_id, mission_id, new_status, username, apartment_number=None):
         pass
 
-    def get_all_missions(self, project, stage_id):
+    def get_all_missions(self, project, title_id, stage_id, apartment_number: int = None):
         pass
 
     def edit_comment_in_mission(self, project, stage_id, mission_id, comment):
@@ -61,13 +61,13 @@ class WorkManagerPermission(AbstractPermission):
     def assign_project_to_user(self, project, permission_type: PermissionType, user_to_assign):
         raise PermissionError
 
-    def set_mission_status(self, project, stage_id, mission_id, new_status, username):
+    def set_mission_status(self, project, title_id, stage_id, mission_id, new_status, username, apartment_number: int = None):
         if new_status == Status.DONE and project.is_mission_invalid(stage_id, mission_id):
             return PermissionError
-        return project.set_mission_status(stage_id, mission_id, new_status, username)
+        return project.set_mission_status(title_id, stage_id, mission_id, new_status, username, apartment_number)
 
-    def get_all_missions(self, project, stage_id):
-        return project.get_all_missions(stage_id)
+    def get_all_missions(self, project, title_id, stage_id, apartment_number: int =None):
+        return project.get_all_missions(title_id, stage_id, apartment_number)
 
     def edit_comment_in_mission(self, project, stage_id, mission_id, comment):
         return project.edit_comment_in_mission(stage_id, mission_id, comment)

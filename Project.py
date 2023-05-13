@@ -1,3 +1,4 @@
+from BuildingFault import BuildingFault
 from Mission import Mission
 from Stage import Stage
 from Utils.Exceptions import *
@@ -10,6 +11,7 @@ class Project:
     def __init__(self, name: str):
         self.name = self.__check_project_name(name)
         self.titles: dict[int, Title] = dict()  # dict<title_id, Title>
+        self.build_fault: dict[UUID, BuildingFault] = dict()
         self.id = uuid.uuid1()
 
     def __check_project_name(self, project_name: str) -> str:
@@ -18,52 +20,41 @@ class Project:
         return project_name
 
     def __is_stage_name_exists(self, stage_name: str):
-        for stage in self.stages.values():
-            if stage.name == stage_name:
+        for title in self.titles.values():
+            if title.is_stage_name_exists(stage_name):
                 return True
         return False
 
-    def add_stage(self, stage_name: str) -> Stage:
-        if self.__is_stage_name_exists(stage_name):
-            raise DuplicateStageNameException(stage_name)
-        new_stage: Stage = Stage(stage_name)
-        self.stages[new_stage.id] = new_stage
-        return new_stage
+    def add_stage(self, title_id: int, stage_name: str) -> Stage:
+        title: Title = self.__get_title(title_id)
+        return title.add_stage(stage_name)
 
     def add_stage(self, title_id: int, apartment_number: int, stage_name: str):
         title: Title = self.__get_title(title_id)
         return title.add_stage(apartment_number, stage_name)
 
-    def add_mission(self, stage_id: UUID, mission_name: str) -> Mission:
-        stage: Stage = self.get_stage(stage_id)
-        new_mission: Mission = stage.add_mission(mission_name)
-        return new_mission
-
-    def get_stage(self, stage_id: UUID):
-        if self.__is_stage_id_exists(stage_id):
-            raise StageDoesntExistException
-        return self.stages[stage_id]
+    def add_mission(self, title_id: int, mission_name: str, stage_id: UUID = None, apartment_number: int = None) -> Mission:
+        title: Title = self.__get_title(title_id)
+        return title.add_mission(mission_name, stage_id, apartment_number)
 
     def edit_name(self, new_project_name):
         self.name = self.__check_project_name(new_project_name)
 
-    def edit_stage_name(self, stage_id: UUID, new_stage_name: str):
-        if self.__is_stage_name_exists(new_stage_name):
-            raise DuplicateStageNameException(new_stage_name)
-        stage: Stage = self.get_stage(stage_id)
-        stage.edit_name(new_stage_name)
+    def edit_stage_name(self, title_id: int, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.edit_stage_name(stage_id, new_stage_name, apartment_number)
 
-    def edit_mission_name(self, stage_id: UUID, mission_id: UUID, new_mission_name):
-        stage: Stage = self.get_stage(stage_id)
-        stage.edit_mission_name(mission_id, new_mission_name)
+    def edit_mission_name(self, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.edit_mission_name(stage_id, mission_id, new_mission_name, apartment_number)
 
-    def set_mission_status(self, stage_id: UUID, mission_id: UUID, new_status, username):
-        stage: Stage = self.get_stage(stage_id)
-        return stage.set_mission_status(mission_id, new_status, username)
+    def set_mission_status(self, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.set_mission_status(stage_id, mission_id, new_status, username, apartment_number)
 
-    def get_all_missions(self, stage_id: UUID):
-        stage: Stage = self.get_stage(stage_id)
-        return stage.get_all_missions()
+    def get_all_missions(self, title_id: int, stage_id: UUID, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.get_all_missions(stage_id, apartment_number)
 
     def edit_comment_in_mission(self, stage_id: UUID, mission_id: UUID, comment: str):
         stage: Stage = self.get_stage(stage_id)
@@ -96,9 +87,6 @@ class Project:
     def set_urgency(self, title_id: int, building_fault_id: UUID, new_urgency):
         title: Title = self.__get_title(title_id)
         return title.set_urgency(building_fault_id, new_urgency)
-
-    def __is_stage_id_exists(self, stage_id: UUID):
-        return stage_id in self.stages.keys()
 
     def __get_title(self, title_id: int):
         if title_id not in self.titles.keys():

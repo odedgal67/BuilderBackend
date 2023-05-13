@@ -107,6 +107,12 @@ class IncorrectPasswordException(Exception):
         super().__init__(self.message)
 
 
+class ApartmentNumberNotNeededException(Exception):
+    def __init__(self):
+        self.message = "Apartment number is provided in a non apartment title"
+        super().__init__(self.message)
+
+
 class ChangeStatusNonEmptyStageException(Exception):
     def __init__(self):
         self.message = "Cant change status for a stage that contains missions"
@@ -122,6 +128,12 @@ class ApartmentNotSpecifiedException(Exception):
 class ApartmentDoesntExistException(Exception):
     def __init__(self):
         self.message = "Apartment number doesnt exist"
+        super().__init__(self.message)
+
+
+class BuildFaultDoesntExistException(Exception):
+    def __init__(self):
+        self.message = "Build fault doesnt exist"
         super().__init__(self.message)
 
 

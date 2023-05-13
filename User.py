@@ -63,9 +63,9 @@ class User:
             raise ProjectDoesntExistException
         return self.projects[project_id]
 
-    def edit_stage_name(self, project_id: UUID, stage_id: UUID, new_stage_name: str):
+    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str):
         project: Project = self.get_project(project_id)
-        project.edit_stage_name(stage_id, new_stage_name)
+        project.edit_stage_name(title_id, stage_id, new_stage_name)
 
     def edit_project_name(self, project_id: UUID, new_project_name: str):
         project: Project = self.get_project(project_id)
@@ -73,32 +73,32 @@ class User:
             raise DuplicateProjectNameException(new_project_name)
         project.edit_name(new_project_name)
 
-    def edit_mission_name(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_mission_name: str):
+    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str):
         project: Project = self.get_project(project_id)
-        project.edit_mission_name(stage_id, mission_id, new_mission_name)
+        project.edit_mission_name(title_id, stage_id, mission_id, new_mission_name)
 
     def add_mission(self, project_id: UUID, stage_id: UUID, mission_name: str) -> Mission:
         project: Project = self.get_project(project_id)
         return project.add_mission(stage_id, mission_name)
 
-    def add_stage(self, project_id: UUID, stage_name: str) -> Stage:
+    def add_stage(self, project_id: UUID, title_id: int, stage_name: str) -> Stage:
         project: Project = self.get_project(project_id)
-        return project.add_stage(stage_name)
+        return project.add_stage(title_id, stage_name)
 
     def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.add_stage(project, title_id, apartment_number, stage_name)
 
-    def set_mission_status(self, project_id: UUID, stage_id: UUID, mission_id: UUID, new_status, username):
+    def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username, apartment_number=None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_mission_status(project, stage_id, mission_id, new_status, username)
+        return project_permission.set_mission_status(project, title_id, stage_id, mission_id, new_status, username, apartment_number)
 
-    def get_all_missions(self, project_id: UUID, stage_id: UUID):
+    def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int =None):
         project: Project = self.get_project(project_id)
         project_permission = self.get_project_permission(project_id)
-        return project_permission.get_all_missions(project, stage_id)
+        return project_permission.get_all_missions(project, title_id, stage_id, apartment_number)
 
     def __is_project_id_exists(self, project_id):
         return project_id in self.projects.keys()
