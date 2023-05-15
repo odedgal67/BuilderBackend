@@ -253,3 +253,10 @@ class Facade:
         return self.controller.set_build_fault_status(
             project_id, build_fault_id, new_status, username
         )
+
+    def remove_user_from_project(
+        self, project_id: UUID, username_to_remove: str, removing_user: str
+    ):
+        return self.controller.remove_user_from_project(
+            project_id, username_to_remove, removing_user
+        )

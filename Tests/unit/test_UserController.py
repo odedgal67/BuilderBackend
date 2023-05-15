@@ -125,7 +125,10 @@ class remove_user(unittest.TestCase):
         )
         self.assertIsNotNone(
             uc.add_stage(
-                project_id=project.id, stage_name="some stage", username=legal_username2
+                project_id=project.id,
+                stage_name="some stage",
+                username=legal_username2,
+                title_id=3,
             ),
             "bug in adding stage flow",
         )
