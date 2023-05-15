@@ -95,6 +95,13 @@ class DuplicateMissionNameException(Exception):
         super().__init__(self.message)
 
 
+class DuplicateBuildingFaultException(Exception):
+    def __init__(self, build_fault_name: str):
+        self.build_fault_name = build_fault_name
+        self.message = f"Build Fault {self.build_fault_name} already exists"
+        super().__init__(self.message)
+
+
 class IllegalPasswordException(Exception):
     def __init__(self):
         self.message = "Invalid password"

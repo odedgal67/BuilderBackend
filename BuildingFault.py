@@ -8,9 +8,12 @@ class BuildingFault(Mission):
         self.urgency: Urgency = urgency
         self.floor_number: int = floor_number
         self.apartment_number: int = apartment_number
+        self.proof_fix: str = ""
 
     def set_urgency(self, new_urgency: Urgency):
         self.urgency = new_urgency
+
+
 
 
 

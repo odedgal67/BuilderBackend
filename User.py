@@ -117,7 +117,7 @@ class User:
         )
 
     def remove_user_from_project(self, project_id: UUID, user_to_remove):
-        project: Projeact = self.get_project(project_id)
+        project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         project_permission.remove_user_from_project(project, user_to_remove)
 
@@ -185,8 +185,23 @@ class User:
     def is_project_exist(self, project_id: UUID):
         return project_id in self.projects.keys()
 
-    def set_urgency(self, project_id, title_id, building_fault_id, new_urgency):
+    def set_urgency(self, project_id, building_fault_id, new_urgency):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_urgency(project, title_id, building_fault_id, new_urgency)
+        return project_permission.set_urgency(project, building_fault_id, new_urgency)
+
+    def add_building_fault(self, project_id: UUID, name: str, floor_number: int, apartment_number: int, urgency):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_building_fault(project, name, floor_number, apartment_number, urgency)
+
+    def remove_building_fault(self, project_id: UUID, build_fault_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.remove_building_fault(project, build_fault_id)
+
+    def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status, username):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.set_build_fault_status(project, build_fault_id, new_status, username)
 

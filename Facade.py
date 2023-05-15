@@ -8,6 +8,7 @@ from uuid import UUID
 # TODO : Return Data Objects instead of real objects
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
+from Utils.Urgency import Urgency
 
 
 class Facade:
@@ -76,5 +77,15 @@ class Facade:
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
         return self.controller.get_all_assigned_users_in_project(project_id, username)
 
-    def set_urgency(self, project_id: UUID, title_id: int, building_fault_id: UUID, new_urgency, username: str):
-        return self.controller.set_urgency(project_id, title_id, building_fault_id, new_urgency, username)
+    def set_urgency(self, project_id: UUID, building_fault_id: UUID, new_urgency: Urgency, username: str):
+        return self.controller.set_urgency(project_id, building_fault_id, new_urgency, username)
+
+    def add_building_fault(self, project_id: UUID, name: str, username: str, floor_number: int, apartment_number: int, urgency: Urgency = Urgency.LOW):
+        return self.controller.add_building_fault(project_id, name, floor_number, apartment_number, urgency, username)
+
+    def remove_building_fault(self, project_id: UUID, build_fault_id: UUID, username: str):
+        return self.controller.remove_building_fault(project_id, build_fault_id, username)
+
+    def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status: Status, username: str):
+        return self.controller.set_build_fault_status(project_id, build_fault_id, new_status, username)
+    
