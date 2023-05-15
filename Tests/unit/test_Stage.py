@@ -19,15 +19,15 @@ stage_edit_name = Stage("first_name")
 stage_without_mission = Stage("stage_without_missions")
 
 
-
 class AddMission(unittest.TestCase):
-
     def test_add_missions_successfully(self):
         stage1.add_mission("mission1")
         stage1.add_mission("mission2")
 
     def test_duplicate_mission_name(self):
-        self.assertRaises(DuplicateMissionNameException, stage_with_missions.add_mission, "mission1")
+        self.assertRaises(
+            DuplicateMissionNameException, stage_with_missions.add_mission, "mission1"
+        )
 
 
 class EditName(unittest.TestCase):
@@ -43,7 +43,9 @@ class EditName(unittest.TestCase):
 
     def test_edit_illegal_long_name(self):
         self.assertEqual(stage_edit_name.name, "first_name")
-        self.assertRaises(IllegalStageNameException, stage_edit_name.edit_name, "a"*26)
+        self.assertRaises(
+            IllegalStageNameException, stage_edit_name.edit_name, "a" * 26
+        )
         self.assertEqual(stage_edit_name.name, "first_name")
 
     def test_edit_legal_name(self):
@@ -54,8 +56,12 @@ class EditName(unittest.TestCase):
 
 class GetMission(unittest.TestCase):
     def test_mission_doesnt_exist(self):
-        self.assertRaises(MissionDoesntExistException, stage_without_mission.get_mission, uuid.uuid1())  # stage with no missions at all
-        self.assertRaises(MissionDoesntExistException, stage_with_missions.get_mission, uuid.uuid1())  # stage with missions but wrong id
+        self.assertRaises(
+            MissionDoesntExistException, stage_without_mission.get_mission, uuid.uuid1()
+        )  # stage with no missions at all
+        self.assertRaises(
+            MissionDoesntExistException, stage_with_missions.get_mission, uuid.uuid1()
+        )  # stage with missions but wrong id
 
     def test_get_mission_successfully(self):
         fetched_mission1: Mission = stage_with_missions.get_mission(mission1.id)
@@ -65,8 +71,15 @@ class GetMission(unittest.TestCase):
 
 
 class EditMissionName(unittest.TestCase):
-    def test_duplicate_mission_name(self): # try to change mission1's name to "mission2"
-        self.assertRaises(DuplicateMissionNameException, stage_with_missions2.edit_mission_name, "mission3", "mission4")
+    def test_duplicate_mission_name(
+        self,
+    ):  # try to change mission1's name to "mission2"
+        self.assertRaises(
+            DuplicateMissionNameException,
+            stage_with_missions2.edit_mission_name,
+            "mission3",
+            "mission4",
+        )
 
     def test_edit_name_successfully(self):
         stage_with_missions2.edit_mission_name(mission3.id, "mission33")
@@ -132,7 +145,11 @@ class GetAllMission(unittest.TestCase):
         my_mission1: Mission = Mission("my_mission1")
         my_mission2: Mission = Mission("my_mission2")
         my_mission3: Mission = Mission("my_mission3")
-        my_stage.missions = {my_mission1.id: my_mission1, my_mission2.id: my_mission2, my_mission3.id: my_mission3}
+        my_stage.missions = {
+            my_mission1.id: my_mission1,
+            my_mission2.id: my_mission2,
+            my_mission3.id: my_mission3,
+        }
         missions_list: list[Mission] = my_stage.get_all_missions()
         self.assertIsNotNone(missions_list)
         self.assertEqual(len(missions_list), 3)
