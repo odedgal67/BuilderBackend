@@ -47,9 +47,9 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         return user.add_stage(project_id, title_id, apartment_number, stage_name)
 
-    def add_mission(self, project_id: UUID, stage_id: UUID, mission_name: str, username: str) -> Mission:
+    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str, apartment_number: int = None) -> Mission:
         user = self.__get_user_by_user_name(username)
-        return user.add_mission(project_id, stage_id, mission_name)
+        return user.add_mission(project_id, title_id, stage_id, mission_name, apartment_number)
 
     def edit_project_name(self, project_id: UUID, new_project_name: str, username: str) -> str:
         user: User = self.__get_user_by_user_name(username)
@@ -91,25 +91,25 @@ class Controller:
         user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
         return assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
 
-    def edit_comment_in_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, comment: str, username: str):
+    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.edit_comment_in_mission(project_id, stage_id, mission_id, comment)
+        return user.edit_comment_in_mission(project_id, title_id, stage_id, mission_id, comment, apartment_number)
 
-    def get_all_stages(self, project_id: UUID, username: str):
+    def get_all_stages(self, project_id: UUID, title_id: int, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.get_all_stages(project_id)
+        return user.get_all_stages(project_id, title_id, apartment_number)
 
-    def remove_stage(self, project_id: UUID, stage_id: UUID, username: str):
+    def remove_stage(self, project_id: UUID, title_id, stage_id: UUID, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.remove_stage(project_id, stage_id)
+        return user.remove_stage(project_id, title_id, stage_id, apartment_number)
 
-    def remove_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, username: str):
+    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.remove_mission(project_id, stage_id, mission_id)
+        return user.remove_mission(project_id, title_id, stage_id, mission_id, apartment_number)
 
-    def set_green_building(self, project_id, stage_id, mission_id, is_green_building, username):
+    def set_green_building(self, project_id, title_id, stage_id, mission_id, is_green_building, username, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_green_building(project_id, stage_id, mission_id, is_green_building)
+        return user.set_green_building(project_id, title_id, stage_id, mission_id, is_green_building, apartment_number)
 
     def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, username: str):
         user: User = self.__get_user_by_user_name(username)

@@ -32,8 +32,8 @@ class Facade:
     def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str, username: str):
         return self.controller.add_stage(project_id, title_id, apartment_number, stage_name, username)
 
-    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str) -> Mission:
-        return self.controller.add_mission(project_id, title_id, stage_id, mission_name, username)
+    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str, apartment_number: int = None) -> Mission:
+        return self.controller.add_mission(project_id, title_id, stage_id, mission_name, username, apartment_number)
 
     def edit_project_name(self, project_id: UUID, new_project_name: str, username: str) -> str:
         return self.controller.edit_project_name(project_id, new_project_name, username)
@@ -50,26 +50,26 @@ class Facade:
     def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, username: str, apartment_number: int = None) -> list:
         return self.controller.get_all_missions(project_id, title_id, stage_id, username, apartment_number)
 
-    def get_all_stages(self, project_id: UUID, username: str) -> list:
-        return self.controller.get_all_stages(project_id, username)
+    def get_all_stages(self, project_id: UUID, title_id: int, username: str, apartment_number: int = None) -> list:
+        return self.controller.get_all_stages(project_id, title_id, username, apartment_number)
 
     def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str):
         return self.controller.assign_project_to_user(project_id, permission_type, assigning_username, username_to_assign)
 
-    def edit_comment_in_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, comment: str, username: str):
-        return self.controller.edit_comment_in_mission(project_id, stage_id, mission_id, comment, username)
+    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, username: str, apartment_number: int = None):
+        return self.controller.edit_comment_in_mission(project_id, title_id, stage_id, mission_id, comment, username, apartment_number)
 
-    def remove_stage(self, project_id: UUID, stage_id: UUID, username: str):
-        return self.controller.remove_stage(project_id, stage_id, username)
+    def remove_stage(self, project_id: UUID, title_id: int, stage_id: UUID, username: str, apartment_number: int = None):
+        return self.controller.remove_stage(project_id, title_id, stage_id, username, apartment_number)
 
-    def remove_mission(self, project_id: UUID, stage_id: UUID, mission_id: UUID, username: str):
-        return self.controller.remove_mission(project_id, stage_id, mission_id, username)
+    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, username: str,apartment_number: int = None):
+        return self.controller.remove_mission(project_id, title_id, stage_id, mission_id, username, apartment_number)
 
-    def set_green_building(self, project_id: UUID, stage_id: UUID, mission_id: UUID, is_green_building: bool, username: str):
-        return self.controller.set_green_building(project_id, stage_id, mission_id, is_green_building, username)
+    def set_green_building(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, is_green_building: bool, username: str, apartment_number: int = None):
+        return self.controller.set_green_building(project_id, title_id, stage_id, mission_id, is_green_building, username, apartment_number)
 
     def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, username: str):
-        return self.controller.set_stage_status(project_id, title_id, stage_id, new_status)
+        return self.controller.set_stage_status(project_id, title_id, stage_id, new_status, username)
 
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
         return self.controller.get_all_assigned_users_in_project(project_id, username)

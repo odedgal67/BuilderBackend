@@ -56,29 +56,29 @@ class Project:
         title: Title = self.__get_title(title_id)
         return title.get_all_missions(stage_id, apartment_number)
 
-    def edit_comment_in_mission(self, stage_id: UUID, mission_id: UUID, comment: str):
-        stage: Stage = self.get_stage(stage_id)
-        return stage.edit_comment_in_mission(mission_id, comment)
+    def edit_comment_in_mission(self, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.edit_comment_in_mission(stage_id, mission_id, comment, apartment_number)
 
-    def get_all_stages(self):
-        return list(self.stages.values())
+    def get_all_stages(self, title_id: int, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.get_all_stages(apartment_number)
 
-    def is_mission_invalid(self, stage_id: UUID, mission_id: UUID) -> bool:
-        stage: Stage = self.get_stage(stage_id)
-        return stage.is_mission_invalid(mission_id)
+    def is_mission_invalid(self, title_id, stage_id: UUID, mission_id: UUID) -> bool:
+        title: Title = self.__get_title(title_id)
+        return title.is_mission_invalid(stage_id, mission_id)
 
-    def remove_stage(self, stage_id: UUID):
-        if not self.__is_stage_id_exists(stage_id):
-            raise StageDoesntExistException
-        self.stages.pop(stage_id)
+    def remove_stage(self, title_id: int, stage_id: UUID, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.remove_stage(stage_id, apartment_number)
 
-    def remove_mission(self, stage_id: UUID, mission_id: UUID):
-        stage: Stage = self.get_stage(stage_id)
-        return stage.remove_mission(mission_id)
+    def remove_mission(self, title_id: int, stage_id: UUID, mission_id: UUID, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.remove_mission(stage_id, mission_id, apartment_number)
 
-    def set_green_building(self, stage_id: UUID, mission_id: UUID, is_green_building: bool):
-        stage: Stage = self.get_stage(stage_id)
-        return stage.set_green_building(mission_id, is_green_building)
+    def set_green_building(self, title_id: int, stage_id: UUID, mission_id: UUID, is_green_building: bool, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.set_green_building(stage_id, mission_id, is_green_building, apartment_number)
 
     def set_stage_status(self, title_id: int, stage_id: UUID, new_status):
         title: Title = self.__get_title(title_id)
@@ -92,8 +92,3 @@ class Project:
         if title_id not in self.titles.keys():
             raise TitleDoesntExistException()
         return self.titles[title_id]
-
-
-
-
-
