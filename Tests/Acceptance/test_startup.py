@@ -5,7 +5,7 @@ from Tests.Acceptance.acceptance_base import AcceptanceBase
 
 
 liron_username = "123456789"
-liron_password = "123qweasd"
+liron_password = "Password"
 
 
 class Startup(AcceptanceBase):
@@ -16,7 +16,6 @@ class Startup(AcceptanceBase):
             liron_username,
             liron_password,
         )
-        self.facade.login(liron_username, liron_password)
 
 
 if __name__ == "__main__":
