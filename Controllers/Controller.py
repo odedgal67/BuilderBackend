@@ -13,6 +13,8 @@ class Controller:
     def __init__(self):
         self.users: dict[str, User] = dict()
         self.connected_users: dict[str, User] = dict()
+        # Init default user
+        self.register("123456789", "Password")
 
     def login(self, username: str, password: str) -> User:
         user: User = self.__get_user_by_user_name(username)
