@@ -12,11 +12,7 @@ class Title(ABC):
         self.name: str = name
 
     @abstractmethod
-    def add_stage(self, stage_name: str):
-        pass
-
-    @abstractmethod
-    def add_stage(self, apartment_number: int, stage_name: str):
+    def add_stage(self, stage_name: str, apartment_number: int = None):
         pass
 
     @abstractmethod
@@ -85,15 +81,14 @@ class TitleMissionsStages(Title):
     def __is_stage_id_exists(self, stage_id: UUID):
         return stage_id in self.stages.keys()
 
-    def add_stage(self, stage_name: str):
+    def add_stage(self, stage_name: str, apartment_number: int = None):
+        if apartment_number is not None:
+            raise ApartmentNumberNotNeededException()
         if self.is_stage_name_exists(stage_name):
             raise DuplicateStageNameException(stage_name)
         new_stage: Stage = Stage(stage_name)
         self.stages[new_stage.id] = new_stage
         return new_stage
-
-    def add_stage(self, apartment_number: int, stage_name: str):
-        raise ApartmentNumberNotNeededException()
 
     def set_stage_status(self, stage_id: UUID, new_status, apartment_number: int = None):
         if apartment_number is not None:
@@ -181,10 +176,9 @@ class TitleApartments(Title):
         super().__init__(name)
         self.apartments: dict[int, Apartment] = dict()  # dict<apartment_number, Apartment>
 
-    def add_stage(self, stage_name: str):
-        raise ApartmentNotSpecifiedException()
-
-    def add_stage(self, apartment_number: int, stage_name: str):
+    def add_stage(self, stage_name: str, apartment_number: int = None):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.add_stage(stage_name)
 

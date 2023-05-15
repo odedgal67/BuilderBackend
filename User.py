@@ -85,14 +85,10 @@ class User:
         project: Project = self.get_project(project_id)
         return project.add_mission(title_id, mission_name, stage_id, apartment_number)
 
-    def add_stage(self, project_id: UUID, title_id: int, stage_name: str) -> Stage:
-        project: Project = self.get_project(project_id)
-        return project.add_stage(title_id, stage_name)
-
-    def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str):
+    def add_stage(self, project_id: UUID, title_id: int, stage_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_stage(project, title_id, apartment_number, stage_name)
+        return project_permission.add_stage(project, title_id, stage_name, apartment_number)
 
     def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username, apartment_number=None):
         project: Project = self.get_project(project_id)

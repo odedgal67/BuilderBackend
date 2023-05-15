@@ -57,7 +57,7 @@ class AbstractPermission(ABC):
         pass
 
     @abstractmethod
-    def add_stage(self, project, title_id, apartment_number, stage_name):
+    def add_stage(self, project, title_id, stage_name, apartment_number: int = None):
         pass
 
     @abstractmethod
@@ -123,8 +123,8 @@ class WorkManagerPermission(AbstractPermission):
     def check_contractor_permission(self, project):
         raise PermissionError
 
-    def add_stage(self, project, title_id: int, apartment_number: int, stage_name: str):
-        return project.add_stage(title_id, apartment_number, stage_name)
+    def add_stage(self, project, title_id: int, stage_name: str, apartment_number: int = None):
+        return project.add_stage(title_id, stage_name, apartment_number)
 
     def add_building_fault(self, project, name: str, floor_number: int, apartment_number: int, urgency):
         return project.add_building_fault(name, floor_number, apartment_number, urgency)

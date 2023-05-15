@@ -34,13 +34,9 @@ class Project:
                 return True
         return False
 
-    def add_stage(self, title_id: int, stage_name: str) -> Stage:
+    def add_stage(self, title_id: int, stage_name: str,  apartment_number: int = None):
         title: Title = self.__get_title(title_id)
-        return title.add_stage(stage_name)
-
-    def add_stage(self, title_id: int, apartment_number: int, stage_name: str):
-        title: Title = self.__get_title(title_id)
-        return title.add_stage(apartment_number, stage_name)
+        return title.add_stage(stage_name, apartment_number)
 
     def add_mission(self, title_id: int, mission_name: str, stage_id: UUID = None, apartment_number: int = None) -> Mission:
         title: Title = self.__get_title(title_id)

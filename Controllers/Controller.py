@@ -41,14 +41,9 @@ class Controller:
         new_project: Project = user.add_project(project_name)
         return new_project
 
-    def add_stage(self, project_id: UUID, title_id: int, stage_name: str, username: str) -> Stage:
-        user = self.__get_user_by_user_name(username)
-        return user.add_stage(project_id, title_id, stage_name)
-
-
-    def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str, username: str):
+    def add_stage(self, project_id: UUID, title_id: int, stage_name: str, username: str,  apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        return user.add_stage(project_id, title_id, apartment_number, stage_name)
+        return user.add_stage(project_id, title_id, stage_name, apartment_number)
 
     def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str, apartment_number: int = None) -> Mission:
         user = self.__get_user_by_user_name(username)
