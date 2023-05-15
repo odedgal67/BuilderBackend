@@ -34,36 +34,78 @@ class Project:
                 return True
         return False
 
-    def add_stage(self, title_id: int, stage_name: str,  apartment_number: int = None):
+    def add_stage(self, title_id: int, stage_name: str, apartment_number: int = None):
         title: Title = self.__get_title(title_id)
         return title.add_stage(stage_name, apartment_number)
 
-    def add_mission(self, title_id: int, mission_name: str, stage_id: UUID = None, apartment_number: int = None) -> Mission:
+    def add_mission(
+        self,
+        title_id: int,
+        mission_name: str,
+        stage_id: UUID = None,
+        apartment_number: int = None,
+    ) -> Mission:
         title: Title = self.__get_title(title_id)
         return title.add_mission(mission_name, stage_id, apartment_number)
 
     def edit_name(self, new_project_name):
         self.name = self.__check_project_name(new_project_name)
 
-    def edit_stage_name(self, title_id: int, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
+    def edit_stage_name(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        new_stage_name: str,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
         return title.edit_stage_name(stage_id, new_stage_name, apartment_number)
 
-    def edit_mission_name(self, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, apartment_number: int = None):
+    def edit_mission_name(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        new_mission_name: str,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
-        return title.edit_mission_name(stage_id, mission_id, new_mission_name, apartment_number)
+        return title.edit_mission_name(
+            stage_id, mission_id, new_mission_name, apartment_number
+        )
 
-    def set_mission_status(self, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int = None):
+    def set_mission_status(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        new_status,
+        username: str,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
-        return title.set_mission_status(stage_id, mission_id, new_status, username, apartment_number)
+        return title.set_mission_status(
+            stage_id, mission_id, new_status, username, apartment_number
+        )
 
-    def get_all_missions(self, title_id: int, stage_id: UUID, apartment_number: int = None):
+    def get_all_missions(
+        self, title_id: int, stage_id: UUID, apartment_number: int = None
+    ):
         title: Title = self.__get_title(title_id)
         return title.get_all_missions(stage_id, apartment_number)
 
-    def edit_comment_in_mission(self, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
+    def edit_comment_in_mission(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        comment: str,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
-        return title.edit_comment_in_mission(stage_id, mission_id, comment, apartment_number)
+        return title.edit_comment_in_mission(
+            stage_id, mission_id, comment, apartment_number
+        )
 
     def get_all_stages(self, title_id: int, apartment_number: int = None):
         title: Title = self.__get_title(title_id)
@@ -77,13 +119,28 @@ class Project:
         title: Title = self.__get_title(title_id)
         return title.remove_stage(stage_id, apartment_number)
 
-    def remove_mission(self, title_id: int, stage_id: UUID, mission_id: UUID, apartment_number: int = None):
+    def remove_mission(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
         return title.remove_mission(stage_id, mission_id, apartment_number)
 
-    def set_green_building(self, title_id: int, stage_id: UUID, mission_id: UUID, is_green_building: bool, apartment_number: int = None):
+    def set_green_building(
+        self,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        is_green_building: bool,
+        apartment_number: int = None,
+    ):
         title: Title = self.__get_title(title_id)
-        return title.set_green_building(stage_id, mission_id, is_green_building, apartment_number)
+        return title.set_green_building(
+            stage_id, mission_id, is_green_building, apartment_number
+        )
 
     def set_stage_status(self, title_id: int, stage_id: UUID, new_status):
         title: Title = self.__get_title(title_id)
@@ -93,11 +150,16 @@ class Project:
         build_fault_to_edit: BuildingFault = self.get_build_fault(building_fault_id)
         return build_fault_to_edit.set_urgency(new_urgency)
 
-    def add_building_fault(self, name: str, floor_number: int, apartment_number: int, urgency):
+    def add_building_fault(
+        self, name: str, floor_number: int, apartment_number: int, urgency
+    ):
         if self.__is_building_fault_name_exists(name):
             raise DuplicateBuildingFaultException(name)
-        new_building_fault: BuildingFault = BuildingFault(name, floor_number, apartment_number, urgency=urgency)
+        new_building_fault: BuildingFault = BuildingFault(
+            name, floor_number, apartment_number, urgency=urgency
+        )
         self.build_faults[new_building_fault.id] = new_building_fault
+        return new_building_fault
 
     def remove_building_fault(self, build_fault_id: UUID):
         if not self.__is_build_fault_id_exists(build_fault_id):
@@ -135,5 +197,3 @@ class Project:
         else:  # Other title with has stages and missions
             new_title: Title = TitleMissionsStages(name)
         self.titles[title_id] = new_title
-
-

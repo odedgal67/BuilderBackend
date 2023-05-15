@@ -18,6 +18,7 @@ class PermissionTestsBase(AcceptanceBase, ABC):
     permission_name = None
     invalid_mission_UUID = None
     facade: Facade = None
+    building_fault_UUID = None
 
     @classmethod
     def __get_permission_enum(self) -> PermissionType:
@@ -60,7 +61,7 @@ class PermissionTestsBase(AcceptanceBase, ABC):
             self.stage_UUID,
             "mission 1",
             self.contractor_username,
-        )
+        ).id
         self.invalid_mission_UUID = self.facade.add_mission(
             self.project_UUID,
             self.title,
@@ -76,6 +77,9 @@ class PermissionTestsBase(AcceptanceBase, ABC):
             Status.INVALID,
             self.contractor_username,
         )
+        self.building_fault_UUID = self.facade.add_building_fault(
+            self.project_UUID, "building fault", self.some_username, 1, 1
+        ).id
 
     def updateStage(self, success: bool):
         if success:
@@ -165,6 +169,46 @@ class PermissionTestsBase(AcceptanceBase, ABC):
                 self.some_username,
             )
 
+    def addBuildingFault(self, success: bool):
+        if success:
+            self.assertNotThrows(
+                "failed to add building fault",
+                self.facade.add_building_fault,
+                self.project_UUID,
+                "building fault1",
+                self.some_username,
+                1,
+                1,
+            )
+        else:
+            self.assertRaises(
+                Exception,
+                self.facade.add_building_fault,
+                self.project_UUID,
+                "building fault2",
+                self.some_username,
+                1,
+                1,
+            )
+
+    def removeBuildingFault(self, success: bool):
+        if success:
+            self.assertNotThrows(
+                "couldn't remove building fault as " + self.__get_permission_name(),
+                self.facade.remove_building_fault,
+                self.project_UUID,
+                self.building_fault_UUID,
+                self.some_username,
+            )
+        else:
+            self.assertRaises(
+                Exception,
+                self.facade.remove_building_fault,
+                self.project_UUID,
+                self.building_fault_UUID,
+                self.some_username,
+            )
+
 
 class WorkManagerPermission(PermissionTestsBase):
     @classmethod
@@ -184,6 +228,12 @@ class WorkManagerPermission(PermissionTestsBase):
 
     def test_finish_invalid_mission(self):
         return self.finishInvalidMission(False)
+
+    def test_add_building_fault(self):
+        return self.addBuildingFault(True)
+
+    def test_remove_building_fault(self):
+        return self.removeBuildingFault(False)
 
 
 class ContractorPermission(PermissionTestsBase):
@@ -205,6 +255,12 @@ class ContractorPermission(PermissionTestsBase):
     def test_finish_invalid_mission(self):
         return self.finishInvalidMission(True)
 
+    def test_add_building_fault(self):
+        return self.addBuildingFault(True)
+
+    def test_remove_building_fault(self):
+        return self.removeBuildingFault(True)
+
 
 class ProjectManager(PermissionTestsBase):
     @classmethod
@@ -224,6 +280,12 @@ class ProjectManager(PermissionTestsBase):
 
     def test_finish_invalid_mission(self):
         return self.finishInvalidMission(False)
+
+    def test_add_building_fault(self):
+        return self.addBuildingFault(True)
+
+    def test_remove_building_fault(self):
+        return self.removeBuildingFault(False)
 
 
 if __name__ == "__main__":
