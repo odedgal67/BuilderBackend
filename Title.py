@@ -50,18 +50,23 @@ class Title(ABC):
     @abstractmethod
     def get_all_stages(self, apartment_number: int = None):
         pass
+
     @abstractmethod
     def edit_comment_in_mission(self, stage_id, mission_id, comment, apartment_number: int = None):
         pass
+
     @abstractmethod
     def remove_stage(self, stage_id, apartment_number):
         pass
+
     @abstractmethod
     def remove_mission(self, stage_id, mission_id, apartment_number: int = None):
         pass
+
     @abstractmethod
     def set_green_building(self, stage_id, mission_id, is_green_building, apartment_number: int = None):
         pass
+
     @abstractmethod
     def is_mission_invalid(self, stage_id, mission_id, apartment_number: int = None):
         pass

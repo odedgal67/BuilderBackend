@@ -132,14 +132,26 @@ class Controller:
                 assigned_users.append(current_user)
         return assigned_users
 
-    def set_urgency(self, project_id: UUID, title_id: int, building_fault_id: UUID, new_urgency, username: str):
+    def set_urgency(self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_urgency(project_id, title_id, building_fault_id, new_urgency)
+        return user.set_urgency(project_id, building_fault_id, new_urgency)
 
-    def remove_user_from_project(
-        self, project_id: UUID, username_to_remove: str, removing_user: str
-    ):
+    def remove_user_from_project(self, project_id: UUID, username_to_remove: str, removing_user: str):
         user: User = self.__get_user_by_user_name(removing_user)
         user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
         return user.remove_user_from_project(project_id, user_to_remove)
+
+    def add_building_fault(self, project_id: UUID, name: str, floor_number: int, apartment_number: int, urgency, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.add_building_fault(project_id, name,floor_number, apartment_number, urgency)
+
+    def remove_building_fault(self, project_id: UUID, build_fault_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.remove_building_fault(project_id, build_fault_id)
+
+    def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.set_build_fault_status(project_id, build_fault_id, new_status, username)
+
+
 
