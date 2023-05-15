@@ -76,3 +76,7 @@ class Apartment:
     def is_mission_invalid(self, stage_id, mission_id):
         stage: Stage = self.get_stage(stage_id)
         return stage.is_mission_invalid(mission_id)
+
+    def edit_mission_name(self, stage_id, mission_id, new_mission_name):
+        stage: Stage = self.get_stage(stage_id)
+        return stage.edit_mission_name(mission_id, new_mission_name)

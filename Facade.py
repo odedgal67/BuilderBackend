@@ -28,9 +28,16 @@ class Facade:
         return self.controller.add_project(project_name, username)
 
     def add_stage(
-        self, project_id: UUID, title_id: int, stage_name: str, username: str
-    ) -> Stage:
-        return self.controller.add_stage(project_id, title_id, stage_name, username)
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_name: str,
+        username: str,
+        apartment_number: int = None,
+    ):
+        return self.controller.add_stage(
+            project_id, title_id, stage_name, username, apartment_number
+        )
 
     def add_mission(
         self,
@@ -245,11 +252,4 @@ class Facade:
     ):
         return self.controller.set_build_fault_status(
             project_id, build_fault_id, new_status, username
-        )
-
-    def remove_user_from_project(
-        self, project_id: UUID, username_to_remove: str, removing_user: str
-    ):
-        return self.controller.remove_user_from_project(
-            project_id, username_to_remove, removing_user
         )
