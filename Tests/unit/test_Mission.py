@@ -21,7 +21,7 @@ class EditName(unittest.TestCase):
 
     def test_illegal_long_name(self):
         self.assertEqual("mission1", mission1.name)
-        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "a"*26)
+        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "a" * 26)
         self.assertEqual("mission1", mission1.name)
 
     def test_legal_name(self):
@@ -47,6 +47,3 @@ class SetStatus(unittest.TestCase):
         self.assertEqual(self.temp_mission.status, Status.IN_PROGRESS)
         self.assertIsNone(self.temp_mission.completion_date)
         self.assertEqual(self.temp_mission.completing_user, "")
-
-
-

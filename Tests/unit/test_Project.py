@@ -16,4 +16,3 @@ import unittest
 #
 # class GetStage(unittest.TestCase):
 #
-

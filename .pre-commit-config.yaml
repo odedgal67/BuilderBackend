@@ -5,10 +5,10 @@ repos:
       - id: black
   - repo: local
     hooks:
-      - id: Tests
-        name: Tests
+      - id: Unit Tests
+        name: Unit Tests
         language: system
-        description: runs all unittests in /Tests/
+        description: runs all unittests in /Tests/unit
         pass_filenames: false
         verbose: true
-        entry: python -m unittest discover -s Tests
+        entry: python -m unittest discover -s Tests/unit
