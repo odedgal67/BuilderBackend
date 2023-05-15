@@ -11,7 +11,9 @@ class AbstractPermission(ABC):
         pass
 
     @abstractmethod
-    def assign_project_to_user(self, project: Project, permission_type: PermissionType, user_to_assign):
+    def assign_project_to_user(
+        self, project: Project, permission_type: PermissionType, user_to_assign
+    ):
         pass
 
     def set_mission_status(self, project, title_id, stage_id, mission_id, new_status, username, apartment_number=None):
@@ -50,8 +52,15 @@ class AbstractPermission(ABC):
     def set_urgency(self, project, title_id, building_fault_id, new_urgency):
         pass
 
+    @abstractmethod
+    def remove_user_from_project(self, project, user_to_remove):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
+    def remove_user_from_project(self, project, user_to_remove):
+        raise PermissionError
+
     def register(self) -> bool:
         return False
 
@@ -98,7 +107,9 @@ class ProjectManagerPermission(WorkManagerPermission):
     def register(self) -> bool:
         return True
 
-    def assign_project_to_user(self, project: Project, permission_type: PermissionType, user_to_assign):
+    def assign_project_to_user(
+        self, project: Project, permission_type: PermissionType, user_to_assign
+    ):
         user_to_assign.assign_project(project, permission_type)
 
     def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
@@ -117,3 +128,7 @@ class ContractorPermission(ProjectManagerPermission):
 
     def check_contractor_permission(self, project):
         return True
+
+    def remove_user_from_project(self, project, user_to_remove):
+        user_to_remove.remove_project(project.id)
+

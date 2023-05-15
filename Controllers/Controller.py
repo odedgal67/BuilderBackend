@@ -43,6 +43,7 @@ class Controller:
         user = self.__get_user_by_user_name(username)
         return user.add_stage(project_id, title_id, stage_name)
 
+
     def add_stage(self, project_id: UUID, title_id: int, apartment_number: int, stage_name: str, username: str):
         user: User = self.__get_user_by_user_name(username)
         return user.add_stage(project_id, title_id, apartment_number, stage_name)
@@ -51,7 +52,8 @@ class Controller:
         user = self.__get_user_by_user_name(username)
         return user.add_mission(project_id, title_id, stage_id, mission_name, apartment_number)
 
-    def edit_project_name(self, project_id: UUID, new_project_name: str, username: str) -> str:
+    def edit_project_name(
+        self, project_id: UUID, new_project_name: str, username: str) -> str:
         user: User = self.__get_user_by_user_name(username)
         user.edit_project_name(project_id, new_project_name)
         return new_project_name
@@ -86,7 +88,13 @@ class Controller:
         else:
             return self.connected_users.get(userid)
 
-    def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str):
+    def assign_project_to_user(
+        self,
+        project_id: UUID,
+        permission_type: PermissionType,
+        assigning_username: str,
+        username_to_assign: str,
+    ):
         assigning_user: User = self.__get_user_by_user_name(assigning_username)
         user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
         return assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
@@ -128,19 +136,10 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         return user.set_urgency(project_id, title_id, building_fault_id, new_urgency)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def remove_user_from_project(
+        self, project_id: UUID, username_to_remove: str, removing_user: str
+    ):
+        user: User = self.__get_user_by_user_name(removing_user)
+        user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
+        return user.remove_user_from_project(project_id, user_to_remove)
 

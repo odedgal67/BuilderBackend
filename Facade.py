@@ -35,9 +35,11 @@ class Facade:
     def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str, apartment_number: int = None) -> Mission:
         return self.controller.add_mission(project_id, title_id, stage_id, mission_name, username, apartment_number)
 
-    def edit_project_name(self, project_id: UUID, new_project_name: str, username: str) -> str:
+    def edit_project_name(
+        self, project_id: UUID, new_project_name: str, username: str
+    ) -> str:
         return self.controller.edit_project_name(project_id, new_project_name, username)
-
+      
     def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, username: str) -> str:
         return self.controller.edit_stage_name(project_id, title_id, stage_id, new_stage_name, username)
 
