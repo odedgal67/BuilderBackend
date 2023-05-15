@@ -124,8 +124,7 @@ class TitleMissionsStages(Title):
     def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
-        stage: Stage = self.__get_stage(stage_id)
-        return stage.edit_mission_name(mission_id, new_mission_name)
+
 
     def set_mission_status(self, stage_id, mission_id, new_status, username, apartment_number: int):
         if apartment_number is not None:
@@ -177,6 +176,7 @@ class TitleMissionsStages(Title):
 
 
 class TitleApartments(Title):
+
     def __init__(self, name: str):
         super().__init__(name)
         self.apartments: dict[int, Apartment] = dict()  # dict<apartment_number, Apartment>
@@ -222,6 +222,12 @@ class TitleApartments(Title):
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.edit_stage_name(stage_id, new_stage_name)
+
+    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
+        apartment: Apartment = self.__get_apartment(apartment_number)
+        return apartment.edit_mission_name(stage_id, mission_id, new_mission_name)
 
     def set_mission_status(self, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int):
         if apartment_number is None:

@@ -5,7 +5,7 @@ from Stage import Stage
 from Utils.Exceptions import *
 import uuid
 from uuid import UUID
-from Title import Title
+from Title import Title, TitleApartments, TitleMissionsStages
 
 
 class Project:
@@ -15,6 +15,13 @@ class Project:
         self.build_faults: dict[UUID, BuildingFault] = dict()
         self.plans: dict[UUID, Plan] = dict()
         self.id = uuid.uuid1()
+        self.__init_default_titles()
+
+    def __init_default_titles(self):
+        self.__add_title("שלב מקדים", 0)
+        self.__add_title("עבודות שלד", 1)
+        self.__add_title("עבודות גמר בדירות", 2)
+        self.__add_title("פיתוח וכללי לבניין", 3)
 
     def __check_project_name(self, project_name: str) -> str:
         if len(project_name) < 3 or len(project_name) > 25:
@@ -123,4 +130,14 @@ class Project:
     def set_build_fault_status(self, build_fault_id: UUID, new_status, username: str):
         build_fault: BuildingFault = self.get_build_fault(build_fault_id)
         return build_fault.set_status(new_status, username)
+
+    def __add_title(self, name: str, title_id: int):
+        if title_id > 3 or title_id < 0:
+            raise Exception()
+        if title_id == 2:  # Apartments Title
+            new_title: Title = TitleApartments(name)
+        else:  # Other title with has stages and missions
+            new_title: Title = TitleMissionsStages(name)
+        self.titles[title_id] = new_title
+
 
