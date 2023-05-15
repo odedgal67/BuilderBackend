@@ -16,32 +16,40 @@ class AbstractPermission(ABC):
     ):
         pass
 
-    @abstractmethod
-    def set_mission_status(self, project, stage_id, mission_id, new_status, username):
+    def set_mission_status(self, project, title_id, stage_id, mission_id, new_status, username, apartment_number=None):
         pass
 
-    @abstractmethod
-    def get_all_missions(self, project, stage_id):
+    def get_all_missions(self, project, title_id, stage_id, apartment_number: int = None):
         pass
 
-    @abstractmethod
-    def edit_comment_in_mission(self, project, stage_id, mission_id, comment):
+    def edit_comment_in_mission(self, project, title_id, stage_id, mission_id, comment, apartment_number: int = None):
         pass
 
-    @abstractmethod
-    def get_all_stages(self, project):
+    def get_all_stages(self, project, title_id, apartment_number: int = None):
         pass
 
-    @abstractmethod
-    def remove_stage(self, project, stage_id):
+    def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
         pass
 
-    @abstractmethod
-    def remove_mission(self, project, stage_id, mission_id):
+    def remove_mission(self, project, title_id, stage_id, mission_id, apartment_number: int = None):
         pass
 
-    @abstractmethod
-    def set_green_building(self, project, stage_id, mission_id, is_green_building):
+    def set_green_building(self, project, title_id, stage_id, mission_id, is_green_building, apartment_number: int = None):
+        pass
+
+    def set_stage_status(self, project, title_id, stage_id, new_status):
+        pass
+
+    def get_all_assigned_users(self, project):
+        pass
+
+    def check_contractor_permission(self, project):
+        pass
+
+    def add_stage(self, project, title_id, apartment_number, stage_name):
+        pass
+
+    def set_urgency(self, project, title_id, building_fault_id, new_urgency):
         pass
 
     @abstractmethod
@@ -56,33 +64,43 @@ class WorkManagerPermission(AbstractPermission):
     def register(self) -> bool:
         return False
 
-    def assign_project_to_user(self, project, user_to_assign):
+    def set_urgency(self, project, title_id, building_fault_id, new_urgency):
+        return project.set_urgency(title_id, building_fault_id, new_urgency)
+
+    def assign_project_to_user(self, project, permission_type: PermissionType, user_to_assign):
         raise PermissionError
 
-    def set_mission_status(self, project, stage_id, mission_id, new_status, username):
-        if new_status == Status.DONE and project.is_mission_invalid(
-            stage_id, mission_id
-        ):
+    def set_mission_status(self, project, title_id, stage_id, mission_id, new_status, username, apartment_number: int = None):
+        if new_status == Status.DONE and project.is_mission_invalid(title_id, stage_id, mission_id):
             return PermissionError
-        return project.set_mission_status(stage_id, mission_id, new_status, username)
+        return project.set_mission_status(title_id, stage_id, mission_id, new_status, username, apartment_number)
 
-    def get_all_missions(self, project, stage_id):
-        return project.get_all_missions(stage_id)
+    def get_all_missions(self, project, title_id, stage_id, apartment_number: int = None):
+        return project.get_all_missions(title_id, stage_id, apartment_number)
 
-    def edit_comment_in_mission(self, project, stage_id, mission_id, comment):
-        return project.edit_comment_in_mission(stage_id, mission_id, comment)
+    def edit_comment_in_mission(self, project, title_id, stage_id, mission_id, comment, apartment_number: int = None):
+        return project.edit_comment_in_mission(title_id, stage_id, mission_id, comment, apartment_number)
 
-    def get_all_stages(self, project):
-        return project.get_all_stages()
+    def get_all_stages(self, project, title_id, apartment_number: int = None):
+        return project.get_all_stages(title_id, apartment_number)
 
-    def remove_stage(self, project, stage_id):
+    def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
         raise PermissionError
 
-    def remove_mission(self, project, stage_id, mission_id):
+    def remove_mission(self, project, title_id, stage_id, mission_id, apartment_number: int = None):
+        raise PermissionError
+    
+    def set_green_building(self, project, title_id, stage_id, mission_id, is_green_building, apartment_number: int = None):
+        return project.set_green_building(title_id, stage_id, mission_id, is_green_building, apartment_number)
+
+    def set_stage_status(self, project, title_id, stage_id, new_status):
+        return project.set_stage_status(title_id, stage_id, new_status)
+
+    def check_contractor_permission(self, project):
         raise PermissionError
 
-    def set_green_building(self, project, stage_id, mission_id, is_green_building):
-        return project.set_green_building(stage_id, mission_id, is_green_building)
+    def add_stage(self, project, title_id: int, apartment_number: int, stage_name: str):
+        return project.add_stage(title_id, apartment_number, stage_name)
 
 
 class ProjectManagerPermission(WorkManagerPermission):
@@ -94,19 +112,23 @@ class ProjectManagerPermission(WorkManagerPermission):
     ):
         user_to_assign.assign_project(project, permission_type)
 
-    def remove_stage(self, project, stage_id):
+    def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
         raise PermissionError
 
-    def remove_mission(self, project, stage_id, mission_id):
+    def remove_mission(self, project, title_id, stage_id, mission_id, apartment_number: int = None):
         raise PermissionError
 
 
 class ContractorPermission(ProjectManagerPermission):
-    def remove_stage(self, project, stage_id):
-        return project.remove_stage(stage_id)
+    def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
+        return project.remove_stage(title_id, stage_id, apartment_number)
 
-    def remove_mission(self, project, stage_id, mission_id):
-        return project.remove_mission(project, stage_id, mission_id)
+    def remove_mission(self, project, title_id, stage_id, mission_id, apartment_number: int = None):
+        return project.remove_mission(project, title_id, stage_id, mission_id, apartment_number)
+
+    def check_contractor_permission(self, project):
+        return True
 
     def remove_user_from_project(self, project, user_to_remove):
         user_to_remove.remove_project(project.id)
+

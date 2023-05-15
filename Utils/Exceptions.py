@@ -21,6 +21,12 @@ class ProjectDoesntExistException(Exception):
         super().__init__(self.message)
 
 
+class TitleDoesntExistException(Exception):
+    def __init__(self):
+        self.message = f"Title doesn't exist"
+        super().__init__(self.message)
+
+
 class StageDoesntExistException(Exception):
     def __init__(self):
         self.message = f"Stage name doesn't exist"
@@ -98,6 +104,36 @@ class IllegalPasswordException(Exception):
 class IncorrectPasswordException(Exception):
     def __init__(self):
         self.message = "Incorrect password"
+        super().__init__(self.message)
+
+
+class ApartmentNumberNotNeededException(Exception):
+    def __init__(self):
+        self.message = "Apartment number is provided in a non apartment title"
+        super().__init__(self.message)
+
+
+class ChangeStatusNonEmptyStageException(Exception):
+    def __init__(self):
+        self.message = "Cant change status for a stage that contains missions"
+        super().__init__(self.message)
+
+
+class ApartmentNotSpecifiedException(Exception):
+    def __init__(self):
+        self.message = "Apartment number was not specified"
+        super().__init__(self.message)
+
+
+class ApartmentDoesntExistException(Exception):
+    def __init__(self):
+        self.message = "Apartment number doesnt exist"
+        super().__init__(self.message)
+
+
+class BuildFaultDoesntExistException(Exception):
+    def __init__(self):
+        self.message = "Build fault doesnt exist"
         super().__init__(self.message)
 
 

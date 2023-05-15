@@ -110,6 +110,11 @@ class Stage:
         mission: Mission = self.get_mission(mission_id)
         return mission.set_green_building(is_green_building)
 
+    def set_status(self, new_status: Status):
+        if len(self.missions) != 0:
+            raise ChangeStatusNonEmptyStageException()
+        self.status = new_status
+
 
 
 
