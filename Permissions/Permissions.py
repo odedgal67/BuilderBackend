@@ -122,7 +122,7 @@ class WorkManagerPermission(AbstractPermission):
         if new_status == Status.DONE and project.is_mission_invalid(
             title_id, stage_id, mission_id
         ):
-            return PermissionError
+            raise PermissionError
         return project.set_mission_status(
             title_id, stage_id, mission_id, new_status, username, apartment_number
         )
@@ -190,7 +190,7 @@ class WorkManagerPermission(AbstractPermission):
 
     def set_build_fault_status(self, project, build_fault_id, new_status, username):
         if new_status == Status.DONE and project.is_build_fault_invalid(build_fault_id):
-            return PermissionError
+            raise PermissionError
         return project.set_build_fault_status(build_fault_id, new_status, username)
 
 
