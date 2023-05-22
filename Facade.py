@@ -5,6 +5,7 @@ import Project
 import Stage
 from uuid import UUID
 
+from DTO.UserDTO import UserDTO
 # TODO : Return Data Objects instead of real objects
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
@@ -15,14 +16,14 @@ class Facade:
     def __init__(self):
         self.controller = Controller()
 
-    def login(self, username: str, password: str) -> User:
-        return self.controller.login(username, password)
+    def login(self, username: str, password: str):
+        return self.controller.login(username, password).to_json()
 
     def logout(self, username: str):
         return self.controller.logout(username)
 
-    def register(self, username: str, password: str) -> User:
-        return self.controller.register(username, password)
+    def register(self, username: str, password: str, name: str):
+        return self.controller.register(username, password, name).to_json()
 
     def add_project(self, project_name: str, username: str) -> Project:
         return self.controller.add_project(project_name, username)
@@ -46,7 +47,7 @@ class Facade:
         stage_id: UUID,
         mission_name: str,
         username: str,
-        apartment_number: int = None,
+        apartment_number: int = None
     ) -> Mission:
         return self.controller.add_mission(
             project_id, title_id, stage_id, mission_name, username, apartment_number
@@ -64,9 +65,10 @@ class Facade:
         stage_id: UUID,
         new_stage_name: str,
         username: str,
+        apartment_number: int = None
     ) -> str:
         return self.controller.edit_stage_name(
-            project_id, title_id, stage_id, new_stage_name, username
+            project_id, title_id, stage_id, new_stage_name, username, apartment_number
         )
 
     def edit_mission_name(
@@ -77,9 +79,10 @@ class Facade:
         mission_id: UUID,
         new_mission_name: str,
         username: str,
+        apartment_number: int = None
     ) -> str:
         return self.controller.edit_mission_name(
-            project_id, title_id, stage_id, mission_id, new_mission_name, username
+            project_id, title_id, stage_id, mission_id, new_mission_name, username, apartment_number
         )
 
     def set_mission_status(

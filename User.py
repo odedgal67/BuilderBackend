@@ -10,10 +10,11 @@ from Utils.PermissionType import PermissionType
 
 
 class User:
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, name: str):
         self.__check_password(password)
         self.__check_username(username)
         self.username = username
+        self.name = name
         self.hashed_password = hash_password(password)
         self.logged_in = False
         self.projects: dict[UUID, Project] = dict()  # dict<project_id, Project>
@@ -67,9 +68,10 @@ class User:
             raise ProjectDoesntExistException
         return self.projects[project_id]
 
-    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str):
+    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
-        project.edit_stage_name(title_id, stage_id, new_stage_name)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_stage_name(project, title_id, stage_id, new_stage_name, apartment_number)
 
     def edit_project_name(self, project_id: UUID, new_project_name: str):
         project: Project = self.get_project(project_id)
@@ -77,13 +79,15 @@ class User:
             raise DuplicateProjectNameException(new_project_name)
         project.edit_name(new_project_name)
 
-    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str):
+    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
-        project.edit_mission_name(title_id, stage_id, mission_id, new_mission_name)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_mission_name(project, title_id, stage_id, mission_id, new_mission_name, apartment_number)
 
     def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, apartment_number: int = None) -> Mission:
         project: Project = self.get_project(project_id)
-        return project.add_mission(title_id, mission_name, stage_id, apartment_number)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_mission(project, title_id, stage_id, mission_name, apartment_number)
 
     def add_stage(self, project_id: UUID, title_id: int, stage_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)

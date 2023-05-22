@@ -24,23 +24,23 @@ class Title(ABC):
         pass
 
     @abstractmethod
-    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int):
+    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int = None):
         pass
 
     @abstractmethod
-    def edit_stage_name(self, stage_id, new_stage_name, apartment_number):
+    def edit_stage_name(self, stage_id, new_stage_name, apartment_number: int = None):
         pass
 
     @abstractmethod
-    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
+    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number: int = None):
         pass
 
     @abstractmethod
-    def set_mission_status(self, stage_id, mission_id, new_status, username, apartment_number):
+    def set_mission_status(self, stage_id, mission_id, new_status, username, apartment_number: int = None):
         pass
 
     @abstractmethod
-    def get_all_missions(self, stage_id, apartment_number):
+    def get_all_missions(self, stage_id, apartment_number: int = None):
         pass
 
     @abstractmethod
@@ -52,7 +52,7 @@ class Title(ABC):
         pass
 
     @abstractmethod
-    def remove_stage(self, stage_id, apartment_number):
+    def remove_stage(self, stage_id, apartment_number: int = None):
         pass
 
     @abstractmethod
@@ -102,13 +102,13 @@ class TitleMissionsStages(Title):
                 return True
         return False
 
-    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int):
+    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int = None):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
         stage: Stage = self.__get_stage(stage_id)
         return stage.add_mission(mission_name)
 
-    def edit_stage_name(self, stage_id: UUID, new_stage_name: str, apartment_number: int):
+    def edit_stage_name(self, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
         if self.is_stage_name_exists(new_stage_name):
@@ -116,18 +116,19 @@ class TitleMissionsStages(Title):
         stage: Stage = self.__get_stage(stage_id)
         return stage.edit_name(new_stage_name)
 
-    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
+    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number: int = None):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
+        stage: Stage = self.__get_stage(stage_id)
+        return stage.edit_mission_name(mission_id, new_mission_name)
 
-
-    def set_mission_status(self, stage_id, mission_id, new_status, username, apartment_number: int):
+    def set_mission_status(self, stage_id, mission_id, new_status, username, apartment_number: int = None):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
         stage: Stage = self.__get_stage(stage_id)
         return stage.set_mission_status(mission_id, new_status, username)
 
-    def get_all_missions(self, stage_id, apartment_number):
+    def get_all_missions(self, stage_id, apartment_number: int = None):
         if apartment_number is not None:
             raise ApartmentNumberNotNeededException()
         stage: Stage = self.__get_stage(stage_id)

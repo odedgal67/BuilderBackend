@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from DTO.UserDTO import UserDTO
 from Mission import Mission
 from Project import Project
 from Stage import Stage
@@ -14,13 +15,14 @@ class Controller:
         self.users: dict[str, User] = dict()
         self.connected_users: dict[str, User] = dict()
         # Init default user
-        self.register("123456789", "Password")
+        self.register("123456789", "Password", "Liron Hart")
 
-    def login(self, username: str, password: str) -> User:
+    def login(self, username: str, password: str) -> UserDTO:
         user: User = self.__get_user_by_user_name(username)
         user.login(password)
         self.connected_users[username] = user
-        return user
+        user_dto: UserDTO = UserDTO(user)
+        return user_dto
 
     def logout(self, username: str):
         user: User = self.__get_user_by_user_name(username)
@@ -29,12 +31,13 @@ class Controller:
         user.logout()
         self.connected_users.pop(username)
 
-    def register(self, username: str, password: str) -> User:
+    def register(self, username: str, password: str, name: str) -> UserDTO:
         if username in self.users:
             raise DuplicateUserName(username)
-        user = User(username, password)
+        user = User(username, password, name)
         self.users[username] = user
-        return user
+        user_dto: UserDTO = UserDTO(user)
+        return user_dto
 
     def add_project(self, project_name: str, username: str) -> Project:
         user = self.__get_user_by_user_name(username)
@@ -55,14 +58,14 @@ class Controller:
         user.edit_project_name(project_id, new_project_name)
         return new_project_name
 
-    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, username: str) -> str:
+    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, username: str, apartment_number: int = None) -> str:
         user: User = self.__get_user_by_user_name(username)
-        user.edit_stage_name(project_id, title_id, stage_id, new_stage_name)
+        user.edit_stage_name(project_id, title_id, stage_id, new_stage_name, apartment_number)
         return new_stage_name
 
-    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, username: str) -> str:
+    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, username: str, apartment_number: int = None) -> str:
         user: User = self.__get_user_by_user_name(username)
-        user.edit_mission_name(project_id, title_id, stage_id, mission_id, new_mission_name)
+        user.edit_mission_name(project_id, title_id, stage_id, mission_id, new_mission_name, apartment_number)
         return new_mission_name
 
     def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status: Status, username: str, apartment_number: int = None):
