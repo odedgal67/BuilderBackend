@@ -93,6 +93,15 @@ class AbstractPermission(ABC):
     def set_build_fault_status(self, project, build_fault_id, new_status, username):
         pass
 
+    def edit_stage_name(self, project, title_id, stage_id, new_stage_name, apartment_number: int = None):
+        pass
+
+    def edit_mission_name(self, project, title_id, stage_id, mission_id, new_mission_name, apartment_number: int = None):
+        pass
+
+    def add_mission(self, project, title_id, stage_id, mission_name, apartment_number: int = None):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def remove_user_from_project(self, project, user_to_remove):
@@ -192,6 +201,15 @@ class WorkManagerPermission(AbstractPermission):
         if new_status == Status.DONE and project.is_build_fault_invalid(build_fault_id):
             raise PermissionError
         return project.set_build_fault_status(build_fault_id, new_status, username)
+
+    def edit_stage_name(self, project, title_id, stage_id, new_stage_name, apartment_number: int = None):
+        return project.edit_stage_name(title_id, stage_id, new_stage_name, apartment_number)
+
+    def edit_mission_name(self, project, title_id, stage_id, mission_id, new_mission_name, apartment_number: int = None):
+        return project.edit_mission_name(title_id, stage_id, mission_id, new_mission_name, apartment_number)
+
+    def add_mission(self, project, title_id, stage_id, mission_name, apartment_number: int = None):
+        return project.add_mission(title_id, mission_name,stage_id, apartment_number)
 
 
 class ProjectManagerPermission(WorkManagerPermission):

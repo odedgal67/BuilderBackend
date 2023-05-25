@@ -38,6 +38,8 @@ class Mission:
             self.status = new_status
 
     def set_comment(self, comment: str):
+        if len(comment) > 400:
+            raise Exception("Comment over 400 characters")
         self.comment = comment
         return comment
 
