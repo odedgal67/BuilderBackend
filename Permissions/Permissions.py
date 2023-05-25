@@ -73,6 +73,12 @@ class AbstractPermission(ABC):
     def check_contractor_permission(self, project):
         pass
 
+    def check_project_manager_permission(self, project):
+        pass
+
+    def check_work_manager_permission(self, project):
+        pass
+
     def add_stage(self, project, title_id, stage_name, apartment_number: int = None):
         pass
 
@@ -211,6 +217,12 @@ class WorkManagerPermission(AbstractPermission):
     def add_mission(self, project, title_id, stage_id, mission_name, apartment_number: int = None):
         return project.add_mission(title_id, mission_name,stage_id, apartment_number)
 
+    def check_project_manager_permission(self, project):
+        raise PermissionError()
+
+    def check_work_manager_permission(self, project):
+        return True
+
 
 class ProjectManagerPermission(WorkManagerPermission):
     def register(self) -> bool:
@@ -229,6 +241,12 @@ class ProjectManagerPermission(WorkManagerPermission):
     ):
         raise PermissionError
 
+    def check_project_manager_permission(self, project):
+        return True
+
+    def check_work_manager_permission(self, project):
+        raise PermissionError()
+
 
 class ContractorPermission(ProjectManagerPermission):
     def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
@@ -243,6 +261,9 @@ class ContractorPermission(ProjectManagerPermission):
 
     def check_contractor_permission(self, project):
         return True
+
+    def check_project_manager_permission(self, project):
+        raise PermissionError()
 
     def remove_user_from_project(self, project, user_to_remove):
         user_to_remove.remove_project(project.id)
@@ -266,3 +287,6 @@ class ContractorPermission(ProjectManagerPermission):
 
     def set_build_fault_status(self, project, build_fault_id, new_status, username):
         return project.set_build_fault_status(build_fault_id, new_status, username)
+
+    def check_work_manager_permission(self, project):
+        raise PermissionError()

@@ -149,13 +149,13 @@ class Controller:
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
         user: User = self.__get_user_by_user_name(username)
         user.check_contractor_permission(project_id)
-        assigned_users: list = list()
-        assigned_users_dto: list = list()
+        result = list()
         for current_user in self.users.values():
             if current_user.is_project_exist(project_id):
-                assigned_users.append(current_user)
-                assigned_users_dto.append(UserDTO(current_user))
-        return assigned_users_dto
+                permission_type: PermissionType = self.__get_permission_type_for_user_in_project(current_user, project_id)
+                current_user_dto: UserDTO = UserDTO(current_user)
+                result.append({'user_dto': current_user_dto, 'permission': permission_type})
+        return result
 
     def set_urgency(self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str):
         user: User = self.__get_user_by_user_name(username)
@@ -183,6 +183,24 @@ class Controller:
     def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status, username: str):
         user: User = self.__get_user_by_user_name(username)
         return user.set_build_fault_status(project_id, build_fault_id, new_status, username)
+
+    def __get_permission_type_for_user_in_project(self, current_user: User, project_id: UUID):
+        try:
+            current_user.check_contractor_permission(project_id)
+            return PermissionType.CONTRACTOR
+        except Exception:
+            try:
+                current_user.check_project_manager_permission(project_id)
+                return PermissionType.PROJECT_MANAGER
+            except Exception:
+                try:
+                    current_user.check_work_manager_permission(project_id)
+                    return PermissionType.WORK_MANAGER
+                except Exception:
+                    raise Exception("User has no permission in the project")
+
+
+
 
 
 

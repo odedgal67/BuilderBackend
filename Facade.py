@@ -90,12 +90,8 @@ class Facade:
         self.controller.set_stage_status(project_id, title_id, stage_id, new_status, username)
 
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
-        # Returns dict [username : user_dto]
-        users_dto_list = self.controller.get_all_assigned_users_in_project(project_id, username)
-        users_dto_dict = dict()
-        for user_dto in users_dto_list:
-            users_dto_dict[user_dto.id] = user_dto
-        return users_dto_dict
+        # Returns list of dictionaries {'user_dto' : user_dto, 'permission' : PermissionType}
+        return self.controller.get_all_assigned_users_in_project(project_id, username)
 
     def set_urgency(self, project_id: UUID, building_fault_id: UUID, new_urgency: Urgency, username: str) -> None:
         # Returns void

@@ -205,3 +205,13 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.set_build_fault_status(project, build_fault_id, new_status, username)
 
+    def check_project_manager_permission(self, project_id):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.check_project_manager_permission(project)
+
+    def check_work_manager_permission(self, project_id):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.check_work_manager_permission(project)
+
