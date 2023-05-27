@@ -215,3 +215,11 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.check_work_manager_permission(project)
 
+    def get_projects(self):
+        output: list[Project] = []
+        for project in self.projects.values():
+            output.append(project)
+        return output
+
+    def get_my_permission(self, project_id: UUID):
+        return self.get_project_permission(project_id).get_enum()

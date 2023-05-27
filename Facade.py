@@ -62,7 +62,7 @@ class Facade:
         stages_dto_list = self.controller.get_all_stages(project_id, title_id, username, apartment_number)
         stages_dict = {}
         for stage_dto in stages_dto_list:
-            stages_dict[stage_dto.id] = stage_dto
+            stages_dict[stage_dto.id] = stage_dto.to_json()
         return stages_dict
 
     def assign_project_to_user(self, project_id: UUID, permission_type: PermissionType, assigning_username: str, username_to_assign: str) -> None:
@@ -111,3 +111,15 @@ class Facade:
 
     def remove_user_from_project(self, project_id: UUID, username_to_remove: str, removing_user: str):
         return self.controller.remove_user_from_project(project_id, username_to_remove, removing_user).to_json()
+
+    def get_projects(self, username: str):
+        project_dto_list = self.controller.get_projects(username)
+        projects_dict = {}
+        counter = 0
+        for project in project_dto_list:
+            projects_dict[counter] = project.to_json()
+            counter += 1
+        return projects_dict
+
+    def get_my_permission(self, project_id: str, username: str):
+        return self.controller.get_my_permission(UUID(project_id), username)

@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
-
+import traceback
 from Facade import Facade
 from Utils.Urgency import Urgency
 
 app = Flask("BuilderAPI")
 facade: Facade = Facade()
 
-ERROR_CODE = 400
+ERROR_CODE = None
 
 
 @app.route('/register', methods=['POST'])
@@ -432,6 +432,44 @@ def handle_request_echo():
     except Exception as e:
         print(f"[echo] : raised exception {str(e)}")
         return jsonify({'error': str(e)}), ERROR_CODE
+
+@app.route("/get_projects", methods=["POST"])
+def handle_request_get_projects():
+    print("get projects received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.get_projects(data["username"])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[get_projects] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/get_my_permission", methods=["POST"])
+def handle_request_get_my_permissiont():
+    print("Get my permission request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.get_my_permission(
+            data["project_id"],
+            data["username"],
+        )
+        print(jsonify({"result": result}))
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[get_my_permission] : raised exception {str(e)}")
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), ERROR_CODE
 
 
 if __name__ == "__main__":

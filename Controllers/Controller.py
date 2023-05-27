@@ -50,40 +50,113 @@ class Controller:
         new_project_dto: ProjectDTO = ProjectDTO(new_project)
         return new_project_dto
 
-    def add_stage(self, project_id: UUID, title_id: int, stage_name: str, username: str,  apartment_number: int = None) -> StageDTO:
+    def add_stage(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_name: str,
+        username: str,
+        apartment_number: int = None,
+    ) -> StageDTO:
         user: User = self.__get_user_by_user_name(username)
-        stage: Stage = user.add_stage(project_id, title_id, stage_name, apartment_number)
+        stage: Stage = user.add_stage(
+            project_id, title_id, stage_name, apartment_number
+        )
         stage_dto: StageDTO = StageDTO(stage)
         return stage_dto
 
-    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, username: str, apartment_number: int = None) -> MissionDTO:
+    def add_mission(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        mission_name: str,
+        username: str,
+        apartment_number: int = None,
+    ) -> MissionDTO:
         user = self.__get_user_by_user_name(username)
-        mission: Mission = user.add_mission(project_id, title_id, stage_id, mission_name, apartment_number)
+        mission: Mission = user.add_mission(
+            project_id, title_id, stage_id, mission_name, apartment_number
+        )
         mission_dto: MissionDTO = MissionDTO(mission)
         return mission_dto
 
-    def edit_project_name(self, project_id: UUID, new_project_name: str, username: str) -> str:
+    def edit_project_name(
+        self, project_id: UUID, new_project_name: str, username: str
+    ) -> str:
         user: User = self.__get_user_by_user_name(username)
         user.edit_project_name(project_id, new_project_name)
         return new_project_name
 
-    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, username: str, apartment_number: int = None) -> str:
+    def edit_stage_name(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        new_stage_name: str,
+        username: str,
+        apartment_number: int = None,
+    ) -> str:
         user: User = self.__get_user_by_user_name(username)
-        user.edit_stage_name(project_id, title_id, stage_id, new_stage_name, apartment_number)
+        user.edit_stage_name(
+            project_id, title_id, stage_id, new_stage_name, apartment_number
+        )
         return new_stage_name
 
-    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, username: str, apartment_number: int = None) -> str:
+    def edit_mission_name(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        new_mission_name: str,
+        username: str,
+        apartment_number: int = None,
+    ) -> str:
         user: User = self.__get_user_by_user_name(username)
-        user.edit_mission_name(project_id, title_id, stage_id, mission_id, new_mission_name, apartment_number)
+        user.edit_mission_name(
+            project_id,
+            title_id,
+            stage_id,
+            mission_id,
+            new_mission_name,
+            apartment_number,
+        )
         return new_mission_name
 
-    def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status: Status, username: str, apartment_number: int = None):
+    def set_mission_status(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        new_status: Status,
+        username: str,
+        apartment_number: int = None,
+    ):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_mission_status(project_id, title_id, stage_id, mission_id, new_status, username, apartment_number)
+        return user.set_mission_status(
+            project_id,
+            title_id,
+            stage_id,
+            mission_id,
+            new_status,
+            username,
+            apartment_number,
+        )
 
-    def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, username: str, apartment_number: int = None):
+    def get_all_missions(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        username: str,
+        apartment_number: int = None,
+    ):
         user: User = self.__get_user_by_user_name(username)
-        missions_list = user.get_all_missions(project_id, title_id, stage_id, apartment_number)
+        missions_list = user.get_all_missions(
+            project_id, title_id, stage_id, apartment_number
+        )
         missions_dto_list = list()
         for mission in missions_list:
             mission_dto: MissionDTO = MissionDTO(mission)
@@ -111,13 +184,32 @@ class Controller:
     ):
         assigning_user: User = self.__get_user_by_user_name(assigning_username)
         user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
-        return assigning_user.assign_project_to_user(project_id, permission_type, user_to_assign)
+        return assigning_user.assign_project_to_user(
+            project_id, permission_type, user_to_assign
+        )
 
-    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, username: str, apartment_number: int = None):
+    def edit_comment_in_mission(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        comment: str,
+        username: str,
+        apartment_number: int = None,
+    ):
         user: User = self.__get_user_by_user_name(username)
-        return user.edit_comment_in_mission(project_id, title_id, stage_id, mission_id, comment, apartment_number)
+        return user.edit_comment_in_mission(
+            project_id, title_id, stage_id, mission_id, comment, apartment_number
+        )
 
-    def get_all_stages(self, project_id: UUID, title_id: int, username: str, apartment_number: int = None):
+    def get_all_stages(
+        self,
+        project_id: UUID,
+        title_id: int,
+        username: str,
+        apartment_number: int = None,
+    ):
         user: User = self.__get_user_by_user_name(username)
         stages_list = user.get_all_stages(project_id, title_id, apartment_number)
         stages_dto_list = list()
@@ -126,23 +218,65 @@ class Controller:
             stages_dto_list.append(stage_dto)
         return stages_dto_list
 
-    def remove_stage(self, project_id: UUID, title_id, stage_id: UUID, username: str, apartment_number: int = None) -> StageDTO:
+    def remove_stage(
+        self,
+        project_id: UUID,
+        title_id,
+        stage_id: UUID,
+        username: str,
+        apartment_number: int = None,
+    ) -> StageDTO:
         user: User = self.__get_user_by_user_name(username)
-        removed_stage: Stage = user.remove_stage(project_id, title_id, stage_id, apartment_number)
+        removed_stage: Stage = user.remove_stage(
+            project_id, title_id, stage_id, apartment_number
+        )
         removed_stage_dto: StageDTO = StageDTO(removed_stage)
         return removed_stage_dto
 
-    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, username: str, apartment_number: int = None) -> MissionDTO:
+    def remove_mission(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        mission_id: UUID,
+        username: str,
+        apartment_number: int = None,
+    ) -> MissionDTO:
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.remove_mission(project_id, title_id, stage_id, mission_id, apartment_number)
+        mission: Mission = user.remove_mission(
+            project_id, title_id, stage_id, mission_id, apartment_number
+        )
         mission_dto: MissionDTO = MissionDTO(mission)
         return mission_dto
 
-    def set_green_building(self, project_id, title_id, stage_id, mission_id, is_green_building, username, apartment_number: int = None):
+    def set_green_building(
+        self,
+        project_id,
+        title_id,
+        stage_id,
+        mission_id,
+        is_green_building,
+        username,
+        apartment_number: int = None,
+    ):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_green_building(project_id, title_id, stage_id, mission_id, is_green_building, apartment_number)
+        return user.set_green_building(
+            project_id,
+            title_id,
+            stage_id,
+            mission_id,
+            is_green_building,
+            apartment_number,
+        )
 
-    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, username: str):
+    def set_stage_status(
+        self,
+        project_id: UUID,
+        title_id: int,
+        stage_id: UUID,
+        new_status: Status,
+        username: str,
+    ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_stage_status(project_id, title_id, stage_id, new_status)
 
@@ -152,39 +286,69 @@ class Controller:
         result = list()
         for current_user in self.users.values():
             if current_user.is_project_exist(project_id):
-                permission_type: PermissionType = self.__get_permission_type_for_user_in_project(current_user, project_id)
+                permission_type: PermissionType = (
+                    self.__get_permission_type_for_user_in_project(
+                        current_user, project_id
+                    )
+                )
                 current_user_dto: UserDTO = UserDTO(current_user)
-                result.append({'user_dto': current_user_dto, 'permission': permission_type})
+                result.append(
+                    {"user_dto": current_user_dto, "permission": permission_type}
+                )
         return result
 
-    def set_urgency(self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str):
+    def set_urgency(
+        self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str
+    ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_urgency(project_id, building_fault_id, new_urgency)
 
-    def remove_user_from_project(self, project_id: UUID, username_to_remove: str, removing_user: str):
+    def remove_user_from_project(
+        self, project_id: UUID, username_to_remove: str, removing_user: str
+    ):
         user: User = self.__get_user_by_user_name(removing_user)
         user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
         user.remove_user_from_project(project_id, user_to_remove)
         user_to_remove_dto: UserDTO = UserDTO(user_to_remove)
         return user_to_remove_dto
 
-    def add_building_fault(self, project_id: UUID, name: str, floor_number: int, apartment_number: int, urgency, username: str):
+    def add_building_fault(
+        self,
+        project_id: UUID,
+        name: str,
+        floor_number: int,
+        apartment_number: int,
+        urgency,
+        username: str,
+    ):
         user: User = self.__get_user_by_user_name(username)
-        building_fault: BuildingFault = user.add_building_fault(project_id, name,floor_number, apartment_number, urgency)
+        building_fault: BuildingFault = user.add_building_fault(
+            project_id, name, floor_number, apartment_number, urgency
+        )
         building_fault_dto: BuildingFaultDTO = BuildingFaultDTO(building_fault)
         return building_fault_dto
 
-    def remove_building_fault(self, project_id: UUID, build_fault_id: UUID, username: str):
+    def remove_building_fault(
+        self, project_id: UUID, build_fault_id: UUID, username: str
+    ):
         user: User = self.__get_user_by_user_name(username)
-        build_fault: BuildingFault = user.remove_building_fault(project_id, build_fault_id)
+        build_fault: BuildingFault = user.remove_building_fault(
+            project_id, build_fault_id
+        )
         build_fault_dto: BuildingFaultDTO = BuildingFaultDTO(build_fault)
         return build_fault_dto
 
-    def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status, username: str):
+    def set_build_fault_status(
+        self, project_id: UUID, build_fault_id: UUID, new_status, username: str
+    ):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_build_fault_status(project_id, build_fault_id, new_status, username)
+        return user.set_build_fault_status(
+            project_id, build_fault_id, new_status, username
+        )
 
-    def __get_permission_type_for_user_in_project(self, current_user: User, project_id: UUID):
+    def __get_permission_type_for_user_in_project(
+        self, current_user: User, project_id: UUID
+    ):
         try:
             current_user.check_contractor_permission(project_id)
             return PermissionType.CONTRACTOR
@@ -199,8 +363,16 @@ class Controller:
                 except Exception:
                     raise Exception("User has no permission in the project")
 
+    def get_projects(self, username: str):
+        if username not in self.connected_users.keys():
+            raise UserNotLoggedInException(username)
+        else:
+            user: User = self.__get_user_by_user_name(username)
+            return [ProjectDTO(p) for p in user.get_projects()]
 
-
-
-
-
+    def get_my_permission(self, project_id: UUID, username: str):
+        if username not in self.connected_users.keys():
+            raise UserNotLoggedInException(username)
+        else:
+            user: User = self.__get_user_by_user_name(username)
+            return user.get_my_permission(project_id)

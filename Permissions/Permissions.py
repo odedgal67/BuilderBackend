@@ -223,8 +223,15 @@ class WorkManagerPermission(AbstractPermission):
     def check_work_manager_permission(self, project):
         return True
 
+    def get_enum(self):
+        return PermissionType.WORK_MANAGER.value
+
 
 class ProjectManagerPermission(WorkManagerPermission):
+
+    def get_enum(self):
+        return PermissionType.PROJECT_MANAGER.value
+
     def register(self) -> bool:
         return True
 
@@ -249,6 +256,9 @@ class ProjectManagerPermission(WorkManagerPermission):
 
 
 class ContractorPermission(ProjectManagerPermission):
+    def get_enum(self):
+        return PermissionType.CONTRACTOR.value
+
     def remove_stage(self, project, title_id, stage_id, apartment_number: int = None):
         return project.remove_stage(title_id, stage_id, apartment_number)
 
