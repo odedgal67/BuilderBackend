@@ -68,19 +68,10 @@ class User:
             raise ProjectDoesntExistException
         return self.projects[project_id]
 
-    def edit_stage_name(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        new_stage_name: str,
-        apartment_number: int = None,
-    ):
+    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.edit_stage_name(
-            project, title_id, stage_id, new_stage_name, apartment_number
-        )
+        return project_permission.edit_stage_name(project, title_id, stage_id, new_stage_name, apartment_number)
 
     def edit_project_name(self, project_id: UUID, new_project_name: str):
         project: Project = self.get_project(project_id)
@@ -88,82 +79,30 @@ class User:
             raise DuplicateProjectNameException(new_project_name)
         project.edit_name(new_project_name)
 
-    def edit_mission_name(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        new_mission_name: str,
-        apartment_number: int = None,
-    ):
+    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.edit_mission_name(
-            project, title_id, stage_id, mission_id, new_mission_name, apartment_number
-        )
+        return project_permission.edit_mission_name(project, title_id, stage_id, mission_id, new_mission_name, apartment_number)
 
-    def add_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_name: str,
-        apartment_number: int = None,
-    ) -> Mission:
+    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, apartment_number: int = None) -> Mission:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_mission(
-            project, title_id, stage_id, mission_name, apartment_number
-        )
+        return project_permission.add_mission(project, title_id, stage_id, mission_name, apartment_number)
 
-    def add_stage(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_name: str,
-        apartment_number: int = None,
-    ):
+    def add_stage(self, project_id: UUID, title_id: int, stage_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_stage(
-            project, title_id, stage_name, apartment_number
-        )
+        return project_permission.add_stage(project, title_id, stage_name, apartment_number)
 
-    def set_mission_status(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        new_status,
-        username,
-        apartment_number=None,
-    ):
+    def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username, apartment_number=None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_mission_status(
-            project,
-            title_id,
-            stage_id,
-            mission_id,
-            new_status,
-            username,
-            apartment_number,
-        )
+        return project_permission.set_mission_status(project, title_id, stage_id, mission_id, new_status, username, apartment_number)
 
-    def get_all_missions(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        apartment_number: int = None,
-    ):
+    def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int =None):
         project: Project = self.get_project(project_id)
         project_permission = self.get_project_permission(project_id)
-        return project_permission.get_all_missions(
-            project, title_id, stage_id, apartment_number
-        )
+        return project_permission.get_all_missions(project, title_id, stage_id, apartment_number)
 
     def __is_project_id_exists(self, project_id):
         return project_id in self.projects.keys()
@@ -208,76 +147,35 @@ class User:
             return ContractorPermission()
         raise Exception()
 
-    def edit_comment_in_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        comment: str,
-        apartment_number: int = None,
-    ):
+    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.edit_comment_in_mission(
-            project, title_id, stage_id, mission_id, comment, apartment_number
-        )
+        return project_permission.edit_comment_in_mission(project, title_id, stage_id, mission_id, comment, apartment_number)
 
     def get_all_stages(self, project_id, title_id: int, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.get_all_stages(project, title_id, apartment_number)
 
-    def remove_stage(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        apartment_number: int = None,
-    ):
+    def remove_stage(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.remove_stage(
-            project, title_id, stage_id, apartment_number
-        )
+        return project_permission.remove_stage(project, title_id, stage_id, apartment_number)
 
-    def remove_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        apartment_number: int = None,
-    ):
+    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.remove_mission(
-            project, title_id, stage_id, mission_id, apartment_number
-        )
+        return project_permission.remove_mission(project, title_id, stage_id, mission_id, apartment_number)
 
-    def set_green_building(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        is_green_building: bool,
-        apartment_number: int = None,
-    ):
+    def set_green_building(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, is_green_building: bool, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_green_building(
-            project, title_id, stage_id, mission_id, is_green_building, apartment_number
-        )
+        return project_permission.set_green_building(project, title_id, stage_id, mission_id, is_green_building, apartment_number)
 
-    def set_stage_status(
-        self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status
-    ):
+    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_stage_status(
-            project, title_id, stage_id, new_status
-        )
+        return project_permission.set_stage_status(project, title_id, stage_id, new_status)
 
     def check_contractor_permission(self, project_id: UUID):
         project: Project = self.get_project(project_id)
@@ -292,33 +190,20 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.set_urgency(project, building_fault_id, new_urgency)
 
-    def add_building_fault(
-        self,
-        project_id: UUID,
-        name: str,
-        floor_number: int,
-        apartment_number: int,
-        urgency,
-    ):
+    def add_building_fault(self, project_id: UUID, name: str, floor_number: int, apartment_number: int, urgency):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_building_fault(
-            project, name, floor_number, apartment_number, urgency
-        )
+        return project_permission.add_building_fault(project, name, floor_number, apartment_number, urgency)
 
     def remove_building_fault(self, project_id: UUID, build_fault_id: UUID):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.remove_building_fault(project, build_fault_id)
 
-    def set_build_fault_status(
-        self, project_id: UUID, build_fault_id: UUID, new_status, username
-    ):
+    def set_build_fault_status(self, project_id: UUID, build_fault_id: UUID, new_status, username):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_build_fault_status(
-            project, build_fault_id, new_status, username
-        )
+        return project_permission.set_build_fault_status(project, build_fault_id, new_status, username)
 
     def check_project_manager_permission(self, project_id):
         project: Project = self.get_project(project_id)
