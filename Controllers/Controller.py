@@ -293,7 +293,7 @@ class Controller:
                 )
                 current_user_dto: UserDTO = UserDTO(current_user)
                 result.append(
-                    {"user_dto": current_user_dto, "permission": permission_type}
+                    {"user_dto": current_user_dto.to_json(), "permission": permission_type}
                 )
         return result
 

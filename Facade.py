@@ -41,7 +41,7 @@ class Facade:
 
     def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, username: str, apartment_number: int = None):
         # Returns new stage name
-        return {'stage_name': self.controller.edit_stage_name(UUID(project_id), title_id, UUID(stage_id), new_stage_name, username, apartment_number)}
+        return {'stage_nam': self.controller.edit_stage_name(UUID(project_id), title_id, UUID(stage_id), new_stage_name, username, apartment_number)}
 
     def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, username: str, apartment_number: int = None):
         # Return new mission name
@@ -56,7 +56,7 @@ class Facade:
         missions_dto_list = self.controller.get_all_missions(UUID(project_id), title_id, UUID(stage_id), username, apartment_number)
         missions_dict = {}
         for mission_dto in missions_dto_list:
-            missions_dict[mission_dto.id] = mission_dto
+            missions_dict[str(mission_dto.id)] = mission_dto.to_json()
         return missions_dict
 
     def get_all_stages(self, project_id: UUID, title_id: int, username: str, apartment_number: int = None):
