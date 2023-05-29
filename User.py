@@ -145,7 +145,7 @@ class User:
             return ProjectManagerPermission()
         if permission_type == PermissionType.CONTRACTOR:
             return ContractorPermission()
-        raise Exception()
+        raise Exception("Permission doesn't exist")
 
     def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)

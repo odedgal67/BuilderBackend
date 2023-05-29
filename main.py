@@ -283,6 +283,7 @@ def handle_request_assign_project_to_user():
         return jsonify({"result": "success"})
     except Exception as e:
         print(f"[assign_project_to_user] : raised exception {str(e)}")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
