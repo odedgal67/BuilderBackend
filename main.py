@@ -77,23 +77,6 @@ def handle_request_add_project():
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
-@app.route("/get_projects", methods=["POST"])
-def handle_request_get_projects():
-    print("get projects received")
-
-    # Parse JSON payload from the request
-    data = request.get_json()
-    print(f"data : {data}")
-
-    # Call the facade method
-    try:
-        result = facade.get_projects(data["username"])
-        return jsonify({"result": result})
-    except Exception as e:
-        print(f"[get_projects] : raised exception {str(e)}")
-        return jsonify({"error": str(e)}), ERROR_CODE
-
-
 @app.route("/add_stage", methods=["POST"])
 def handle_request_add_stage():
     print("Add Stage request received")
@@ -585,6 +568,7 @@ def handle_request_echo():
     except Exception as e:
         print(f"[echo] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
+
 
 @app.route("/get_projects", methods=["POST"])
 def handle_request_get_projects():
