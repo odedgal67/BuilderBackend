@@ -49,6 +49,9 @@ class Mission:
     def set_green_building(self, is_green_building: bool):
         self.green_building = is_green_building
 
+    def set_proof(self, proof_link: str):
+        self.proof = proof_link
+
 
 
 

@@ -115,6 +115,9 @@ class Stage:
             raise ChangeStatusNonEmptyStageException()
         self.status = new_status
 
+    def check_set_mission_proof(self, mission_id) -> Mission:
+        return self.get_mission(mission_id)
+
 
 
 

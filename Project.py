@@ -197,3 +197,7 @@ class Project:
         else:  # Other title with has stages and missions
             new_title: Title = TitleMissionsStages(name)
         self.titles[title_id] = new_title
+
+    def check_set_mission_proof(self, title_id, stage_id, mission_id, apartment_number = None):
+        title: Title = self.__get_title(title_id)
+        return title.check_set_mission_proof(stage_id, mission_id, apartment_number)

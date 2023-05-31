@@ -155,3 +155,7 @@ class MissingUserID(Exception):
     def __init__(self, user_id: int):
         self.user_Id = user_id
         super().__init__(f"Missing userid: {user_id}")
+
+class IllegalFileTypeException(Exception):
+    def __init__(self, filename: str):
+        super().__init__(f"file has illegal type: {filename}")

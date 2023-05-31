@@ -67,8 +67,15 @@ class Title(ABC):
     def is_mission_invalid(self, stage_id, mission_id, apartment_number: int = None):
         pass
 
+    @abstractmethod
+    def check_set_mission_proof(self,  stage_id, mission_id, apartment_number = None):
+        pass
+
 
 class TitleMissionsStages(Title):
+    def check_set_mission_proof(self, stage_id, mission_id, apartment_number=None):
+        return self.__get_stage(stage_id).check_set_mission_proof(mission_id)
+
     def __init__(self, name: str):
         super().__init__(name)
         self.stages: dict[UUID, Stage] = dict()  # dict<stage_id, Stage>
@@ -176,6 +183,12 @@ class TitleApartments(Title):
     def __init__(self, name: str):
         super().__init__(name)
         self.apartments: dict[int, Apartment] = dict()  # dict<apartment_number, Apartment>
+
+    def check_set_mission_proof(self, stage_id, mission_id, apartment_number=None):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
+        apartment: Apartment = self.__get_apartment(apartment_number)
+        return apartment.check_set_mission_proof(stage_id, mission_id)
 
     def add_stage(self, stage_name: str, apartment_number: int = None):
         if apartment_number is None:

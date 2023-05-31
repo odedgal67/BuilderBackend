@@ -1,6 +1,8 @@
 from uuid import UUID
 
 from BuildingFault import BuildingFault
+from Config import GLOBAL_CONFIG
+from Controllers.FileSystem import FileSystemController
 from DTO.BuildingFaultDTO import BuildingFaultDTO
 from DTO.MissionDTO import MissionDTO
 from DTO.ProjectDTO import ProjectDTO
@@ -21,6 +23,15 @@ class Controller:
         self.connected_users: dict[str, User] = dict()
         # Init default user
         self.register("123456789", "Password", "Liron Hart")
+        self.fileSystem = FileSystemController(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY)
+
+    def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
+                          data, original_file_name: str, username: str, apartment_number: int = None, ):
+        user: User = self.__get_user_by_user_name(username)
+        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        proof_link = self.fileSystem.add_file(data, original_file_name)
+        mission.set_proof(proof_link)
+        return proof_link
 
     def login(self, username: str, password: str) -> UserDTO:
         user: User = self.__get_user_by_user_name(username)
@@ -51,12 +62,12 @@ class Controller:
         return new_project_dto
 
     def add_stage(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_name: str,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_name: str,
+            username: str,
+            apartment_number: int = None,
     ) -> StageDTO:
         user: User = self.__get_user_by_user_name(username)
         stage: Stage = user.add_stage(
@@ -66,13 +77,13 @@ class Controller:
         return stage_dto
 
     def add_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_name: str,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            mission_name: str,
+            username: str,
+            apartment_number: int = None,
     ) -> MissionDTO:
         user = self.__get_user_by_user_name(username)
         mission: Mission = user.add_mission(
@@ -82,20 +93,20 @@ class Controller:
         return mission_dto
 
     def edit_project_name(
-        self, project_id: UUID, new_project_name: str, username: str
+            self, project_id: UUID, new_project_name: str, username: str
     ) -> str:
         user: User = self.__get_user_by_user_name(username)
         user.edit_project_name(project_id, new_project_name)
         return new_project_name
 
     def edit_stage_name(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        new_stage_name: str,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            new_stage_name: str,
+            username: str,
+            apartment_number: int = None,
     ) -> str:
         user: User = self.__get_user_by_user_name(username)
         user.edit_stage_name(
@@ -104,14 +115,14 @@ class Controller:
         return new_stage_name
 
     def edit_mission_name(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        new_mission_name: str,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            mission_id: UUID,
+            new_mission_name: str,
+            username: str,
+            apartment_number: int = None,
     ) -> str:
         user: User = self.__get_user_by_user_name(username)
         user.edit_mission_name(
@@ -125,14 +136,14 @@ class Controller:
         return new_mission_name
 
     def set_mission_status(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        new_status: Status,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            mission_id: UUID,
+            new_status: Status,
+            username: str,
+            apartment_number: int = None,
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_mission_status(
@@ -146,12 +157,12 @@ class Controller:
         )
 
     def get_all_missions(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            username: str,
+            apartment_number: int = None,
     ):
         user: User = self.__get_user_by_user_name(username)
         missions_list = user.get_all_missions(
@@ -176,11 +187,11 @@ class Controller:
             return self.connected_users.get(userid)
 
     def assign_project_to_user(
-        self,
-        project_id: UUID,
-        permission_type: PermissionType,
-        assigning_username: str,
-        username_to_assign: str,
+            self,
+            project_id: UUID,
+            permission_type: PermissionType,
+            assigning_username: str,
+            username_to_assign: str,
     ):
         assigning_user: User = self.__get_user_by_user_name(assigning_username)
         user_to_assign: User = self.__get_user_by_user_name(username_to_assign)
@@ -189,14 +200,14 @@ class Controller:
         )
 
     def edit_comment_in_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        comment: str,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            mission_id: UUID,
+            comment: str,
+            username: str,
+            apartment_number: int = None,
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.edit_comment_in_mission(
@@ -204,11 +215,11 @@ class Controller:
         )
 
     def get_all_stages(
-        self,
-        project_id: UUID,
-        title_id: int,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            username: str,
+            apartment_number: int = None,
     ):
         user: User = self.__get_user_by_user_name(username)
         stages_list = user.get_all_stages(project_id, title_id, apartment_number)
@@ -219,12 +230,12 @@ class Controller:
         return stages_dto_list
 
     def remove_stage(
-        self,
-        project_id: UUID,
-        title_id,
-        stage_id: UUID,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id,
+            stage_id: UUID,
+            username: str,
+            apartment_number: int = None,
     ) -> StageDTO:
         user: User = self.__get_user_by_user_name(username)
         removed_stage: Stage = user.remove_stage(
@@ -234,13 +245,13 @@ class Controller:
         return removed_stage_dto
 
     def remove_mission(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        mission_id: UUID,
-        username: str,
-        apartment_number: int = None,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            mission_id: UUID,
+            username: str,
+            apartment_number: int = None,
     ) -> MissionDTO:
         user: User = self.__get_user_by_user_name(username)
         mission: Mission = user.remove_mission(
@@ -250,14 +261,14 @@ class Controller:
         return mission_dto
 
     def set_green_building(
-        self,
-        project_id,
-        title_id,
-        stage_id,
-        mission_id,
-        is_green_building,
-        username,
-        apartment_number: int = None,
+            self,
+            project_id,
+            title_id,
+            stage_id,
+            mission_id,
+            is_green_building,
+            username,
+            apartment_number: int = None,
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_green_building(
@@ -270,12 +281,12 @@ class Controller:
         )
 
     def set_stage_status(
-        self,
-        project_id: UUID,
-        title_id: int,
-        stage_id: UUID,
-        new_status: Status,
-        username: str,
+            self,
+            project_id: UUID,
+            title_id: int,
+            stage_id: UUID,
+            new_status: Status,
+            username: str,
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_stage_status(project_id, title_id, stage_id, new_status)
@@ -298,13 +309,13 @@ class Controller:
         return result
 
     def set_urgency(
-        self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str
+            self, project_id: UUID, building_fault_id: UUID, new_urgency, username: str
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_urgency(project_id, building_fault_id, new_urgency)
 
     def remove_user_from_project(
-        self, project_id: UUID, username_to_remove: str, removing_user: str
+            self, project_id: UUID, username_to_remove: str, removing_user: str
     ):
         user: User = self.__get_user_by_user_name(removing_user)
         user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
@@ -313,13 +324,13 @@ class Controller:
         return user_to_remove_dto
 
     def add_building_fault(
-        self,
-        project_id: UUID,
-        name: str,
-        floor_number: int,
-        apartment_number: int,
-        urgency,
-        username: str,
+            self,
+            project_id: UUID,
+            name: str,
+            floor_number: int,
+            apartment_number: int,
+            urgency,
+            username: str,
     ):
         user: User = self.__get_user_by_user_name(username)
         building_fault: BuildingFault = user.add_building_fault(
@@ -329,7 +340,7 @@ class Controller:
         return building_fault_dto
 
     def remove_building_fault(
-        self, project_id: UUID, build_fault_id: UUID, username: str
+            self, project_id: UUID, build_fault_id: UUID, username: str
     ):
         user: User = self.__get_user_by_user_name(username)
         build_fault: BuildingFault = user.remove_building_fault(
@@ -339,7 +350,7 @@ class Controller:
         return build_fault_dto
 
     def set_build_fault_status(
-        self, project_id: UUID, build_fault_id: UUID, new_status, username: str
+            self, project_id: UUID, build_fault_id: UUID, new_status, username: str
     ):
         user: User = self.__get_user_by_user_name(username)
         return user.set_build_fault_status(
@@ -347,7 +358,7 @@ class Controller:
         )
 
     def __get_permission_type_for_user_in_project(
-        self, current_user: User, project_id: UUID
+            self, current_user: User, project_id: UUID
     ):
         try:
             current_user.check_contractor_permission(project_id)

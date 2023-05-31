@@ -125,3 +125,8 @@ class Facade:
 
     def get_my_permission(self, project_id: str, username: str):
         return self.controller.get_my_permission(UUID(project_id), username)
+
+    def set_mission_proof(self, project_id: str, title_id: int, stage_id: str, mission_id: str,
+                          data, original_file_name: str, username: str, apartment_number: int = None,):
+        return self.controller.set_mission_proof(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data, original_file_name, username, apartment_number)
+

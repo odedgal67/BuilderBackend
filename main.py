@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort, send_from_directory
 import traceback
+
+from Config import GLOBAL_CONFIG
 from Facade import Facade
 from Utils.Urgency import Urgency
+import os
 
 app = Flask("BuilderAPI")
 facade: Facade = Facade()
@@ -587,6 +590,36 @@ def handle_request_get_projects():
         print(f"[get_projects] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
+@app.route("/set_mission_proof", methods=['POST'])
+def handle_set_mission_proof():
+    print("set mission proof request received")
+    data = request.files.get('file')
+    original_file_name = request.form.get('file_name')
+    project_id = request.form.get('project_id')
+    apartment_number = request.form.get('apartment_number')
+    stage_id = request.form.get('stage_id')
+    mission_id = request.form.get('mission_id')
+    username = request.form.get('username')
+    title_id = request.form.get('title_id')
+    try:
+        result = facade.set_mission_proof(project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[set_mission_proof] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+@app.route('/<path:filename>', methods=['GET'])
+def serve_file(filename):
+    file_path = os.path.join(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY, filename)
+
+    if not os.path.isfile(file_path):
+        print(f"file not found on get request {file_path}")
+        abort(404)
+
+    return send_from_directory(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY, filename)
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    print("running with the following configuration:")
+    print(GLOBAL_CONFIG)
+    app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
