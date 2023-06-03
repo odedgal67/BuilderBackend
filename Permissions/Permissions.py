@@ -108,6 +108,9 @@ class AbstractPermission(ABC):
     def add_mission(self, project, title_id, stage_id, mission_name, apartment_number: int = None):
         pass
 
+    def get_all_building_faults(self, project):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
@@ -229,6 +232,9 @@ class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
         return PermissionType.WORK_MANAGER.value
 
+    def get_all_building_faults(self, project):
+        raise PermissionError
+
 
 class ProjectManagerPermission(WorkManagerPermission):
 
@@ -256,6 +262,9 @@ class ProjectManagerPermission(WorkManagerPermission):
 
     def check_work_manager_permission(self, project):
         raise PermissionError()
+
+    def get_all_building_faults(self, project):
+        return project.get_all_building_faults()
 
 
 class ContractorPermission(ProjectManagerPermission):

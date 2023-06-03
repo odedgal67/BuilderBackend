@@ -130,3 +130,10 @@ class Facade:
                           data, original_file_name: str, username: str, apartment_number: int = None,):
         return self.controller.set_mission_proof(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data, original_file_name, username, apartment_number)
 
+    def get_all_building_faults(self, project_id: UUID, username: str):
+        # Returns dict [build fault id: build fault dto]
+        build_fault_list = self.controller.get_all_building_faults(project_id, username)
+        build_fault_dict = {}
+        for build_fault in build_fault_list:
+            build_fault_dict[str(build_fault.id)] = build_fault.to_json()
+        return build_fault_dict

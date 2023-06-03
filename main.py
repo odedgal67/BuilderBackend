@@ -590,6 +590,7 @@ def handle_request_get_projects():
         print(f"[get_projects] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
+
 @app.route("/set_mission_proof", methods=['POST'])
 def handle_set_mission_proof():
     print("set mission proof request received")
@@ -608,6 +609,7 @@ def handle_set_mission_proof():
         print(f"[set_mission_proof] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
+
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
     file_path = os.path.join(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY, filename)
@@ -617,6 +619,23 @@ def serve_file(filename):
         abort(404)
 
     return send_from_directory(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY, filename)
+
+
+@app.route("/get_all_building_faults", methods=["POST"])
+def handle_request_get_all_building_faults():
+    print("get all building faults request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.get_all_building_faults(data['project_id'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[get_all_building_faults] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
 
 
 if __name__ == "__main__":

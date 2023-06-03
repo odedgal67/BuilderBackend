@@ -229,6 +229,15 @@ class Controller:
             stages_dto_list.append(stage_dto)
         return stages_dto_list
 
+    def get_all_building_faults(self, project_id: UUID,username: str):
+        user: User = self.__get_user_by_user_name(username)
+        building_fault_list = user.get_all_building_faults(project_id)
+        building_fault_dto_list = list()
+        for build_fault in building_fault_list:
+            build_fault_dto: BuildingFaultDTO = BuildingFaultDTO(build_fault)
+            building_fault_dto_list.append(build_fault_dto)
+        return building_fault_dto_list
+
     def remove_stage(
             self,
             project_id: UUID,
@@ -387,3 +396,6 @@ class Controller:
         else:
             user: User = self.__get_user_by_user_name(username)
             return user.get_my_permission(project_id)
+
+
+

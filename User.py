@@ -161,6 +161,11 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.get_all_stages(project, title_id, apartment_number)
 
+    def get_all_building_faults(self, project_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.get_all_building_faults(project)
+
     def remove_stage(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
