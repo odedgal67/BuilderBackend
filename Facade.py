@@ -132,7 +132,7 @@ class Facade:
 
     def get_all_building_faults(self, project_id: UUID, username: str):
         # Returns dict [build fault id: build fault dto]
-        build_fault_list = self.controller.get_all_building_faults(project_id, username)
+        build_fault_list = self.controller.get_all_building_faults(UUID(project_id), username)
         build_fault_dict = {}
         for build_fault in build_fault_list:
             build_fault_dict[str(build_fault.id)] = build_fault.to_json()
