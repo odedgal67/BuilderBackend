@@ -126,6 +126,9 @@ class AbstractPermission(ABC):
     def edit_mission_link(self, project, title_id, stage_id, mission_id, new_link, apartment_number):
         pass
 
+    def check_change_user_permission_in_project(self):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
@@ -265,6 +268,9 @@ class WorkManagerPermission(AbstractPermission):
     def edit_mission_link(self, project: Project, title_id, stage_id, mission_id, new_link, apartment_number: int = None):
         return project.edit_mission_link(title_id, stage_id, mission_id, new_link, apartment_number)
 
+    def check_change_user_permission_in_project(self):
+        raise PermissionError
+
 
 class ProjectManagerPermission(WorkManagerPermission):
 
@@ -343,3 +349,6 @@ class ContractorPermission(ProjectManagerPermission):
 
     def check_work_manager_permission(self, project):
         raise PermissionError()
+
+    def check_change_user_permission_in_project(self):
+        return True

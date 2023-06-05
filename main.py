@@ -705,7 +705,7 @@ def handle_request_edit_plan_link():
         print(f"[edit_plan_link] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
-    
+
 @app.route("/edit_mission_link", methods=["POST"])
 def handle_request_edit_mission_link():
     print("edit mission link request received")
@@ -720,6 +720,57 @@ def handle_request_edit_mission_link():
         return jsonify({"result": result})
     except Exception as e:
         print(f"[edit_mission_link] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/change_user_permission_in_project", methods=["POST"])
+def handle_request_change_user_permission_in_project():
+    print("change user permission in project request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.change_user_permission_in_project(data['project_id'], data['new_permission'], data['username_to_change'], data['username_changing'])
+        return jsonify({"result": "success"})
+    except Exception as e:
+        print(f"[change_user_permission_in_project] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/change_user_name", methods=["POST"])
+def handle_request_change_user_name():
+    print("change user name request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.change_user_name(data['new_name'], data['username_to_change'])
+        return jsonify({"result": "success"})
+    except Exception as e:
+        print(f"[change_user_name] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/change_user_password", methods=["POST"])
+def handle_request_change_user_password():
+    print("change user password request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.change_user_password(data['new_password'], data['username_to_change'])
+        return jsonify({"result": "success"})
+    except Exception as e:
+        print(f"[change_user_password] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
 

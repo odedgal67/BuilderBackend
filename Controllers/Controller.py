@@ -423,3 +423,16 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         return user.edit_mission_link(project_id, title_id, stage_id, mission_id, new_link, apartment_number)
 
+    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str):
+        user_changing: User = self.__get_user_by_user_name(username_changing)
+        user_changing.check_change_user_permission_in_project(project_id)  # Check the user has permission to do that action in that project
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_permission_in_project(project_id, new_permission)
+
+    def change_user_name(self, new_name: str, username_to_change: str):
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_name(new_name)
+
+    def change_user_password(self, new_password: str, username_to_change: str):
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_password(new_password)

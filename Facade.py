@@ -156,3 +156,13 @@ class Facade:
     def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
         # Returns new link
         return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), new_link, username)}
+
+    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str):
+        # Returns Void
+        self.controller.change_user_permission_in_project(UUID(project_id), new_permission, username_to_change, username_changing)
+
+    def change_user_name(self, new_name: str, username_to_change: str):
+        self.controller.change_user_name(new_name, username_to_change)
+
+    def change_user_password(self, new_password: str, username_to_change: str):
+        self.controller.change_user_password(new_password, username_to_change)
