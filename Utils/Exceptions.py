@@ -67,10 +67,24 @@ class IllegalMissionNameException(Exception):
         super().__init__(self.message)
 
 
+class IllegalPlanNameException(Exception):
+    def __init__(self, plan_name: str):
+        self.plan_name = plan_name
+        self.message = f"Plan name {self.plan_name} is invalid"
+        super().__init__(self.message)
+
+
 class DuplicateUserName(Exception):
     def __init__(self, username: str):
         self.username = username
         self.message = f"Username {self.username} already exists"
+        super().__init__(self.message)
+
+
+class DuplicatePlanNameException(Exception):
+    def __init__(self, plan_name: str):
+        self.plan_name = plan_name
+        self.message = f"Plan name {self.plan_name} already exists"
         super().__init__(self.message)
 
 
@@ -138,6 +152,12 @@ class ApartmentDoesntExistException(Exception):
         super().__init__(self.message)
 
 
+class PlanDoesntExistException(Exception):
+    def __init__(self):
+        self.message = "Plan doesnt exist"
+        super().__init__(self.message)
+
+
 class BuildFaultDoesntExistException(Exception):
     def __init__(self):
         self.message = "Build fault doesnt exist"
@@ -155,3 +175,7 @@ class MissingUserID(Exception):
     def __init__(self, user_id: int):
         self.user_Id = user_id
         super().__init__(f"Missing userid: {user_id}")
+
+class IllegalFileTypeException(Exception):
+    def __init__(self, filename: str):
+        super().__init__(f"file has illegal type: {filename}")

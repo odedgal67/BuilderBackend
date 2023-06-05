@@ -1,8 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class PermissionType(Enum):
+class PermissionType(IntEnum):
     WORK_MANAGER = 1
     PROJECT_MANAGER = 2
     CONTRACTOR = 3
-

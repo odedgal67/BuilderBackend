@@ -80,3 +80,9 @@ class Apartment:
     def edit_mission_name(self, stage_id, mission_id, new_mission_name):
         stage: Stage = self.get_stage(stage_id)
         return stage.edit_mission_name(mission_id, new_mission_name)
+
+    def check_set_mission_proof(self, stage_id, mission_id):
+        return self.get_stage(stage_id).check_set_mission_proof((mission_id))
+
+    def edit_mission_link(self, stage_id, mission_id, new_link):
+        return self.get_stage(stage_id).edit_mission_link(mission_id, new_link)
