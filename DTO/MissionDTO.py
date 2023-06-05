@@ -13,6 +13,7 @@ class MissionDTO(DTO):
         self.completing_user = mission.completing_user
         self.comment = mission.comment
         self.id = mission.id
+        self.tekken = mission.tekken
         if mission.completion_date is not None:
             self.completion_date = mission.completion_date.strftime("%m/%d/%Y, %H:%M:%S")
         else:
@@ -28,5 +29,6 @@ class MissionDTO(DTO):
             'link': self.link,
             'green_building': self.green_building,
             'comment': self.comment,
-            'proof': self.proof
+            'proof': self.proof,
+            'tekken': self.tekken
         }

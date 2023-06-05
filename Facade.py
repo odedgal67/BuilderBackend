@@ -130,6 +130,11 @@ class Facade:
                           data, original_file_name: str, username: str, apartment_number: int = None,):
         return self.controller.set_mission_proof(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data, original_file_name, username, apartment_number)
 
+    def set_mission_tekken(self, project_id: str, title_id: int, stage_id: str, mission_id: str,
+                          data, original_file_name: str, username: str, apartment_number: int = None,):
+        return self.controller.set_mission_tekken(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data,
+                                                 original_file_name, username, apartment_number)
+
     def get_all_building_faults(self, project_id: UUID, username: str):
         # Returns dict [build fault id: build fault dto]
         build_fault_list = self.controller.get_all_building_faults(UUID(project_id), username)

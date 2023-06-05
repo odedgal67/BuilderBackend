@@ -6,18 +6,19 @@ from Utils.Exceptions import *
 
 class Mission:
     def __init__(self, name: str, link: str = "", green_building: bool = False):
+        self.tekken: str = ""   # link to tekken pdf
         self.name = self.__check_mission_name(name)
-        self.link = link
+        self.link = link    # link to plan
         self.green_building = green_building
         self.status = Status.TO_DO
-        self.proof: str = ""
+        self.proof: str = ""    # link to proof picture
         self.completion_date: datetime = None
         self.completing_user: str = ""
         self.comment: str = ""
         self.id = uuid.uuid1()
 
     def __check_mission_name(self, mission_name):
-        if len(mission_name) < 3 or len(mission_name) > 25:
+        if len(mission_name) < 3 or len(mission_name) > 500:
             raise IllegalMissionNameException(mission_name)
         return mission_name
 
@@ -51,6 +52,9 @@ class Mission:
 
     def set_proof(self, proof_link: str):
         self.proof = proof_link
+
+    def set_tekken(self, tekken_link: str):
+        self.tekken = tekken_link
 
 
 
