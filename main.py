@@ -774,6 +774,74 @@ def handle_request_change_user_password():
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
+@app.route("/add_apartment", methods=["POST"])
+def handle_request_add_apartment():
+    print("add apartment request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.add_apartment(data['project_id'], data['apartment_number'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[add_apartment] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/remove_apartment", methods=["POST"])
+def handle_request_remove_apartment():
+    print("remove apartment request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.remove_apartment(data['project_id'], data['apartment_number'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[remove_apartment] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/get_all_apartments_in_project", methods=["POST"])
+def handle_request_get_all_apartments_in_project():
+    print("get all apartments in project request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.get_all_apartments_in_project(data['project_id'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[get_all_apartments_in_project] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/edit_building_fault", methods=["POST"])
+def handle_request_edit_building_fault():
+    print("edit building fault request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.edit_building_fault(data['project_id'], data['building_fault_id'], data['building_fault_name'], data['floor_number'], data['apartment_number'], data['link'], data['green_building'], data['urgency'], data['username'])
+        return jsonify({"result": "success"})
+    except Exception as e:
+        print(f"[edit_building_fault] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
 if __name__ == "__main__":
     print("running with the following configuration:")
     print(GLOBAL_CONFIG)

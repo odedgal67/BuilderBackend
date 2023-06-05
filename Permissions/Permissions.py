@@ -129,6 +129,19 @@ class AbstractPermission(ABC):
     def check_change_user_permission_in_project(self):
         pass
 
+    def add_apartment(self, project: Project, apartment_number: int):
+        pass
+
+    def remove_apartment(self, project, apartment_number):
+        pass
+
+    def get_all_apartments_in_project(self, project):
+        pass
+
+    def edit_building_fault(self, project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building,
+                            urgency):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
@@ -271,6 +284,18 @@ class WorkManagerPermission(AbstractPermission):
     def check_change_user_permission_in_project(self):
         raise PermissionError
 
+    def add_apartment(self, project: Project, apartment_number: int):
+        return project.add_apartment(apartment_number)
+
+    def remove_apartment(self, project, apartment_number):
+        raise PermissionError
+
+    def get_all_apartments_in_project(self, project: Project):
+        return project.get_all_apartments_in_project()
+
+    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
+        return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
 
 class ProjectManagerPermission(WorkManagerPermission):
 
@@ -304,6 +329,10 @@ class ProjectManagerPermission(WorkManagerPermission):
 
     def remove_plan(self, project: Project, plan_id):
         return project.remove_plan(plan_id)
+
+    def remove_apartment(self, project: Project, apartment_number: int):
+        return project.remove_apartment(apartment_number)
+
 
 
 class ContractorPermission(ProjectManagerPermission):

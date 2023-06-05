@@ -131,6 +131,7 @@ class User:
         self.projects_permissions[project.id] = project_permission
 
     def remove_project(self, project_id: UUID):
+        #TODO: cant remove last user
         self.projects.pop(project_id)
         self.projects_permissions.pop(project_id)
 
@@ -273,3 +274,23 @@ class User:
     def change_password(self, new_password: str):
         new_password = self.__check_password(new_password)
         self.hashed_password = hash_password(new_password)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_apartment(project, apartment_number)
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.remove_apartment(project, apartment_number)
+
+    def get_all_apartments_in_project(self, project_id):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.get_all_apartments_in_project(project)
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
