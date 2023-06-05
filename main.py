@@ -638,6 +638,91 @@ def handle_request_get_all_building_faults():
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
+@app.route("/add_plan", methods=["POST"])
+def handle_request_add_plan():
+    print("add plan request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.add_plan(data['project_id'], data['plan_name'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[add_plan] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/remove_plan", methods=["POST"])
+def handle_request_remove_plan():
+    print("remove plan request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.remove_plan(data['project_id'], data['plan_id'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[remove_plan] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/edit_plan_name", methods=["POST"])
+def handle_request_edit_plan_name():
+    print("edit plan name request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.edit_plan_name(data['project_id'], data['plan_id'], data['new_plan_name'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[edit_plan_name] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/edit_plan_link", methods=["POST"])
+def handle_request_edit_plan_link():
+    print("edit plan link request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.edit_plan_link(data['project_id'], data['plan_id'], data['new_link'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[edit_plan_link] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+    
+@app.route("/edit_mission_link", methods=["POST"])
+def handle_request_edit_mission_link():
+    print("edit mission link request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.edit_mission_link(data['project_id'], data['title_id'], data['stage_id'], data['mission_id'], data['new_link'], data['username'], data.get('apartment_number', None))
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[edit_mission_link] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
 if __name__ == "__main__":
     print("running with the following configuration:")
     print(GLOBAL_CONFIG)

@@ -68,7 +68,11 @@ class Title(ABC):
         pass
 
     @abstractmethod
-    def check_set_mission_proof(self,  stage_id, mission_id, apartment_number = None):
+    def check_set_mission_proof(self,  stage_id, mission_id, apartment_number: int = None):
+        pass
+
+    @abstractmethod
+    def edit_mission_link(self, stage_id, mission_id, new_link, apartment_number: int = None):
         pass
 
 
@@ -177,6 +181,12 @@ class TitleMissionsStages(Title):
         stage: Stage = self.__get_stage(stage_id)
         return stage.is_mission_invalid(mission_id)
 
+    def edit_mission_link(self, stage_id, mission_id, new_link, apartment_number: int = None):
+        if apartment_number is not None:
+            raise ApartmentNumberNotNeededException()
+        stage: Stage = self.__get_stage(stage_id)
+        return stage.edit_mission_link(mission_id, new_link)
+
 
 class TitleApartments(Title):
 
@@ -219,25 +229,25 @@ class TitleApartments(Title):
                 return True
         return False
 
-    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int):
+    def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int = None):
         if apartment_number is None:
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.add_mission(stage_id, mission_name)
 
-    def edit_stage_name(self, stage_id: UUID, new_stage_name: str, apartment_number: int):
+    def edit_stage_name(self, stage_id: UUID, new_stage_name: str, apartment_number: int= None):
         if apartment_number is None:
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.edit_stage_name(stage_id, new_stage_name)
 
-    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
+    def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number: int = None):
         if apartment_number is None:
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.edit_mission_name(stage_id, mission_id, new_mission_name)
 
-    def set_mission_status(self, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int):
+    def set_mission_status(self, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int = None):
         if apartment_number is None:
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
@@ -285,41 +295,11 @@ class TitleApartments(Title):
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.is_mission_invalid(stage_id, mission_id)
 
+    def edit_mission_link(self, stage_id, mission_id, new_link, apartment_number: int = None):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
+        apartment: Apartment = self.__get_apartment(apartment_number)
+        return apartment.edit_mission_link(stage_id, mission_id, new_link)
 
-
-# class TitleBuildingFaults(Title):  # TODO missions here is building fault, fix all the raise exception methods
-#     def __init__(self, name: str):
-#         super().__init__(name)
-#         self.building_faults: dict[UUID, BuildingFault] = dict()  # dict<building_fault_id, BuildingFault>
-#
-#     def add_stage(self, stage_name: str):
-#         raise StageDoesntExistException()
-#
-#     def add_stage(self, apartment_number: int, stage_name: str):
-#         raise ApartmentNumberNotNeededException()
-#
-#     def set_stage_status(self, stage_id: UUID, new_status):
-#         raise StageDoesntExistException()
-#
-#     def set_urgency(self, building_fault_id, new_urgency):
-#         building_fault: BuildingFault = self.__get_building_fault(building_fault_id)
-#         return building_fault.set_urgency(new_urgency)
-#
-#     def __get_building_fault(self, building_fault_id):
-#         if building_fault_id not in self.building_faults.keys():
-#             raise BuildFaultDoesntExistException()
-#         return self.building_faults[building_fault_id]
-#
-#     def is_stage_name_exists(self, stage_name: str):
-#         raise Exception()
-#
-#     def add_mission(self, mission_name: str, stage_id: UUID, apartment_number: int):
-#         raise Exception()
-#
-#     def edit_stage_name(self, stage_id: UUID, new_stage_name: str, apartment_number: int):
-#         raise Exception()
-#
-#     def edit_mission_name(self, stage_id, mission_id, new_mission_name, apartment_number):
-#         raise Exception()
 
 

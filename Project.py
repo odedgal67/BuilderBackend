@@ -6,6 +6,7 @@ from Utils.Exceptions import *
 import uuid
 from uuid import UUID
 from Title import Title, TitleApartments, TitleMissionsStages
+from Utils.Status import Status
 
 
 class Project:
@@ -43,7 +44,7 @@ class Project:
         title_id: int,
         mission_name: str,
         stage_id: UUID = None,
-        apartment_number: int = None,
+        apartment_number: int = None
     ) -> Mission:
         title: Title = self.__get_title(title_id)
         return title.add_mission(mission_name, stage_id, apartment_number)
@@ -56,7 +57,7 @@ class Project:
         title_id: int,
         stage_id: UUID,
         new_stage_name: str,
-        apartment_number: int = None,
+        apartment_number: int = None
     ):
         title: Title = self.__get_title(title_id)
         return title.edit_stage_name(stage_id, new_stage_name, apartment_number)
@@ -67,12 +68,16 @@ class Project:
         stage_id: UUID,
         mission_id: UUID,
         new_mission_name: str,
-        apartment_number: int = None,
+        apartment_number: int = None
     ):
         title: Title = self.__get_title(title_id)
         return title.edit_mission_name(
             stage_id, mission_id, new_mission_name, apartment_number
         )
+
+    def edit_mission_link(self, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        return title.edit_mission_link(stage_id, mission_id, new_link, apartment_number)
 
     def set_mission_status(
         self,
@@ -81,7 +86,7 @@ class Project:
         mission_id: UUID,
         new_status,
         username: str,
-        apartment_number: int = None,
+        apartment_number: int = None
     ):
         title: Title = self.__get_title(title_id)
         return title.set_mission_status(
@@ -161,10 +166,22 @@ class Project:
         self.build_faults[new_building_fault.id] = new_building_fault
         return new_building_fault
 
+    def add_plan(self, plan_name):
+        if self.__is_plan_name_exists(plan_name):
+            raise DuplicatePlanNameException(plan_name)
+        new_plan: Plan = Plan(plan_name)
+        self.plans[new_plan.id] = new_plan
+        return new_plan
+
     def remove_building_fault(self, build_fault_id: UUID):
         if not self.__is_build_fault_id_exists(build_fault_id):
             raise BuildFaultDoesntExistException()
         return self.build_faults.pop(build_fault_id)
+
+    def remove_plan(self, plan_id: UUID):
+        if not self.__is_plan_id_exists(plan_id):
+            raise PlanDoesntExistException()
+        return self.plans.pop(plan_id)
 
     def __get_title(self, title_id: int):
         if title_id not in self.titles.keys():
@@ -207,3 +224,35 @@ class Project:
         for build_fault in self.build_faults.values():
             building_fault_list.append(build_fault)
         return building_fault_list
+
+    def __is_plan_name_exists(self, plan_name: str):
+        for plan in self.plans.values():
+            if plan.name == plan_name:
+                return True
+        return False
+
+    def __is_plan_id_exists(self, plan_id: UUID):
+        for plan in self.plans.values():
+            if plan.id == plan_id:
+                return True
+        return False
+
+    def is_build_fault_invalid(self, build_fault_id):
+        build_fault: BuildingFault = self.get_build_fault(build_fault_id)
+        return build_fault.status == Status.INVALID
+
+    def edit_plan_name(self, plan_id: UUID, new_plan_name: str):
+        plan: Plan = self.__get_plan(plan_id)
+        return plan.set_name(new_plan_name)
+
+    def __get_plan(self, plan_id: UUID):
+        if plan_id not in self.plans.keys():
+            raise PlanDoesntExistException()
+        return self.plans[plan_id]
+
+    def edit_plan_link(self, plan_id: UUID, new_link: str):
+        plan: Plan = self.__get_plan(plan_id)
+        return plan.set_link(new_link)
+
+
+

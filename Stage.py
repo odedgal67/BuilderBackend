@@ -118,6 +118,10 @@ class Stage:
     def check_set_mission_proof(self, mission_id) -> Mission:
         return self.get_mission(mission_id)
 
+    def edit_mission_link(self, mission_id, new_link):
+        mission: Mission = self.get_mission(mission_id)
+        return mission.set_link(new_link)
+
 
 
 

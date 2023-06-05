@@ -5,10 +5,12 @@ from Config import GLOBAL_CONFIG
 from Controllers.FileSystem import FileSystemController
 from DTO.BuildingFaultDTO import BuildingFaultDTO
 from DTO.MissionDTO import MissionDTO
+from DTO.PlanDTO import PlanDTO
 from DTO.ProjectDTO import ProjectDTO
 from DTO.StageDTO import StageDTO
 from DTO.UserDTO import UserDTO
 from Mission import Mission
+from Plan import Plan
 from Project import Project
 from Stage import Stage
 from User import User
@@ -397,5 +399,27 @@ class Controller:
             user: User = self.__get_user_by_user_name(username)
             return user.get_my_permission(project_id)
 
+    def add_plan(self, project_id: UUID, plan_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plan: Plan = user.add_plan(project_id, plan_name)
+        plan_dto: PlanDTO = PlanDTO(plan)
+        return plan_dto
 
+    def remove_plan(self, project_id: UUID, plan_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plan: Plan = user.remove_plan(project_id, plan_id)
+        plan_dto: PlanDTO = PlanDTO(plan)
+        return plan_dto
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_plan_name(project_id, plan_id, new_plan_name)
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_plan_link(project_id, plan_id, new_link)
+
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, username: str, apartment_number: int = None):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_mission_link(project_id, title_id, stage_id, mission_id, new_link, apartment_number)
 

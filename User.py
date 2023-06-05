@@ -232,3 +232,28 @@ class User:
 
     def get_my_permission(self, project_id: UUID):
         return self.get_project_permission(project_id).get_enum()
+
+    def add_plan(self, project_id: UUID, plan_name: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_plan(project, plan_name)
+
+    def remove_plan(self, project_id: UUID, plan_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.remove_plan(project, plan_id)
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_plan_name(project, plan_id, new_plan_name)
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_plan_link(project, plan_id, new_link)
+
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_mission_link(project, title_id, stage_id, mission_id, new_link, apartment_number)

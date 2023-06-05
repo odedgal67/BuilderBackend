@@ -47,6 +47,9 @@ class Facade:
         # Return new mission name
         return {'mission_name': self.controller.edit_mission_name(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_mission_name, username, apartment_number)}
 
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, username: str, apartment_number: int = None):
+        return {"link": self.controller.edit_mission_link(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_link, username, apartment_number)}
+
     def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int = None) -> None:
         # Returns void
         self.controller.set_mission_status(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_status, username, apartment_number)
@@ -127,7 +130,7 @@ class Facade:
         return self.controller.get_my_permission(UUID(project_id), username)
 
     def set_mission_proof(self, project_id: str, title_id: int, stage_id: str, mission_id: str,
-                          data, original_file_name: str, username: str, apartment_number: int = None,):
+                          data, original_file_name: str, username: str, apartment_number: int = None):
         return self.controller.set_mission_proof(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data, original_file_name, username, apartment_number)
 
     def get_all_building_faults(self, project_id: UUID, username: str):
@@ -137,3 +140,19 @@ class Facade:
         for build_fault in build_fault_list:
             build_fault_dict[str(build_fault.id)] = build_fault.to_json()
         return build_fault_dict
+
+    def add_plan(self, project_id: UUID, plan_name: str, username: str):
+        # Returns new plan
+        return self.controller.add_plan(UUID(project_id), plan_name, username).to_json()
+
+    def remove_plan(self, project_id: UUID, plan_id: UUID, username: str):
+        # Returns removed plan
+        return self.controller.remove_plan(UUID(project_id), UUID(plan_id), username).to_json()
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str, username: str):
+        # Returns new name
+        return {"name": self.controller.edit_plan_name(UUID(project_id), UUID(plan_id), new_plan_name, username)}
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
+        # Returns new link
+        return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), new_link, username)}
