@@ -11,7 +11,7 @@ class Plan:
         self.id = uuid.uuid1()
         self.name = name
         self.link = link
-        self.date = date
+        self.date = date  # TODO date now if none
 
     def set_link(self, new_link: str):
         self.link = new_link

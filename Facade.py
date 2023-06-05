@@ -157,7 +157,7 @@ class Facade:
         # Returns new link
         return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), new_link, username)}
 
-    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str):
+    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str): # Delete
         # Returns Void
         self.controller.change_user_permission_in_project(UUID(project_id), new_permission, username_to_change, username_changing)
 
@@ -166,3 +166,25 @@ class Facade:
 
     def change_user_password(self, new_password: str, username_to_change: str):
         self.controller.change_user_password(new_password, username_to_change)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        # Returns the new apartment
+        return self.controller.add_apartment(UUID(project_id), apartment_number, username).to_json()
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        # Returns the removed apartment
+        return self.controller.remove_apartment(UUID(project_id), apartment_number, username)
+
+    def get_all_apartments_in_project(self, project_id: UUID, username: str):
+        # Returns dict[apartment number : ApartmentDTO]
+        apartments_dict = dict()
+        apartments_dto_list = self.controller.get_all_apartments_in_project(UUID(project_id), username)
+        for apartment_dto in apartments_dto_list:
+            apartments_dict[apartment_dto.apartment_number] = apartment_dto
+        return apartments_dict
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name: str, floor_number: int, apartment_number: int, link: str, green_building: bool, urgency: Urgency, username: str):
+        # Returns Void
+        self.controller.edit_building_fault(UUID(project_id), UUID(building_fault_id), building_fault_name, floor_number, apartment_number, link, green_building, urgency, username)
+
+    # TODO : Check Login in each method

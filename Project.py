@@ -254,5 +254,26 @@ class Project:
         plan: Plan = self.__get_plan(plan_id)
         return plan.set_link(new_link)
 
+    def add_apartment(self, apartment_number: int):
+        title: Title = self.titles[2]  # Get apartments title
+        return title.add_apartment(apartment_number)
+
+    def remove_apartment(self, apartment_number: int):
+        title: Title = self.titles[2]  # Get apartments title
+        return title.remove_apartment(apartment_number)
+
+    def get_all_apartments_in_project(self):
+        title: Title = self.titles[2]  # Get apartments title
+        return title.get_all_apartments_in_project()
+
+    def edit_building_fault(self, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
+        building_fault: BuildingFault = self.get_build_fault(building_fault_id)
+        building_fault.edit_name(building_fault_name)
+        building_fault.set_floor_number(floor_number)
+        building_fault.set_apartment_number(apartment_number)
+        building_fault.set_link(link)
+        building_fault.set_green_building(green_building)
+        building_fault.set_urgency(urgency)
+
 
 

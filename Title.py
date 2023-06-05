@@ -75,6 +75,18 @@ class Title(ABC):
     def edit_mission_link(self, stage_id, mission_id, new_link, apartment_number: int = None):
         pass
 
+    @abstractmethod
+    def add_apartment(self, apartment_number):
+        pass
+
+    @abstractmethod
+    def remove_apartment(self, apartment_number):
+        pass
+
+    @abstractmethod
+    def get_all_apartments_in_project(self):
+        pass
+
 
 class TitleMissionsStages(Title):
     def check_set_mission_proof(self, stage_id, mission_id, apartment_number=None):
@@ -186,6 +198,15 @@ class TitleMissionsStages(Title):
             raise ApartmentNumberNotNeededException()
         stage: Stage = self.__get_stage(stage_id)
         return stage.edit_mission_link(mission_id, new_link)
+
+    def add_apartment(self, apartment_number):
+        raise Exception("Should not occur - adding apartment to a non apartment title")
+
+    def remove_apartment(self, apartment_number):
+        raise Exception("Should not occur - removing apartment from a non apartment title")
+
+    def get_all_apartments_in_project(self):
+        raise Exception("Should not occur - get all apartments from a non apartment title")
 
 
 class TitleApartments(Title):
@@ -300,6 +321,24 @@ class TitleApartments(Title):
             raise ApartmentNotSpecifiedException()
         apartment: Apartment = self.__get_apartment(apartment_number)
         return apartment.edit_mission_link(stage_id, mission_id, new_link)
+
+    def add_apartment(self, apartment_number: int):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
+        new_apartment: Apartment = Apartment(apartment_number)
+        self.apartments[apartment_number] = new_apartment
+        return new_apartment
+
+    def remove_apartment(self, apartment_number: int):
+        if apartment_number is None:
+            raise ApartmentNotSpecifiedException()
+        if apartment_number not in self.apartments.keys():
+            raise ApartmentDoesntExistException()
+        return self.apartments.pop(apartment_number)
+
+    def get_all_apartments_in_project(self):
+        return self.apartments.values()
+
 
 
 

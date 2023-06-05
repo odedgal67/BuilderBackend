@@ -3,6 +3,7 @@ from uuid import UUID
 from BuildingFault import BuildingFault
 from Config import GLOBAL_CONFIG
 from Controllers.FileSystem import FileSystemController
+from DTO.ApartmentDTO import ApartmentDTO
 from DTO.BuildingFaultDTO import BuildingFaultDTO
 from DTO.MissionDTO import MissionDTO
 from DTO.PlanDTO import PlanDTO
@@ -436,3 +437,25 @@ class Controller:
     def change_user_password(self, new_password: str, username_to_change: str):
         user_to_change: User = self.__get_user_by_user_name(username_to_change)
         user_to_change.change_password(new_password)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return ApartmentDTO(user.add_apartment(project_id, apartment_number))
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return ApartmentDTO(user.remove_apartment(project_id, apartment_number))
+
+    def get_all_apartments_in_project(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        apartment_list = user.get_all_apartments_in_project(project_id)
+        apartment_dto_list = list()
+        for apartment in apartment_list:
+            apartment_dto: ApartmentDTO = ApartmentDTO(apartment)
+            apartment_dto_list.append(apartment_dto)
+        return apartment_dto_list
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency, username):
+        user: User = self.__get_user_by_user_name(username)
+        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
