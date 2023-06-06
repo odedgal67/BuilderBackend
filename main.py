@@ -14,7 +14,7 @@ ERROR_CODE = None
 
 @app.route("/register", methods=["POST"])
 def handle_request_register():
-    print("Register request received")
+    print("\n\nRegister request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -31,7 +31,7 @@ def handle_request_register():
 
 @app.route("/login", methods=["POST"])
 def handle_request_login():
-    print("Login request received")
+    print("\n\nLogin request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -48,7 +48,7 @@ def handle_request_login():
 
 @app.route("/logout", methods=["POST"])
 def handle_request_logout():
-    print("Logout request received")
+    print("\n\nLogout request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -65,7 +65,7 @@ def handle_request_logout():
 
 @app.route("/add_project", methods=["POST"])
 def handle_request_add_project():
-    print("Add Project request received")
+    print("\n\nAdd Project request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -82,7 +82,7 @@ def handle_request_add_project():
 
 @app.route("/add_stage", methods=["POST"])
 def handle_request_add_stage():
-    print("Add Stage request received")
+    print("\n\nAdd Stage request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -106,7 +106,7 @@ def handle_request_add_stage():
 
 @app.route("/add_mission", methods=["POST"])
 def handle_request_add_mission():
-    print("Add Mission request received")
+    print("\n\nAdd Mission request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -130,7 +130,7 @@ def handle_request_add_mission():
 
 @app.route("/edit_project_name", methods=["POST"])
 def handle_request_edit_project_name():
-    print("Edit Project Name request received")
+    print("\n\nEdit Project Name request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -149,7 +149,7 @@ def handle_request_edit_project_name():
 
 @app.route("/edit_stage_name", methods=["POST"])
 def handle_request_edit_stage_name():
-    print("Edit Stage Name request received")
+    print("\n\nEdit Stage Name request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -173,7 +173,7 @@ def handle_request_edit_stage_name():
 
 @app.route("/edit_mission_name", methods=["POST"])
 def handle_request_edit_mission_name():
-    print("Edit Mission Name request received")
+    print("\n\nEdit Mission Name request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -198,7 +198,7 @@ def handle_request_edit_mission_name():
 
 @app.route("/set_mission_status", methods=["POST"])
 def handle_request_set_mission_status():
-    print("Set Mission Status request received")
+    print("\n\nSet Mission Status request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -223,7 +223,7 @@ def handle_request_set_mission_status():
 
 @app.route("/get_all_missions", methods=["POST"])
 def handle_request_get_all_missions():
-    print("Get All Missions request received")
+    print("\n\nGet All Missions request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -246,7 +246,7 @@ def handle_request_get_all_missions():
 
 @app.route("/get_all_stages", methods=["POST"])
 def handle_request_get_all_stages():
-    print("Get All Stages request received")
+    print("\n\nGet All Stages request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -269,7 +269,7 @@ def handle_request_get_all_stages():
 
 @app.route("/assign_project_to_user", methods=["POST"])
 def handle_request_assign_project_to_user():
-    print("Assign Project To User request received")
+    print("\n\nAssign Project To User request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -292,7 +292,7 @@ def handle_request_assign_project_to_user():
 
 @app.route("/edit_comment_in_mission", methods=["POST"])
 def handle_request_edit_comment_in_mission():
-    print("Edit Comment In Mission request received")
+    print("\n\nEdit Comment In Mission request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -317,7 +317,7 @@ def handle_request_edit_comment_in_mission():
 
 @app.route("/remove_stage", methods=["POST"])
 def handle_request_remove_stage():
-    print("Remove Stage request received")
+    print("\n\nRemove Stage request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -340,7 +340,7 @@ def handle_request_remove_stage():
 
 @app.route("/remove_mission", methods=["POST"])
 def handle_request_remove_mission():
-    print("Remove Mission request received")
+    print("\n\nRemove Mission request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -364,7 +364,7 @@ def handle_request_remove_mission():
 
 @app.route("/set_green_building", methods=["POST"])
 def handle_request_set_green_building():
-    print("Set Green Building request received")
+    print("\n\nSet Green Building request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -389,7 +389,7 @@ def handle_request_set_green_building():
 
 @app.route("/set_stage_status", methods=["POST"])
 def handle_request_set_stage_status():
-    print("Set Stage Status request received")
+    print("\n\nSet Stage Status request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -412,7 +412,7 @@ def handle_request_set_stage_status():
 
 @app.route("/get_all_assigned_users_in_project", methods=["POST"])
 def handle_request_get_all_assigned_users_in_project():
-    print("Get All Assigned Users In Project request received")
+    print("\n\nGet All Assigned Users In Project request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -431,7 +431,7 @@ def handle_request_get_all_assigned_users_in_project():
 
 @app.route("/set_urgency", methods=["POST"])
 def handle_request_set_urgency():
-    print("Set Urgency request received")
+    print("\n\nSet Urgency request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -453,7 +453,7 @@ def handle_request_set_urgency():
 
 @app.route("/add_building_fault", methods=["POST"])
 def handle_request_add_building_fault():
-    print("Add Building Fault request received")
+    print("\n\nAdd Building Fault request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -477,7 +477,7 @@ def handle_request_add_building_fault():
 
 @app.route("/remove_building_fault", methods=["POST"])
 def handle_request_remove_building_fault():
-    print("Remove Building Fault request received")
+    print("\n\nRemove Building Fault request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -496,7 +496,7 @@ def handle_request_remove_building_fault():
 
 @app.route("/set_build_fault_status", methods=["POST"])
 def handle_request_set_build_fault_status():
-    print("Set Build Fault Status request received")
+    print("\n\nSet Build Fault Status request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -518,7 +518,7 @@ def handle_request_set_build_fault_status():
 
 @app.route("/remove_user_from_project", methods=["POST"])
 def handle_request_remove_user_from_project():
-    print("Remove User From Project request received")
+    print("\n\nRemove User From Project request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -537,7 +537,7 @@ def handle_request_remove_user_from_project():
 
 @app.route("/get_my_permission", methods=["POST"])
 def handle_request_get_my_permission():
-    print("Get my permission request received")
+    print("\n\nGet my permission request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -559,7 +559,7 @@ def handle_request_get_my_permission():
 
 @app.route("/echo", methods=["POST"])
 def handle_request_echo():
-    print("Echo request received")
+    print("\n\nEcho request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -576,7 +576,7 @@ def handle_request_echo():
 
 @app.route("/get_projects", methods=["POST"])
 def handle_request_get_projects():
-    print("get projects received")
+    print("\n\nget projects received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -593,7 +593,7 @@ def handle_request_get_projects():
 
 @app.route("/set_mission_proof", methods=['POST'])
 def handle_set_mission_proof():
-    print("set mission proof request received")
+    print("\n\nset mission proof request received")
     data = request.files.get('file')
     original_file_name = request.form.get('file_name')
     project_id = request.form.get('project_id')
@@ -623,7 +623,7 @@ def serve_file(filename):
 
 @app.route("/get_all_building_faults", methods=["POST"])
 def handle_request_get_all_building_faults():
-    print("get all building faults request received")
+    print("\n\nget all building faults request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -640,7 +640,7 @@ def handle_request_get_all_building_faults():
 
 @app.route("/add_plan", methods=["POST"])
 def handle_request_add_plan():
-    print("add plan request received")
+    print("\n\nadd plan request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -657,7 +657,7 @@ def handle_request_add_plan():
 
 @app.route("/remove_plan", methods=["POST"])
 def handle_request_remove_plan():
-    print("remove plan request received")
+    print("\n\nremove plan request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -674,7 +674,7 @@ def handle_request_remove_plan():
 
 @app.route("/edit_plan_name", methods=["POST"])
 def handle_request_edit_plan_name():
-    print("edit plan name request received")
+    print("\n\nedit plan name request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -691,7 +691,7 @@ def handle_request_edit_plan_name():
 
 @app.route("/edit_plan_link", methods=["POST"])
 def handle_request_edit_plan_link():
-    print("edit plan link request received")
+    print("\n\nedit plan link request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -708,7 +708,7 @@ def handle_request_edit_plan_link():
 
 @app.route("/edit_mission_link", methods=["POST"])
 def handle_request_edit_mission_link():
-    print("edit mission link request received")
+    print("\n\nedit mission link request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -725,7 +725,7 @@ def handle_request_edit_mission_link():
 
 @app.route("/change_user_permission_in_project", methods=["POST"])
 def handle_request_change_user_permission_in_project():
-    print("change user permission in project request received")
+    print("\n\nchange user permission in project request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -742,7 +742,7 @@ def handle_request_change_user_permission_in_project():
 
 @app.route("/change_user_name", methods=["POST"])
 def handle_request_change_user_name():
-    print("change user name request received")
+    print("\n\nchange user name request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -759,7 +759,7 @@ def handle_request_change_user_name():
 
 @app.route("/change_user_password", methods=["POST"])
 def handle_request_change_user_password():
-    print("change user password request received")
+    print("\n\nchange user password request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -776,7 +776,7 @@ def handle_request_change_user_password():
 
 @app.route("/add_apartment", methods=["POST"])
 def handle_request_add_apartment():
-    print("add apartment request received")
+    print("\n\nadd apartment request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -793,7 +793,7 @@ def handle_request_add_apartment():
 
 @app.route("/remove_apartment", methods=["POST"])
 def handle_request_remove_apartment():
-    print("remove apartment request received")
+    print("\n\nremove apartment request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -810,7 +810,7 @@ def handle_request_remove_apartment():
 
 @app.route("/get_all_apartments_in_project", methods=["POST"])
 def handle_request_get_all_apartments_in_project():
-    print("get all apartments in project request received")
+    print("\n\nget all apartments in project request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -827,7 +827,7 @@ def handle_request_get_all_apartments_in_project():
 
 @app.route("/get_all_plans", methods=["POST"])
 def handle_request_get_all_plans():
-    print("get all plans request received")
+    print("\n\nget all plans request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
@@ -844,7 +844,7 @@ def handle_request_get_all_plans():
 
 @app.route("/edit_building_fault", methods=["POST"])
 def handle_request_edit_building_fault():
-    print("edit building fault request received")
+    print("\n\nedit building fault request received")
 
     # Parse JSON payload from the request
     data = request.get_json()
