@@ -825,6 +825,23 @@ def handle_request_get_all_apartments_in_project():
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
+@app.route("/get_all_plans", methods=["POST"])
+def handle_request_get_all_plans():
+    print("get all plans request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.get_all_plans(data['project_id'], data['username'])
+        return jsonify({"result": result})
+    except Exception as e:
+        print(f"[get_all_plans] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
 @app.route("/edit_building_fault", methods=["POST"])
 def handle_request_edit_building_fault():
     print("edit building fault request received")

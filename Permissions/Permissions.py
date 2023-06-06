@@ -142,6 +142,9 @@ class AbstractPermission(ABC):
                             urgency):
         pass
 
+    def get_all_plans(self, project):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
@@ -263,8 +266,11 @@ class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
         return PermissionType.WORK_MANAGER.value
 
-    def get_all_building_faults(self, project):
-        raise PermissionError
+    def get_all_building_faults(self, project: Project):
+        return project.get_all_building_faults()
+
+    def get_all_plans(self, project: Project):
+        return project.get_all_plans()
 
     def add_plan(self, project: Project, plan_name):
         return project.add_plan(plan_name)
@@ -323,9 +329,6 @@ class ProjectManagerPermission(WorkManagerPermission):
 
     def check_work_manager_permission(self, project):
         raise PermissionError()
-
-    def get_all_building_faults(self, project: Project):
-        return project.get_all_building_faults()
 
     def remove_plan(self, project: Project, plan_id):
         return project.remove_plan(plan_id)

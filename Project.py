@@ -225,6 +225,12 @@ class Project:
             building_fault_list.append(build_fault)
         return building_fault_list
 
+    def get_all_plans(self):
+        plans_list = list()
+        for plan in self.plans.values():
+            plans_list.append(plan)
+        return plans_list
+
     def __is_plan_name_exists(self, plan_name: str):
         for plan in self.plans.values():
             if plan.name == plan_name:
@@ -274,6 +280,8 @@ class Project:
         building_fault.set_link(link)
         building_fault.set_green_building(green_building)
         building_fault.set_urgency(urgency)
+
+
 
 
 

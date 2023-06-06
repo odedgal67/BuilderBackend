@@ -141,6 +141,14 @@ class Facade:
             build_fault_dict[str(build_fault.id)] = build_fault.to_json()
         return build_fault_dict
 
+    def get_all_plans(self, project_id: UUID, username: str):
+        # Returns dict [plan_id: PlanDTO]
+        plans_list = self.controller.get_all_plans(UUID(project_id), username)
+        plans_dict = dict()
+        for plan in plans_dict:
+            plans_dict[str(plan.id)] = plan.to_json()
+        return plans_dict
+
     def add_plan(self, project_id: UUID, plan_name: str, username: str):
         # Returns new plan
         return self.controller.add_plan(UUID(project_id), plan_name, username).to_json()

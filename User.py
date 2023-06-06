@@ -131,7 +131,6 @@ class User:
         self.projects_permissions[project.id] = project_permission
 
     def remove_project(self, project_id: UUID):
-        #TODO: cant remove last user
         self.projects.pop(project_id)
         self.projects_permissions.pop(project_id)
 
@@ -166,6 +165,11 @@ class User:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.get_all_building_faults(project)
+
+    def get_all_plans(self, project_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.get_all_plans(project)
 
     def remove_stage(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
@@ -294,3 +298,4 @@ class User:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+

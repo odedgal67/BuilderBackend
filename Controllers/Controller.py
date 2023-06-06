@@ -232,7 +232,7 @@ class Controller:
             stages_dto_list.append(stage_dto)
         return stages_dto_list
 
-    def get_all_building_faults(self, project_id: UUID,username: str):
+    def get_all_building_faults(self, project_id: UUID, username: str):
         user: User = self.__get_user_by_user_name(username)
         building_fault_list = user.get_all_building_faults(project_id)
         building_fault_dto_list = list()
@@ -240,6 +240,15 @@ class Controller:
             build_fault_dto: BuildingFaultDTO = BuildingFaultDTO(build_fault)
             building_fault_dto_list.append(build_fault_dto)
         return building_fault_dto_list
+
+    def get_all_plans(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plans_list = user.get_all_plans(project_id)
+        plans_dto_list = list()
+        for plan in plans_list:
+            plan_dto: PlanDTO = PlanDTO(plan)
+            plans_dto_list.append(plan_dto)
+        return plans_dto_list
 
     def remove_stage(
             self,
@@ -329,6 +338,7 @@ class Controller:
     def remove_user_from_project(
             self, project_id: UUID, username_to_remove: str, removing_user: str
     ):
+        self.__check_not_last_user(project_id)
         user: User = self.__get_user_by_user_name(removing_user)
         user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
         user.remove_user_from_project(project_id, user_to_remove)
@@ -458,4 +468,14 @@ class Controller:
     def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency, username):
         user: User = self.__get_user_by_user_name(username)
         user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
+    def __check_not_last_user(self, project_id: UUID):
+        counter: int = 0
+        for user in self.users.values():
+            if user.is_project_exist(project_id):
+                counter = counter+1
+        if counter <= 1:
+            raise Exception("Project has only 1 user left")
+
+
 
