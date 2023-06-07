@@ -8,12 +8,13 @@ MIN_MISSION_NAME_LENGTH = 3
 MAX_COMMENT_LENGTH = 400
 
 class Mission:
-    def __init__(self, name: str, link: str = "", green_building: bool = False):
+    def __init__(self, name: str, plan_link: str = "", green_building: bool = False):
+        self.tekken: str = ""   # link to tekken pdf
         self.name = self.__check_mission_name(name)
-        self.link = link
+        self.plan_link = plan_link    # link to plan
         self.green_building = green_building
         self.status = Status.TO_DO
-        self.proof: str = ""
+        self.proof: str = ""    # link to proof picture
         self.completion_date: datetime = None
         self.completing_user: str = ""
         self.comment: str = ""
@@ -55,8 +56,12 @@ class Mission:
     def set_proof(self, proof_link: str):
         self.proof = proof_link
 
-    def set_link(self, new_link):
-        self.link = new_link
+    def set_tekken(self, tekken_link: str):
+        self.tekken = tekken_link
+
+    def set_plan_link(self, plan_link: str):
+        self.plan_link = plan_link
+
 
 
 

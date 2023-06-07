@@ -1,3 +1,5 @@
+from typing import Callable
+
 from flask import Flask, request, jsonify, abort, send_from_directory
 import traceback
 
@@ -590,10 +592,7 @@ def handle_request_get_projects():
         print(f"[get_projects] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
-
-@app.route("/set_mission_proof", methods=['POST'])
-def handle_set_mission_proof():
-    print("\n\nset mission proof request received")
+def get_attributes_on_set_file_request(request):
     data = request.files.get('file')
     original_file_name = request.form.get('file_name')
     project_id = request.form.get('project_id')
@@ -602,12 +601,34 @@ def handle_set_mission_proof():
     mission_id = request.form.get('mission_id')
     username = request.form.get('username')
     title_id = request.form.get('title_id')
+    return data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id
+
+def wrap_with_try_except(func_name: str, func: Callable, *kwargs):
     try:
-        result = facade.set_mission_proof(project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
+        result = func(*kwargs)
         return jsonify({"result": result})
     except Exception as e:
-        print(f"[set_mission_proof] : raised exception {str(e)}")
+        print(f"[{func_name}] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
+
+@app.route("/set_mission_proof", methods=['POST'])
+def handle_set_mission_proof():
+    print("set mission proof request received")
+    data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
+    return wrap_with_try_except("set_mission_proof", facade.set_mission_proof, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
+
+@app.route('/set_mission_tekken', methods=['POST'])
+def handle_set_mission_tekken():
+    print("set mission proof request received")
+    data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
+    return wrap_with_try_except("set_mission_tekken", facade.set_mission_tekken, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
+
+@app.route('/set_mission_plan_link', methods=['POST'])
+def handle_set_mission_plan_link():
+    print("post set_mission_plan_link request recieved")
+    data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
+    return wrap_with_try_except("set_mission_plan_link", facade.set_mission_plan_link, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
+
 
 
 @app.route('/<path:filename>', methods=['GET'])
@@ -623,7 +644,7 @@ def serve_file(filename):
 
 @app.route("/get_all_building_faults", methods=["POST"])
 def handle_request_get_all_building_faults():
-    print("\n\nget all building faults request received")
+    print("get all building faults request received")
 
     # Parse JSON payload from the request
     data = request.get_json()

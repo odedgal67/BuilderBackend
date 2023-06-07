@@ -2,6 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class DTO(ABC):
-    @abstractmethod
     def to_json(self):
-        pass
+        attributes = vars(self)
+        return {key: value for key, value in attributes.items() if not key.startswith('__')}

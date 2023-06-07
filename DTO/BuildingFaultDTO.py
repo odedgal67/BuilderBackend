@@ -6,7 +6,7 @@ class BuildingFaultDTO(DTO):
 
         # mission fields
         self.name = building_fault.name
-        self.link = building_fault.link
+        self.link = building_fault.plan_link
         self.green_building = building_fault.green_building
         self.status = building_fault.status
         self.proof = building_fault.proof
