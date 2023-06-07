@@ -361,6 +361,7 @@ def handle_request_remove_mission():
         return jsonify({"result": result})
     except Exception as e:
         print(f"[remove_mission] : raised exception {str(e)}")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
 
 

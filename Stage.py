@@ -104,7 +104,7 @@ class Stage:
     def remove_mission(self, mission_id: UUID):
         if not self.__is_mission_id_exists(mission_id):
             raise MissionDoesntExistException
-        self.missions.pop(mission_id)
+        return self.missions.pop(mission_id)
 
     def set_green_building(self, mission_id: UUID, is_green_building: bool):
         mission: Mission = self.get_mission(mission_id)
