@@ -3,12 +3,15 @@ from uuid import UUID
 from BuildingFault import BuildingFault
 from Config import GLOBAL_CONFIG
 from Controllers.FileSystem import FileSystemController
+from DTO.ApartmentDTO import ApartmentDTO
 from DTO.BuildingFaultDTO import BuildingFaultDTO
 from DTO.MissionDTO import MissionDTO
+from DTO.PlanDTO import PlanDTO
 from DTO.ProjectDTO import ProjectDTO
 from DTO.StageDTO import StageDTO
 from DTO.UserDTO import UserDTO
 from Mission import Mission
+from Plan import Plan
 from Project import Project
 from Stage import Stage
 from User import User
@@ -254,6 +257,15 @@ class Controller:
             building_fault_dto_list.append(build_fault_dto)
         return building_fault_dto_list
 
+    def get_all_plans(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plans_list = user.get_all_plans(project_id)
+        plans_dto_list = list()
+        for plan in plans_list:
+            plan_dto: PlanDTO = PlanDTO(plan)
+            plans_dto_list.append(plan_dto)
+        return plans_dto_list
+
     def remove_stage(
             self,
             project_id: UUID,
@@ -342,6 +354,7 @@ class Controller:
     def remove_user_from_project(
             self, project_id: UUID, username_to_remove: str, removing_user: str
     ):
+        self.__check_not_last_user(project_id)
         user: User = self.__get_user_by_user_name(removing_user)
         user_to_remove: User = self.__get_user_by_user_name(username_to_remove)
         user.remove_user_from_project(project_id, user_to_remove)
@@ -412,5 +425,72 @@ class Controller:
         else:
             user: User = self.__get_user_by_user_name(username)
             return user.get_my_permission(project_id)
+
+    def add_plan(self, project_id: UUID, plan_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plan: Plan = user.add_plan(project_id, plan_name)
+        plan_dto: PlanDTO = PlanDTO(plan)
+        return plan_dto
+
+    def remove_plan(self, project_id: UUID, plan_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plan: Plan = user.remove_plan(project_id, plan_id)
+        plan_dto: PlanDTO = PlanDTO(plan)
+        return plan_dto
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_plan_name(project_id, plan_id, new_plan_name)
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_plan_link(project_id, plan_id, new_link)
+
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, username: str, apartment_number: int = None):
+        user: User = self.__get_user_by_user_name(username)
+        return user.edit_mission_link(project_id, title_id, stage_id, mission_id, new_link, apartment_number)
+
+    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str):
+        user_changing: User = self.__get_user_by_user_name(username_changing)
+        user_changing.check_change_user_permission_in_project(project_id)  # Check the user has permission to do that action in that project
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_permission_in_project(project_id, new_permission)
+
+    def change_user_name(self, new_name: str, username_to_change: str):
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_name(new_name)
+
+    def change_user_password(self, new_password: str, username_to_change: str):
+        user_to_change: User = self.__get_user_by_user_name(username_to_change)
+        user_to_change.change_password(new_password)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return ApartmentDTO(user.add_apartment(project_id, apartment_number))
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        return ApartmentDTO(user.remove_apartment(project_id, apartment_number))
+
+    def get_all_apartments_in_project(self, project_id: UUID, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        apartment_list = user.get_all_apartments_in_project(project_id)
+        apartment_dto_list = list()
+        for apartment in apartment_list:
+            apartment_dto: ApartmentDTO = ApartmentDTO(apartment)
+            apartment_dto_list.append(apartment_dto)
+        return apartment_dto_list
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency, username):
+        user: User = self.__get_user_by_user_name(username)
+        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
+    def __check_not_last_user(self, project_id: UUID):
+        counter: int = 0
+        for user in self.users.values():
+            if user.is_project_exist(project_id):
+                counter = counter+1
+        if counter <= 1:
+            raise Exception("Project has only 1 user left")
 
 

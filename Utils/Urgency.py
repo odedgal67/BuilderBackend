@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class Urgency(Enum):
+class Urgency(IntEnum):
     LOW = 1
     MODERATE = 2
     HIGH = 3

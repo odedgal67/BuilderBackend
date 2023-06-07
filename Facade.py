@@ -47,6 +47,9 @@ class Facade:
         # Return new mission name
         return {'mission_name': self.controller.edit_mission_name(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_mission_name, username, apartment_number)}
 
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, username: str, apartment_number: int = None):
+        return {"link": self.controller.edit_mission_link(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_link, username, apartment_number)}
+
     def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username: str, apartment_number: int = None) -> None:
         # Returns void
         self.controller.set_mission_status(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), new_status, username, apartment_number)
@@ -127,7 +130,7 @@ class Facade:
         return self.controller.get_my_permission(UUID(project_id), username)
 
     def set_mission_proof(self, project_id: str, title_id: int, stage_id: str, mission_id: str,
-                          data, original_file_name: str, username: str, apartment_number: int = None,):
+                          data, original_file_name: str, username: str, apartment_number: int = None):
         return self.controller.set_mission_proof(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data, original_file_name, username, apartment_number)
 
     def set_mission_tekken(self, project_id: str, title_id: int, stage_id: str, mission_id: str,
@@ -147,3 +150,59 @@ class Facade:
         for build_fault in build_fault_list:
             build_fault_dict[str(build_fault.id)] = build_fault.to_json()
         return build_fault_dict
+
+    def get_all_plans(self, project_id: UUID, username: str):
+        # Returns dict [plan_id: PlanDTO]
+        plans_list = self.controller.get_all_plans(UUID(project_id), username)
+        plans_dict = dict()
+        for plan in plans_dict:
+            plans_dict[str(plan.id)] = plan.to_json()
+        return plans_dict
+
+    def add_plan(self, project_id: UUID, plan_name: str, username: str):
+        # Returns new plan
+        return self.controller.add_plan(UUID(project_id), plan_name, username).to_json()
+
+    def remove_plan(self, project_id: UUID, plan_id: UUID, username: str):
+        # Returns removed plan
+        return self.controller.remove_plan(UUID(project_id), UUID(plan_id), username).to_json()
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str, username: str):
+        # Returns new name
+        return {"name": self.controller.edit_plan_name(UUID(project_id), UUID(plan_id), new_plan_name, username)}
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
+        # Returns new link
+        return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), new_link, username)}
+
+    def change_user_permission_in_project(self, project_id: UUID, new_permission: PermissionType, username_to_change: str, username_changing: str): # Delete
+        # Returns Void
+        self.controller.change_user_permission_in_project(UUID(project_id), new_permission, username_to_change, username_changing)
+
+    def change_user_name(self, new_name: str, username_to_change: str):
+        self.controller.change_user_name(new_name, username_to_change)
+
+    def change_user_password(self, new_password: str, username_to_change: str):
+        self.controller.change_user_password(new_password, username_to_change)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        # Returns the new apartment
+        return self.controller.add_apartment(UUID(project_id), apartment_number, username).to_json()
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int, username: str):
+        # Returns the removed apartment
+        return self.controller.remove_apartment(UUID(project_id), apartment_number, username)
+
+    def get_all_apartments_in_project(self, project_id: UUID, username: str):
+        # Returns dict[apartment number : ApartmentDTO]
+        apartments_dict = dict()
+        apartments_dto_list = self.controller.get_all_apartments_in_project(UUID(project_id), username)
+        for apartment_dto in apartments_dto_list:
+            apartments_dict[apartment_dto.apartment_number] = apartment_dto
+        return apartments_dict
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name: str, floor_number: int, apartment_number: int, link: str, green_building: bool, urgency: Urgency, username: str):
+        # Returns Void
+        self.controller.edit_building_fault(UUID(project_id), UUID(building_fault_id), building_fault_name, floor_number, apartment_number, link, green_building, urgency, username)
+
+    # TODO : Check Login in each method

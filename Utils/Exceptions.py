@@ -67,10 +67,24 @@ class IllegalMissionNameException(Exception):
         super().__init__(self.message)
 
 
+class IllegalPlanNameException(Exception):
+    def __init__(self, plan_name: str):
+        self.plan_name = plan_name
+        self.message = f"Plan name {self.plan_name} is invalid"
+        super().__init__(self.message)
+
+
 class DuplicateUserName(Exception):
     def __init__(self, username: str):
         self.username = username
         self.message = f"Username {self.username} already exists"
+        super().__init__(self.message)
+
+
+class DuplicatePlanNameException(Exception):
+    def __init__(self, plan_name: str):
+        self.plan_name = plan_name
+        self.message = f"Plan name {self.plan_name} already exists"
         super().__init__(self.message)
 
 
@@ -135,6 +149,12 @@ class ApartmentNotSpecifiedException(Exception):
 class ApartmentDoesntExistException(Exception):
     def __init__(self):
         self.message = "Apartment number doesnt exist"
+        super().__init__(self.message)
+
+
+class PlanDoesntExistException(Exception):
+    def __init__(self):
+        self.message = "Plan doesnt exist"
         super().__init__(self.message)
 
 

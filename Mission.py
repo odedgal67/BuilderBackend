@@ -3,6 +3,10 @@ from datetime import datetime
 from Utils.Status import Status
 from Utils.Exceptions import *
 
+MAX_MISSION_NAME_LENGTH = 100
+MIN_MISSION_NAME_LENGTH = 3
+MAX_COMMENT_LENGTH = 400
+
 class Mission:
     def __init__(self, name: str, plan_link: str = "", green_building: bool = False):
         self.tekken: str = ""   # link to tekken pdf
@@ -17,7 +21,7 @@ class Mission:
         self.id = uuid.uuid1()
 
     def __check_mission_name(self, mission_name):
-        if len(mission_name) < 3 or len(mission_name) > 500:
+        if len(mission_name) < MIN_MISSION_NAME_LENGTH or len(mission_name) > MAX_MISSION_NAME_LENGTH:
             raise IllegalMissionNameException(mission_name)
         return mission_name
 
@@ -38,8 +42,8 @@ class Mission:
             self.status = new_status
 
     def set_comment(self, comment: str):
-        if len(comment) > 400:
-            raise Exception("Comment over 400 characters")
+        if len(comment) > MAX_COMMENT_LENGTH:
+            raise Exception(f"Comment over {MAX_COMMENT_LENGTH} characters")
         self.comment = comment
         return comment
 

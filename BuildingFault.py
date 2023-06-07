@@ -13,6 +13,12 @@ class BuildingFault(Mission):
     def set_urgency(self, new_urgency: Urgency):
         self.urgency = new_urgency
 
+    def set_floor_number(self, floor_number):
+        self.floor_number = floor_number
+
+    def set_apartment_number(self, apartment_number):
+        self.apartment_number = apartment_number
+
 
 
 

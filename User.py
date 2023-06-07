@@ -166,6 +166,11 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.get_all_building_faults(project)
 
+    def get_all_plans(self, project_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.get_all_plans(project)
+
     def remove_stage(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
@@ -232,3 +237,65 @@ class User:
 
     def get_my_permission(self, project_id: UUID):
         return self.get_project_permission(project_id).get_enum()
+
+    def add_plan(self, project_id: UUID, plan_name: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_plan(project, plan_name)
+
+    def remove_plan(self, project_id: UUID, plan_id: UUID):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.remove_plan(project, plan_id)
+
+    def edit_plan_name(self, project_id: UUID, plan_id: UUID, new_plan_name: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_plan_name(project, plan_id, new_plan_name)
+
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_plan_link(project, plan_id, new_link)
+
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.edit_mission_link(project, title_id, stage_id, mission_id, new_link, apartment_number)
+
+    def check_change_user_permission_in_project(self, project_id):
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.check_change_user_permission_in_project()
+
+    def change_permission_in_project(self, project_id, new_permission):
+        if not self.__is_project_id_exists(project_id):
+            raise ProjectDoesntExistException()
+        self.projects_permissions[project_id] = self.build_permission(new_permission)
+
+    def change_name(self, new_name: str):
+        self.name = new_name
+
+    def change_password(self, new_password: str):
+        new_password = self.__check_password(new_password)
+        self.hashed_password = hash_password(new_password)
+
+    def add_apartment(self, project_id: UUID, apartment_number: int):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_apartment(project, apartment_number)
+
+    def remove_apartment(self, project_id: UUID, apartment_number: int):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.remove_apartment(project, apartment_number)
+
+    def get_all_apartments_in_project(self, project_id):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.get_all_apartments_in_project(project)
+
+    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
