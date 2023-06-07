@@ -6,7 +6,7 @@ class MissionDTO(DTO):
 
     def __init__(self, mission: Mission):
         self.name = mission.name
-        self.link = mission.link
+        self.plan_link = mission.plan_link
         self.green_building = mission.green_building
         self.status = mission.status
         self.proof = mission.proof
@@ -18,17 +18,3 @@ class MissionDTO(DTO):
             self.completion_date = mission.completion_date.strftime("%m/%d/%Y, %H:%M:%S")
         else:
             self.completion_date = ""
-
-    def to_json(self):
-        return {
-            'name': self.name,
-            'id': self.id,
-            'status': self.status,
-            'completion_date': self.completion_date,
-            'completing_user': self.completing_user,
-            'link': self.link,
-            'green_building': self.green_building,
-            'comment': self.comment,
-            'proof': self.proof,
-            'tekken': self.tekken
-        }

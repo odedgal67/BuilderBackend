@@ -33,13 +33,21 @@ class Controller:
         mission.set_proof(proof_link)
         return proof_link
 
-
-    def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username, apartment_number):
+    def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
+                           apartment_number):
         user: User = self.__get_user_by_user_name(username)
         mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         tekken_link = self.fileSystem.add_doc(data, original_file_name)
         mission.set_tekken(tekken_link)
         return tekken_link
+
+    def set_mission_plan_link(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
+                           apartment_number):
+        user: User = self.__get_user_by_user_name(username)
+        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        plan_link = self.fileSystem.add_doc(data, original_file_name)
+        mission.set_plan_link(plan_link)
+        return plan_link
 
     def login(self, username: str, password: str) -> UserDTO:
         user: User = self.__get_user_by_user_name(username)
@@ -237,7 +245,7 @@ class Controller:
             stages_dto_list.append(stage_dto)
         return stages_dto_list
 
-    def get_all_building_faults(self, project_id: UUID,username: str):
+    def get_all_building_faults(self, project_id: UUID, username: str):
         user: User = self.__get_user_by_user_name(username)
         building_fault_list = user.get_all_building_faults(project_id)
         building_fault_dto_list = list()
@@ -404,6 +412,5 @@ class Controller:
         else:
             user: User = self.__get_user_by_user_name(username)
             return user.get_my_permission(project_id)
-
 
 

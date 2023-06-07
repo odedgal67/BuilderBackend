@@ -3,12 +3,11 @@ from datetime import datetime
 from Utils.Status import Status
 from Utils.Exceptions import *
 
-
 class Mission:
-    def __init__(self, name: str, link: str = "", green_building: bool = False):
+    def __init__(self, name: str, plan_link: str = "", green_building: bool = False):
         self.tekken: str = ""   # link to tekken pdf
         self.name = self.__check_mission_name(name)
-        self.link = link    # link to plan
+        self.plan_link = plan_link    # link to plan
         self.green_building = green_building
         self.status = Status.TO_DO
         self.proof: str = ""    # link to proof picture
@@ -55,6 +54,10 @@ class Mission:
 
     def set_tekken(self, tekken_link: str):
         self.tekken = tekken_link
+
+    def set_plan_link(self, plan_link: str):
+        self.plan_link = plan_link
+
 
 
 

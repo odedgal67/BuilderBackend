@@ -3,8 +3,8 @@ from Utils.Urgency import Urgency
 
 
 class BuildingFault(Mission):
-    def __init__(self, name: str, floor_number: int, apartment_number: int, link: str = "", green_building: bool = False, urgency: Urgency = Urgency.LOW):
-        Mission.__init__(self, name, link, green_building)
+    def __init__(self, name: str, floor_number: int, apartment_number: int, plan_link: str = "", green_building: bool = False, urgency: Urgency = Urgency.LOW):
+        Mission.__init__(self, name, plan_link, green_building)
         self.urgency: Urgency = urgency
         self.floor_number: int = floor_number
         self.apartment_number: int = apartment_number

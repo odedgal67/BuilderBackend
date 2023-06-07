@@ -159,3 +159,7 @@ class MissingUserID(Exception):
 class IllegalFileTypeException(Exception):
     def __init__(self, filename: str):
         super().__init__(f"file has illegal type: {filename}")
+
+class IllegalLink(Exception):
+    def __init__(self, link: str):
+        super().__init__(f"link doesn't have a valid format: {link}")
