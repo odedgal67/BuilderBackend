@@ -10,6 +10,19 @@ class Apartment:
         self.apartment_number = apartment_number
         self.stages: dict[UUID, Stage] = dict()  # dict<stage_id, Stage>
 
+    def to_json(self):
+        return {
+            'apartment_number': self.apartment_number,
+            'stages': self.get_stages_json()
+        }
+
+    def get_stages_json(self):
+        to_return = dict()
+        for stage_uuid in self.stages.keys():
+            stage_json = self.stages[stage_uuid].to_json()
+            to_return[str(stage_uuid)] = stage_json
+        return to_return
+
     def contains_stage_id(self, stage_id: UUID):
         return stage_id in self.stages.keys()
 
@@ -86,3 +99,5 @@ class Apartment:
 
     def edit_mission_link(self, stage_id, mission_id, new_link):
         return self.get_stage(stage_id).edit_mission_link(mission_id, new_link)
+
+

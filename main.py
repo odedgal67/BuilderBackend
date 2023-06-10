@@ -1,17 +1,25 @@
+
 from typing import Callable
 
 from flask import Flask, request, jsonify, abort, send_from_directory
 import traceback
 
 from Config import GLOBAL_CONFIG
+from DTO.UserDTO import UserDTO
 from Facade import Facade
+from User import User
 from Utils.Urgency import Urgency
 import os
+from pymongo import MongoClient
 
 app = Flask("BuilderAPI")
 facade: Facade = Facade()
 
 ERROR_CODE = None
+
+client = MongoClient("mongodb://localhost:27017")
+my_db = client['Builder']
+my_collection = my_db['builder']
 
 
 @app.route("/register", methods=["POST"])
@@ -882,6 +890,18 @@ def handle_request_edit_building_fault():
 
 
 if __name__ == "__main__":
-    print("running with the following configuration:")
-    print(GLOBAL_CONFIG)
-    app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
+    # print("running with the following configuration:")
+    # print(GLOBAL_CONFIG)
+    # app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
+    # stam_json = {"test": {"dictkey": "dicttestvalue"}, "number": 6}
+    # user: User = User("123456789", "Password", "OdedWithShit")
+    # user.add_project("MyProject")
+    # rec = my_collection.insert_one(user.to_json())
+    # print(rec)
+
+    curser = my_collection.find()
+    for rec in curser:
+        if 'projects' in rec:
+            projects_data = rec['projects']
+            print(len(projects_data))
+        print(rec)

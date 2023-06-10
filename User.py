@@ -1,3 +1,4 @@
+
 from uuid import UUID
 
 from Mission import Mission
@@ -23,6 +24,38 @@ class User:
         ] = (
             dict()
         )  # the permission for each project for this user - dict<project_id, AbstractPermission>
+        
+    def __init__(self, json_data):
+        self.username = json_data['username']
+        self.name = json_data['name']
+        self.hashed_password = json_data['hashed_password']
+        self.logged_in = json_data['logged_in']
+        if 'projects' in json_data:
+
+
+    def to_json(self):
+        return {
+            'username': self.username,
+            'name': self.name,
+            'hashed_password': self.hashed_password,
+            'logged_in': self.logged_in,
+            'projects': self.projects_to_json_dict(),
+            'projects_permissions': self.projects_permissions_to_json_dict()
+            }
+
+    def projects_to_json_dict(self):
+        to_return = dict()
+        for project_uuid in self.projects.keys():
+            project_json = self.projects[project_uuid].to_json()
+            to_return[str(project_uuid)] = project_json
+        return to_return
+
+    def projects_permissions_to_json_dict(self):
+        to_return = dict()
+        for project_permission_uuid in self.projects_permissions.keys():
+            project_permission_json = self.projects_permissions[project_permission_uuid].to_json()
+            to_return[str(project_permission_uuid)] = project_permission_json
+        return to_return
 
     def __check_password(self, password: str) -> str:
         upperandlower = password.isupper() or password.islower()
@@ -298,4 +331,8 @@ class User:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+
+
+
+
 

@@ -18,6 +18,36 @@ class Project:
         self.id = uuid.uuid1()
         self.__init_default_titles()
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'id': str(self.id),
+            'titles': self.get_titles_json(),
+            'build_faults': self.get_build_faults_json(),
+            'plans': self.get_plan_json()
+        }
+
+    def get_titles_json(self):
+        to_return = dict()
+        for title_number in self.titles.keys():
+            title_json = self.titles[title_number].to_json()
+            to_return[str(title_number)] = title_json
+        return to_return
+
+    def get_build_faults_json(self):
+        to_return = dict()
+        for build_fault_uuid in self.build_faults.keys():
+            build_fault_json = self.build_faults[build_fault_uuid].to_json()
+            to_return[str(build_fault_uuid)] = build_fault_json
+        return to_return
+
+    def get_plan_json(self):
+        to_return = dict()
+        for plan_uuid in self.plans.keys():
+            plan_json = self.plans[plan_uuid].to_json()
+            to_return[str(plan_uuid)] = plan_json
+        return to_return
+
     def __init_default_titles(self):
         self.__add_title("שלב מקדים", 0)
         self.__add_title("עבודות שלד", 1)
@@ -280,6 +310,14 @@ class Project:
         building_fault.set_link(link)
         building_fault.set_green_building(green_building)
         building_fault.set_urgency(urgency)
+
+
+
+
+
+
+
+
 
 
 

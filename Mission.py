@@ -20,6 +20,21 @@ class Mission:
         self.comment: str = ""
         self.id = uuid.uuid1()
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'plan_link': self.plan_link,
+            'green_building': self.green_building,
+            'tekken': self.tekken,
+            'status': self.status,
+            'proof': self.proof,
+            'completion_date': self.completion_date,
+            'completing_user': self.completing_user,
+            'comment': self.comment,
+            'id': str(self.id)
+        }
+
+
     def __check_mission_name(self, mission_name):
         if len(mission_name) < MIN_MISSION_NAME_LENGTH or len(mission_name) > MAX_MISSION_NAME_LENGTH:
             raise IllegalMissionNameException(mission_name)

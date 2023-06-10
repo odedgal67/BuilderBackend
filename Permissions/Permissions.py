@@ -145,10 +145,16 @@ class AbstractPermission(ABC):
     def get_all_plans(self, project):
         pass
 
+    def to_json(self):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
         return PermissionType.WORK_MANAGER.value
+
+    def to_json(self):
+        return 1
 
     def remove_user_from_project(self, project: Project, user_to_remove):
         raise PermissionError
@@ -308,6 +314,9 @@ class ProjectManagerPermission(WorkManagerPermission):
     def get_enum(self):
         return PermissionType.PROJECT_MANAGER.value
 
+    def to_json(self):
+        return 2
+
     def register(self) -> bool:
         return True
 
@@ -341,6 +350,9 @@ class ProjectManagerPermission(WorkManagerPermission):
 class ContractorPermission(ProjectManagerPermission):
     def get_enum(self):
         return PermissionType.CONTRACTOR.value
+
+    def to_json(self):
+        return 3
 
     def remove_stage(self, project: Project, title_id, stage_id, apartment_number: int = None):
         return project.remove_stage(title_id, stage_id, apartment_number)

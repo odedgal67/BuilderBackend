@@ -14,6 +14,22 @@ class Stage:
         self.missions: dict[UUID, Mission] = dict()  # mission_id, Mission
         self.id = uuid.uuid1()
 
+    def to_json(self):
+        return {
+            'name': self.name,
+            'completion_date': self.completion_date,
+            'status': self.status,
+            'id': str(self.id),
+            'missions': self.get_missions_json()
+        }
+
+    def get_missions_json(self):
+        to_return = dict()
+        for mission_uuid in self.missions.keys():
+            mission_json = self.missions[mission_uuid].to_json()
+            to_return[str(mission_uuid)] = mission_json
+        return to_return
+
     def __check_stage_name(self, stage_name: str) -> str:
         if len(stage_name) < 3 or len(stage_name) > 25:
             raise IllegalStageNameException(stage_name)
@@ -121,6 +137,9 @@ class Stage:
     def edit_mission_link(self, mission_id, new_link):
         mission: Mission = self.get_mission(mission_id)
         return mission.set_link(new_link)
+
+
+
 
 
 

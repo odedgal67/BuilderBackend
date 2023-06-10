@@ -11,7 +11,10 @@ class Plan:
         self.id = uuid.uuid1()
         self.name = name
         self.link = link
-        self.date = date  # TODO date now if none
+        if date is None:
+            self.date = datetime.now()
+        else:
+            self.date = date
 
     def set_link(self, new_link: str):
         self.link = new_link
@@ -41,3 +44,11 @@ class Plan:
         if len(new_plan_name) > MAX_PLAN_NAME_LENGTH or len(new_plan_name) < MIN_PLAN_NAME_LENGTH:
             raise IllegalPlanNameException(new_plan_name)
         return new_plan_name
+
+    def to_json(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'link': self.link,
+            'date': self.date
+        }

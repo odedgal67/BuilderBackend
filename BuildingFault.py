@@ -19,7 +19,23 @@ class BuildingFault(Mission):
     def set_apartment_number(self, apartment_number):
         self.apartment_number = apartment_number
 
-
+    def to_json(self):
+        return {
+            'name': self.name,
+            'floor_number': self.floor_number,
+            'apartment_number': self.apartment_number,
+            'plan_link': self.plan_link,
+            'green_building': self.green_building,
+            'urgency': self.urgency,
+            'proof_fix': self.proof_fix,
+            'tekken': self.tekken,
+            'status': self.status,
+            'proof': self.proof,
+            'completion_date': self.completion_date,
+            'completing_user': self.completing_user,
+            'comment': self.comment,
+            'id': str(self.id)
+        }
 
 
 
