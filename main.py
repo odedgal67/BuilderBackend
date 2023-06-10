@@ -893,15 +893,17 @@ if __name__ == "__main__":
     # print("running with the following configuration:")
     # print(GLOBAL_CONFIG)
     # app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
-    # stam_json = {"test": {"dictkey": "dicttestvalue"}, "number": 6}
+
     # user: User = User("123456789", "Password", "OdedWithShit")
-    # user.add_project("MyProject")
+    # project = user.add_project("MyProject")
+    # user.add_apartment(project.id, 17)
+    # user.add_stage(project.id, 0, "MyStaAGE0")
+    # user.add_stage(project.id, 1, "MyStaAGE1")
+    # user.add_stage(project.id, 3, "MyStaAGE3")
+    # user.add_stage(project.id, 2, "MyStaAGE2", 17)
     # rec = my_collection.insert_one(user.to_json())
     # print(rec)
 
     curser = my_collection.find()
-    for rec in curser:
-        if 'projects' in rec:
-            projects_data = rec['projects']
-            print(len(projects_data))
-        print(rec)
+    facade.controller.read_database(curser)
+    print(facade)

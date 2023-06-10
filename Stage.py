@@ -6,6 +6,26 @@ from Utils.Status import Status
 from Utils.Exceptions import *
 
 
+def load_stage(json_data):
+    stage_id = UUID(json_data[0])
+    stage_data = json_data[1]
+    name = stage_data['name']
+    completion_date = stage_data['completion_date']
+    status = stage_data['status']
+    missions = dict()
+    new_stage: Stage = Stage(name)
+    if 'missions' in stage_data:
+        for mission_json in stage_data['missions'].items():
+            mission = load_mission(mission_json)
+            missions[mission.id] = mission
+    new_stage.missions = missions
+    new_stage.id = stage_id
+    new_stage.completion_date = completion_date
+    new_stage.status = status
+    return new_stage
+
+
+
 class Stage:
     def __init__(self, name: str):
         self.name = self.__check_stage_name(name)

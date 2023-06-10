@@ -6,6 +6,23 @@ MAX_PLAN_NAME_LENGTH = 100
 MIN_PLAN_NAME_LENGTH = 3
 
 
+def load_plan(json_data):
+    plan_id = uuid.UUID(json_data[0])
+    plan_data = json_data[1]
+    name = plan_data['name']
+    link = plan_data['link']
+    date = plan_data['link']
+
+    new_plan = Plan(name, link, date)
+
+    new_plan.id = plan_id
+    new_plan.date = date
+    new_plan.link = link
+    new_plan.name = name
+
+    return new_plan
+
+
 class Plan:
     def __init__(self, name: str, link: str = "", date: datetime = None):
         self.id = uuid.uuid1()

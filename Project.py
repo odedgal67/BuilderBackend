@@ -1,13 +1,43 @@
-from BuildingFault import BuildingFault
+from BuildingFault import BuildingFault, load_build_fault
 from Mission import Mission
 from Plan import Plan
 from Stage import Stage
 from Utils.Exceptions import *
 import uuid
 from uuid import UUID
-from Title import Title, TitleApartments, TitleMissionsStages
+from Title import Title, TitleApartments, TitleMissionsStages, load_title
 from Utils.Status import Status
 
+
+def load_project(json_data):
+    id = UUID(json_data[0])
+    project_data = json_data[1]
+    name = project_data['name']
+    titles = dict()
+    build_faults = dict()
+    plans = dict()
+
+    if 'titles' in project_data:
+        for title_json in project_data['titles'].items():
+            title_number, title = load_title(title_json)
+            titles[title_number] = title
+
+    if 'build_faults' in project_data:
+        for build_fault_json in project_data['build_faults'].items():
+            build_fault = load_build_fault(build_fault_json)
+            build_faults[build_fault.id] = build_fault
+
+    if 'plans' in project_data:
+        for plan_json in project_data['plans'].items():
+            plan = load_plan(plan_json)
+            plans[plan.id] = plan
+
+    new_project: Project = Project(name)
+    new_project.id = id
+    new_project.titles = titles
+    new_project.build_faults = build_faults
+    new_project.plans = plans
+    return new_project
 
 class Project:
     def __init__(self, name: str):

@@ -15,11 +15,10 @@ from Mission import Mission
 from Plan import Plan
 from Project import Project
 from Stage import Stage
-from User import User
+from User import User, load_user
 from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
-
 
 
 class Controller:
@@ -32,13 +31,13 @@ class Controller:
 
     def read_database(self, curser):
         for user_json_data in curser:
-            read_user = User(user_json_data)  # User read from database
+            read_user = load_user(user_json_data)  # User read from database
             self.users[read_user.username] = read_user
             if read_user.logged_in:
                 self.connected_users[read_user.username] = read_user
 
     def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
-                          data, original_file_name: str, username: str, apartment_number: int = None, ):
+                          data, original_file_name: str, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
         mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         proof_link = self.fileSystem.add_image(data, original_file_name)

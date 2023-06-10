@@ -1,7 +1,21 @@
 from uuid import UUID
 
-from Stage import Stage
+from Stage import Stage, load_stage
 from Utils.Exceptions import *
+
+
+def load_apartment(json_data):
+    apartment_number = int(json_data[0])
+    apartment_data = json_data[1]
+    stages = dict()
+    new_apartment: Apartment = Apartment(apartment_number)
+    if 'stages' in apartment_data:
+        for stage_json in apartment_data['stages'].items():
+            stage = load_stage(stage_json)
+            stages[stage.id] = stage
+    new_apartment.stages = stages
+    return new_apartment
+
 
 
 class Apartment:

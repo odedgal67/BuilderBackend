@@ -1,13 +1,50 @@
 
 from uuid import UUID
-
 from Mission import Mission
 from Permissions.Permissions import *
-from Stage import Stage
 from Utils.PasswordHasher import *
 from Utils.Exceptions import *
-from Project import Project
+from Project import Project, load_project
 from Utils.PermissionType import PermissionType
+
+
+def load_project_permission(project_permission_json_data):
+    return project_permission_json_data[0], build_permission(int(project_permission_json_data[1]))
+
+
+def load_user(json_data):
+    username = json_data['username']
+    name = json_data['name']
+    hashed_password = json_data['hashed_password']
+    logged_in = json_data['logged_in']
+    projects = dict()
+    projects_permissions = dict()
+    if 'projects' in json_data:
+        projects_list_json_data = json_data['projects']
+        for project_json_data in projects_list_json_data.items():
+            new_project: Project = load_project(project_json_data)
+            projects[new_project.id] = new_project
+    if 'projects_permissions' in json_data:
+        projects_permissions_list_json_data = json_data['projects_permissions']
+        for project_permission_json_data in projects_permissions_list_json_data.items():
+            project_id, project_permission = load_project_permission(project_permission_json_data)
+            projects_permissions[project_id] = project_permission
+    new_user: User = User(username, "TempPass", name)
+    new_user.hashed_password = hashed_password
+    new_user.logged_in = logged_in
+    new_user.projects = projects
+    new_user.projects_permissions = projects_permissions
+    return new_user
+
+
+def build_permission(permission_type):
+    if permission_type == PermissionType.WORK_MANAGER:
+        return WorkManagerPermission()
+    if permission_type == PermissionType.PROJECT_MANAGER:
+        return ProjectManagerPermission()
+    if permission_type == PermissionType.CONTRACTOR:
+        return ContractorPermission()
+    raise Exception("Permission doesn't exist")
 
 
 class User:
@@ -24,14 +61,6 @@ class User:
         ] = (
             dict()
         )  # the permission for each project for this user - dict<project_id, AbstractPermission>
-        
-    def __init__(self, json_data):
-        self.username = json_data['username']
-        self.name = json_data['name']
-        self.hashed_password = json_data['hashed_password']
-        self.logged_in = json_data['logged_in']
-        if 'projects' in json_data:
-
 
     def to_json(self):
         return {
@@ -159,7 +188,7 @@ class User:
         project_permission.remove_user_from_project(project, user_to_remove)
 
     def assign_project(self, project: Project, permission_type: PermissionType):
-        project_permission: AbstractPermission = self.build_permission(permission_type)
+        project_permission: AbstractPermission = build_permission(permission_type)
         self.projects[project.id] = project
         self.projects_permissions[project.id] = project_permission
 
@@ -174,15 +203,6 @@ class User:
 
     def __is_project_id_exists_in_permissions(self, project_id: UUID):
         return project_id in self.projects_permissions.keys()
-
-    def build_permission(self, permission_type):
-        if permission_type == PermissionType.WORK_MANAGER:
-            return WorkManagerPermission()
-        if permission_type == PermissionType.PROJECT_MANAGER:
-            return ProjectManagerPermission()
-        if permission_type == PermissionType.CONTRACTOR:
-            return ContractorPermission()
-        raise Exception("Permission doesn't exist")
 
     def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
@@ -303,7 +323,7 @@ class User:
     def change_permission_in_project(self, project_id, new_permission):
         if not self.__is_project_id_exists(project_id):
             raise ProjectDoesntExistException()
-        self.projects_permissions[project_id] = self.build_permission(new_permission)
+        self.projects_permissions[project_id] = build_permission(new_permission)
 
     def change_name(self, new_name: str):
         self.name = new_name
