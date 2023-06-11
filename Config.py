@@ -9,7 +9,9 @@ class AbstractConfig(ABC):
     DATABASE_ENABLED: bool
     IP: str
     PORT: int
-
+    MONGO_URL: str = "mongodb://localhost:27017"
+    DB_NAME: str = "Builder"
+    COLLECTION_NAME: str = "builder"
     def __post_init__(self):
         if self.IP is None:
             self.IP = "0.0.0.0"
@@ -20,14 +22,14 @@ class AbstractConfig(ABC):
 @dataclass()
 class RemoteConfig(AbstractConfig):
     def __init__(self):
-        super().__init__(SERVER_FILE_DIRECTORY="/home/ec2-user/server_files", DATABASE_ENABLED=False, IP=None,
+        super().__init__(SERVER_FILE_DIRECTORY="/home/ec2-user/server_files", IP=None,
                          PORT=None)
 
 
 @dataclass()
 class LocalConfig(AbstractConfig):
     def __init__(self):
-        super().__init__(SERVER_FILE_DIRECTORY="server_files", DATABASE_ENABLED=False, IP=None, PORT=None)
+        super().__init__(SERVER_FILE_DIRECTORY="server_files", IP=None, PORT=None)
 
 
 GLOBAL_CONFIG = LocalConfig() if sys.platform.startswith('win') else RemoteConfig()

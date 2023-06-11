@@ -10,16 +10,13 @@ from Facade import Facade
 from User import User
 from Utils.Urgency import Urgency
 import os
-from pymongo import MongoClient
+
+from db_utils import my_collection
 
 app = Flask("BuilderAPI")
 facade: Facade = Facade()
 
 ERROR_CODE = None
-
-client = MongoClient("mongodb://localhost:27017")
-my_db = client['Builder']
-my_collection = my_db['builder']
 
 
 @app.route("/register", methods=["POST"])
@@ -890,20 +887,18 @@ def handle_request_edit_building_fault():
 
 
 if __name__ == "__main__":
-    # print("running with the following configuration:")
-    # print(GLOBAL_CONFIG)
-    # app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
-
+    print("running with the following configuration:")
+    print(GLOBAL_CONFIG)
+    facade.controller.read_database(my_collection.find())
+    app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
+    #
     # user: User = User("123456789", "Password", "OdedWithShit")
     # project = user.add_project("MyProject")
-    # user.add_apartment(project.id, 17)
+    # user.add_apartment(project.id, 17) #if you want to run this again modify it to use register
     # user.add_stage(project.id, 0, "MyStaAGE0")
     # user.add_stage(project.id, 1, "MyStaAGE1")
     # user.add_stage(project.id, 3, "MyStaAGE3")
     # user.add_stage(project.id, 2, "MyStaAGE2", 17)
     # rec = my_collection.insert_one(user.to_json())
     # print(rec)
-
-    curser = my_collection.find()
-    facade.controller.read_database(curser)
     print(facade)

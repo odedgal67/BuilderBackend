@@ -19,6 +19,7 @@ from User import User, load_user
 from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
+from db_utils import persist_user
 
 
 class Controller:
@@ -27,6 +28,7 @@ class Controller:
         self.connected_users: dict[str, User] = dict()
         # Init default user
         self.register("123456789", "Password", "Liron Hart")
+        self.register("123123123", "Password", "Oded With Shit")
         self.fileSystem = FileSystemController(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY)
 
     def read_database(self, curser):
@@ -78,6 +80,7 @@ class Controller:
         if username in self.users:
             raise DuplicateUserName(username)
         user = User(username, password, name)
+        persist_user(user)
         self.users[username] = user
         user_dto: UserDTO = UserDTO(user)
         return user_dto
@@ -85,6 +88,7 @@ class Controller:
     def add_project(self, project_name: str, username: str) -> ProjectDTO:
         user = self.__get_user_by_user_name(username)
         new_project: Project = user.add_project(project_name)
+        persist_user(user)
         new_project_dto: ProjectDTO = ProjectDTO(new_project)
         return new_project_dto
 
