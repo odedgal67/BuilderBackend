@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 class DTO(ABC):
     def to_json(self):
         attributes = vars(self)
-        return {key: (str(value) if type(value) != int and type(value) != str else value) for key, value in attributes.items() if not key.startswith('__')}
+        return {key: value for key, value in attributes.items() if not key.startswith('__')}

@@ -6,7 +6,6 @@ import sys
 @dataclass(init=True, repr=True)
 class AbstractConfig(ABC):
     SERVER_FILE_DIRECTORY: str
-    DATABASE_ENABLED: bool
     IP: str
     PORT: int
     MONGO_URL: str = "mongodb://localhost:27017"
