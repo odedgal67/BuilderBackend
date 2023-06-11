@@ -71,8 +71,6 @@ class Controller:
 
     def logout(self, username: str) -> None:
         user: User = self.__get_user_by_user_name(username)
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
         user.logout()
         self.connected_users.pop(username)
 
@@ -425,18 +423,12 @@ class Controller:
                     raise Exception("User has no permission in the project")
 
     def get_projects(self, username: str):
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
-        else:
-            user: User = self.__get_user_by_user_name(username)
-            return [ProjectDTO(p) for p in user.get_projects()]
+        user: User = self.__get_user_by_user_name(username)
+        return [ProjectDTO(p) for p in user.get_projects()]
 
     def get_my_permission(self, project_id: UUID, username: str):
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
-        else:
-            user: User = self.__get_user_by_user_name(username)
-            return user.get_my_permission(project_id)
+        user: User = self.__get_user_by_user_name(username)
+        return user.get_my_permission(project_id)
 
     def add_plan(self, project_id: UUID, plan_name: str, username: str):
         user: User = self.__get_user_by_user_name(username)

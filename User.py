@@ -112,8 +112,6 @@ class User:
         return False
 
     def login(self, password: str) -> bool:
-        if self.logged_in:
-            raise AlreadyLoggedException(self.username)
         if not compare_password(password, self.hashed_password):
             raise IncorrectPasswordException()
         self.logged_in = True

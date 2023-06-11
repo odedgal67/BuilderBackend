@@ -1,7 +1,11 @@
+from datetime import timedelta
 
+from flask_session import Session
 from typing import Callable
 
-from flask import Flask, request, jsonify, abort, send_from_directory
+from functools import wraps
+from flask import Flask, request, jsonify, abort, send_from_directory, session
+
 import traceback
 
 from Config import GLOBAL_CONFIG
@@ -10,14 +14,31 @@ from Facade import Facade
 from User import User
 from Utils.Urgency import Urgency
 import os
+import secrets
 
 from db_utils import my_collection
 
 app = Flask("BuilderAPI")
+SESSION_TYPE = 'filesystem'
+app.config.from_object(__name__)
+secret_key = secrets.token_hex(32)  # Generate a 32-byte secret key
+app.secret_key = secret_key
+Session(app)
+app.permanent_session_lifetime = timedelta(seconds=1)
 facade: Facade = Facade()
 
 ERROR_CODE = None
+REFRESH_TOKEN_ERROR_CODE = 401
 
+
+
+def require_login(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({"error": "User not logged in (no current session)"}), REFRESH_TOKEN_ERROR_CODE
+        return func(*args, **kwargs)
+    return wrapper
 
 @app.route("/register", methods=["POST"])
 def handle_request_register():
@@ -47,6 +68,7 @@ def handle_request_login():
     # Call the facade method
     try:
         result = facade.login(data["username"], data["password"])
+        session['user_id'] = data["username"]
         return jsonify({"result": result})
     except Exception as e:
         print(f"[login] : raised exception {str(e)}")
@@ -64,6 +86,7 @@ def handle_request_logout():
     # Call the facade method
     try:
         facade.logout(data["username"])
+        session.clear()
         return jsonify({"result": "success"})
     except Exception as e:
         print(f"[logout] : raised exception {str(e)}")
@@ -71,6 +94,7 @@ def handle_request_logout():
 
 
 @app.route("/add_project", methods=["POST"])
+@require_login
 def handle_request_add_project():
     print("\n\nAdd Project request received")
 
@@ -88,6 +112,7 @@ def handle_request_add_project():
 
 
 @app.route("/add_stage", methods=["POST"])
+@require_login
 def handle_request_add_stage():
     print("\n\nAdd Stage request received")
 
@@ -112,6 +137,7 @@ def handle_request_add_stage():
 
 
 @app.route("/add_mission", methods=["POST"])
+@require_login
 def handle_request_add_mission():
     print("\n\nAdd Mission request received")
 
@@ -136,6 +162,7 @@ def handle_request_add_mission():
 
 
 @app.route("/edit_project_name", methods=["POST"])
+@require_login
 def handle_request_edit_project_name():
     print("\n\nEdit Project Name request received")
 
@@ -155,6 +182,7 @@ def handle_request_edit_project_name():
 
 
 @app.route("/edit_stage_name", methods=["POST"])
+@require_login
 def handle_request_edit_stage_name():
     print("\n\nEdit Stage Name request received")
 
@@ -179,6 +207,7 @@ def handle_request_edit_stage_name():
 
 
 @app.route("/edit_mission_name", methods=["POST"])
+@require_login
 def handle_request_edit_mission_name():
     print("\n\nEdit Mission Name request received")
 
@@ -204,6 +233,7 @@ def handle_request_edit_mission_name():
 
 
 @app.route("/set_mission_status", methods=["POST"])
+@require_login
 def handle_request_set_mission_status():
     print("\n\nSet Mission Status request received")
 
@@ -229,6 +259,7 @@ def handle_request_set_mission_status():
 
 
 @app.route("/get_all_missions", methods=["POST"])
+@require_login
 def handle_request_get_all_missions():
     print("\n\nGet All Missions request received")
 
@@ -252,6 +283,7 @@ def handle_request_get_all_missions():
 
 
 @app.route("/get_all_stages", methods=["POST"])
+@require_login
 def handle_request_get_all_stages():
     print("\n\nGet All Stages request received")
 
@@ -275,6 +307,7 @@ def handle_request_get_all_stages():
 
 
 @app.route("/assign_project_to_user", methods=["POST"])
+@require_login
 def handle_request_assign_project_to_user():
     print("\n\nAssign Project To User request received")
 
@@ -298,6 +331,7 @@ def handle_request_assign_project_to_user():
 
 
 @app.route("/edit_comment_in_mission", methods=["POST"])
+@require_login
 def handle_request_edit_comment_in_mission():
     print("\n\nEdit Comment In Mission request received")
 
@@ -323,6 +357,7 @@ def handle_request_edit_comment_in_mission():
 
 
 @app.route("/remove_stage", methods=["POST"])
+@require_login
 def handle_request_remove_stage():
     print("\n\nRemove Stage request received")
 
@@ -346,6 +381,7 @@ def handle_request_remove_stage():
 
 
 @app.route("/remove_mission", methods=["POST"])
+@require_login
 def handle_request_remove_mission():
     print("\n\nRemove Mission request received")
 
@@ -371,6 +407,7 @@ def handle_request_remove_mission():
 
 
 @app.route("/set_green_building", methods=["POST"])
+@require_login
 def handle_request_set_green_building():
     print("\n\nSet Green Building request received")
 
@@ -396,6 +433,7 @@ def handle_request_set_green_building():
 
 
 @app.route("/set_stage_status", methods=["POST"])
+@require_login
 def handle_request_set_stage_status():
     print("\n\nSet Stage Status request received")
 
@@ -419,6 +457,7 @@ def handle_request_set_stage_status():
 
 
 @app.route("/get_all_assigned_users_in_project", methods=["POST"])
+@require_login
 def handle_request_get_all_assigned_users_in_project():
     print("\n\nGet All Assigned Users In Project request received")
 
@@ -438,6 +477,7 @@ def handle_request_get_all_assigned_users_in_project():
 
 
 @app.route("/set_urgency", methods=["POST"])
+@require_login
 def handle_request_set_urgency():
     print("\n\nSet Urgency request received")
 
@@ -460,6 +500,7 @@ def handle_request_set_urgency():
 
 
 @app.route("/add_building_fault", methods=["POST"])
+@require_login
 def handle_request_add_building_fault():
     print("\n\nAdd Building Fault request received")
 
@@ -484,6 +525,7 @@ def handle_request_add_building_fault():
 
 
 @app.route("/remove_building_fault", methods=["POST"])
+@require_login
 def handle_request_remove_building_fault():
     print("\n\nRemove Building Fault request received")
 
@@ -503,6 +545,7 @@ def handle_request_remove_building_fault():
 
 
 @app.route("/set_build_fault_status", methods=["POST"])
+@require_login
 def handle_request_set_build_fault_status():
     print("\n\nSet Build Fault Status request received")
 
@@ -525,6 +568,7 @@ def handle_request_set_build_fault_status():
 
 
 @app.route("/remove_user_from_project", methods=["POST"])
+@require_login
 def handle_request_remove_user_from_project():
     print("\n\nRemove User From Project request received")
 
@@ -544,6 +588,7 @@ def handle_request_remove_user_from_project():
 
 
 @app.route("/get_my_permission", methods=["POST"])
+@require_login
 def handle_request_get_my_permission():
     print("\n\nGet my permission request received")
 
@@ -583,6 +628,7 @@ def handle_request_echo():
 
 
 @app.route("/get_projects", methods=["POST"])
+@require_login
 def handle_request_get_projects():
     print("\n\nget projects received")
 
@@ -618,18 +664,21 @@ def wrap_with_try_except(func_name: str, func: Callable, *kwargs):
         return jsonify({"error": str(e)}), ERROR_CODE
 
 @app.route("/set_mission_proof", methods=['POST'])
+@require_login
 def handle_set_mission_proof():
     print("set mission proof request received")
     data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
     return wrap_with_try_except("set_mission_proof", facade.set_mission_proof, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
 
 @app.route('/set_mission_tekken', methods=['POST'])
+@require_login
 def handle_set_mission_tekken():
     print("set mission proof request received")
     data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
     return wrap_with_try_except("set_mission_tekken", facade.set_mission_tekken, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
 
 @app.route('/set_mission_plan_link', methods=['POST'])
+@require_login
 def handle_set_mission_plan_link():
     print("post set_mission_plan_link request recieved")
     data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
@@ -638,6 +687,7 @@ def handle_set_mission_plan_link():
 
 
 @app.route('/<path:filename>', methods=['GET'])
+# @require_login
 def serve_file(filename):
     file_path = os.path.join(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY, filename)
 
@@ -649,6 +699,7 @@ def serve_file(filename):
 
 
 @app.route("/get_all_building_faults", methods=["POST"])
+@require_login
 def handle_request_get_all_building_faults():
     print("get all building faults request received")
 
@@ -666,6 +717,7 @@ def handle_request_get_all_building_faults():
 
 
 @app.route("/add_plan", methods=["POST"])
+@require_login
 def handle_request_add_plan():
     print("\n\nadd plan request received")
 
@@ -683,6 +735,7 @@ def handle_request_add_plan():
 
 
 @app.route("/remove_plan", methods=["POST"])
+@require_login
 def handle_request_remove_plan():
     print("\n\nremove plan request received")
 
@@ -700,6 +753,7 @@ def handle_request_remove_plan():
 
 
 @app.route("/edit_plan_name", methods=["POST"])
+@require_login
 def handle_request_edit_plan_name():
     print("\n\nedit plan name request received")
 
@@ -717,6 +771,7 @@ def handle_request_edit_plan_name():
 
 
 @app.route("/edit_plan_link", methods=["POST"])
+@require_login
 def handle_request_edit_plan_link():
     print("\n\nedit plan link request received")
 
@@ -734,6 +789,7 @@ def handle_request_edit_plan_link():
 
 
 @app.route("/edit_mission_link", methods=["POST"])
+@require_login
 def handle_request_edit_mission_link():
     print("\n\nedit mission link request received")
 
@@ -751,6 +807,7 @@ def handle_request_edit_mission_link():
 
 
 @app.route("/change_user_permission_in_project", methods=["POST"])
+@require_login
 def handle_request_change_user_permission_in_project():
     print("\n\nchange user permission in project request received")
 
@@ -768,6 +825,7 @@ def handle_request_change_user_permission_in_project():
 
 
 @app.route("/change_user_name", methods=["POST"])
+@require_login
 def handle_request_change_user_name():
     print("\n\nchange user name request received")
 
@@ -785,6 +843,7 @@ def handle_request_change_user_name():
 
 
 @app.route("/change_user_password", methods=["POST"])
+@require_login
 def handle_request_change_user_password():
     print("\n\nchange user password request received")
 
@@ -802,6 +861,7 @@ def handle_request_change_user_password():
 
 
 @app.route("/add_apartment", methods=["POST"])
+@require_login
 def handle_request_add_apartment():
     print("\n\nadd apartment request received")
 
@@ -819,6 +879,7 @@ def handle_request_add_apartment():
 
 
 @app.route("/remove_apartment", methods=["POST"])
+@require_login
 def handle_request_remove_apartment():
     print("\n\nremove apartment request received")
 
@@ -836,6 +897,7 @@ def handle_request_remove_apartment():
 
 
 @app.route("/get_all_apartments_in_project", methods=["POST"])
+@require_login
 def handle_request_get_all_apartments_in_project():
     print("\n\nget all apartments in project request received")
 
@@ -853,6 +915,7 @@ def handle_request_get_all_apartments_in_project():
 
 
 @app.route("/get_all_plans", methods=["POST"])
+@require_login
 def handle_request_get_all_plans():
     print("\n\nget all plans request received")
 
@@ -870,6 +933,7 @@ def handle_request_get_all_plans():
 
 
 @app.route("/edit_building_fault", methods=["POST"])
+@require_login
 def handle_request_edit_building_fault():
     print("\n\nedit building fault request received")
 
@@ -891,14 +955,4 @@ if __name__ == "__main__":
     print(GLOBAL_CONFIG)
     facade.controller.read_database(my_collection.find())
     app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
-    #
-    # user: User = User("123456789", "Password", "OdedWithShit")
-    # project = user.add_project("MyProject")
-    # user.add_apartment(project.id, 17) #if you want to run this again modify it to use register
-    # user.add_stage(project.id, 0, "MyStaAGE0")
-    # user.add_stage(project.id, 1, "MyStaAGE1")
-    # user.add_stage(project.id, 3, "MyStaAGE3")
-    # user.add_stage(project.id, 2, "MyStaAGE2", 17)
-    # rec = my_collection.insert_one(user.to_json())
-    # print(rec)
     print(facade)
