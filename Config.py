@@ -22,7 +22,7 @@ class AbstractConfig(ABC):
 class RemoteConfig(AbstractConfig):
     def __init__(self):
         super().__init__(SERVER_FILE_DIRECTORY="/home/ec2-user/server_files", IP=None,
-                         PORT=None)
+                         PORT=None, MONGO_URL="mongodb+srv://odedgal67:o95r88i84D@cluster0.qesnyur.mongodb.net/")
 
 
 @dataclass()

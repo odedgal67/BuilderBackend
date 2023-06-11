@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from uuid import UUID
-from Mission import Mission
+from Mission import Mission, load_mission
 from Utils.Status import Status
 from Utils.Exceptions import *
 

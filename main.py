@@ -24,7 +24,7 @@ app.config.from_object(__name__)
 secret_key = secrets.token_hex(32)  # Generate a 32-byte secret key
 app.secret_key = secret_key
 Session(app)
-app.permanent_session_lifetime = timedelta(seconds=1)
+app.permanent_session_lifetime = timedelta(minutes=10)
 facade: Facade = Facade()
 
 ERROR_CODE = None
@@ -955,4 +955,3 @@ if __name__ == "__main__":
     print(GLOBAL_CONFIG)
     facade.controller.read_database(my_collection.find())
     app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
-    print(facade)

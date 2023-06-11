@@ -9,7 +9,7 @@ from db_utils import persist_user
 
 
 def load_project_permission(project_permission_json_data):
-    return project_permission_json_data[0], build_permission(int(project_permission_json_data[1]))
+    return UUID(project_permission_json_data[0]), build_permission(int(project_permission_json_data[1]))
 
 
 loaded_projects = dict()
@@ -31,7 +31,6 @@ def load_user(json_data):
             else:
                 loaded_projects[new_project.id] = new_project
             projects[new_project.id] = new_project
-            print(projects)
     if 'projects_permissions' in json_data:
         projects_permissions_list_json_data = json_data['projects_permissions']
         for project_permission_json_data in projects_permissions_list_json_data.items():
