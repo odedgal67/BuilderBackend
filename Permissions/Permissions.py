@@ -138,8 +138,7 @@ class AbstractPermission(ABC):
     def get_all_apartments_in_project(self, project):
         pass
 
-    def edit_building_fault(self, project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building,
-                            urgency):
+    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         pass
 
     def get_all_plans(self, project):
@@ -305,8 +304,8 @@ class WorkManagerPermission(AbstractPermission):
     def get_all_apartments_in_project(self, project: Project):
         return project.get_all_apartments_in_project()
 
-    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
-        return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
+        return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
 
 class ProjectManagerPermission(WorkManagerPermission):

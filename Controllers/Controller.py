@@ -485,9 +485,9 @@ class Controller:
             apartment_dto_list.append(apartment_dto)
         return apartment_dto_list
 
-    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency, username):
+    def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         user: User = self.__get_user_by_user_name(username)
-        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
     def __check_not_last_user(self, project_id: UUID):
         counter: int = 0

@@ -155,7 +155,7 @@ class Facade:
         # Returns dict [plan_id: PlanDTO]
         plans_list = self.controller.get_all_plans(UUID(project_id), username)
         plans_dict = dict()
-        for plan in plans_dict:
+        for plan in plans_list:
             plans_dict[str(plan.id)] = plan.to_json()
         return plans_dict
 
@@ -201,8 +201,7 @@ class Facade:
             apartments_dict[apartment_dto.apartment_number] = apartment_dto
         return apartments_dict
 
-    def edit_building_fault(self, project_id: str, building_fault_id: str, building_fault_name: str, floor_number: int, apartment_number: int, link: str, green_building: bool, urgency: Urgency, username: str):
+    def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username: str):
         # Returns Void
-        self.controller.edit_building_fault(UUID(project_id), UUID(building_fault_id), building_fault_name, floor_number, apartment_number, link, green_building, urgency, username)
+        self.controller.edit_building_fault(UUID(project_id), UUID(building_fault_id), building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
-    # TODO : Check Login in each method

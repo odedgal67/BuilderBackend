@@ -17,7 +17,6 @@ def load_apartment(json_data):
     return new_apartment
 
 
-
 class Apartment:
 
     def __init__(self, apartment_number: int):

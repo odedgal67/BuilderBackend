@@ -943,7 +943,7 @@ def handle_request_edit_building_fault():
 
     # Call the facade method
     try:
-        facade.edit_building_fault(data['project_id'], data['building_fault_id'], data['building_fault_name'], data['floor_number'], data['apartment_number'], data['link'], data['green_building'], data['urgency'], data['username'])
+        facade.edit_building_fault(data['project_id'], data['building_fault_id'], data['building_fault_name'], data['floor_number'], data['apartment_number'], data['green_building'], data['urgency'], data['proof_fix'], data['tekken'], data['plan_link'], data['status'], data['proof'], data['comment'], data['username'])
         return jsonify({"result": "success"})
     except Exception as e:
         print(f"[edit_building_fault] : raised exception {str(e)}")

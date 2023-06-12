@@ -76,6 +76,9 @@ class BuildingFault(Mission):
             'id': str(self.id)
         }
 
+    def set_proof_fix(self, proof_fix):
+        self.proof_fix = proof_fix
+
 
 
 

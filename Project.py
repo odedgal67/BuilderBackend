@@ -336,12 +336,17 @@ class Project:
         title: Title = self.titles[2]  # Get apartments title
         return title.get_all_apartments_in_project()
 
-    def edit_building_fault(self, building_fault_id, building_fault_name, floor_number, apartment_number, link,
-                            green_building, urgency):
+    def edit_building_fault(self, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         building_fault: BuildingFault = self.get_build_fault(building_fault_id)
         building_fault.edit_name(building_fault_name)
         building_fault.set_floor_number(floor_number)
         building_fault.set_apartment_number(apartment_number)
-        building_fault.set_link(link)
         building_fault.set_green_building(green_building)
         building_fault.set_urgency(urgency)
+        building_fault.set_proof_fix(proof_fix)
+        building_fault.set_tekken(tekken)
+        building_fault.set_plan_link(plan_link)
+        building_fault.set_status(status, username)
+        building_fault.set_proof(proof)
+        building_fault.set_comment(comment)
+
