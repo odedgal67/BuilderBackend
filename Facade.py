@@ -108,11 +108,11 @@ class Facade:
 
     def remove_building_fault(self, project_id: str, build_fault_id: UUID, username: str):
         # Returns removed building fault
-        return self.controller.remove_building_fault(UUID(project_id), build_fault_id, username).to_json()
+        return self.controller.remove_building_fault(UUID(project_id), UUID(build_fault_id), username).to_json()
 
     def set_build_fault_status(self, project_id: str, build_fault_id: UUID, new_status: Status, username: str) -> None:
         # Returns void
-        self.controller.set_build_fault_status(UUID(project_id), build_fault_id, new_status, username)
+        self.controller.set_build_fault_status(UUID(project_id), UUID(build_fault_id), new_status, username)
 
     def remove_user_from_project(self, project_id: str, username_to_remove: str, removing_user: str):
         return self.controller.remove_user_from_project(UUID(project_id), username_to_remove, removing_user).to_json()
@@ -159,9 +159,9 @@ class Facade:
             plans_dict[str(plan.id)] = plan.to_json()
         return plans_dict
 
-    def add_plan(self, project_id: str, plan_name: str, username: str):
+    def add_plan(self, project_id: str, plan_name: str, link, username: str):
         # Returns new plan
-        return self.controller.add_plan(UUID(project_id), plan_name, username).to_json()
+        return self.controller.add_plan(UUID(project_id), plan_name, link, username).to_json()
 
     def remove_plan(self, project_id: str, plan_id: str, username: str):
         # Returns removed plan

@@ -111,7 +111,7 @@ class AbstractPermission(ABC):
     def get_all_building_faults(self, project):
         pass
 
-    def add_plan(self, project, plan_name):
+    def add_plan(self, project, plan_name, link):
         pass
 
     def remove_plan(self, project, plan_id):
@@ -277,8 +277,8 @@ class WorkManagerPermission(AbstractPermission):
     def get_all_plans(self, project: Project):
         return project.get_all_plans()
 
-    def add_plan(self, project: Project, plan_name):
-        return project.add_plan(plan_name)
+    def add_plan(self, project: Project, plan_name, link):
+        return project.add_plan(plan_name, link)
 
     def remove_plan(self, project: Project, plan_id):
         raise PermissionError

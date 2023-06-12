@@ -311,10 +311,10 @@ class User:
     def get_my_permission(self, project_id: UUID):
         return self.get_project_permission(project_id).get_enum()
 
-    def add_plan(self, project_id: UUID, plan_name: str):
+    def add_plan(self, project_id: UUID, plan_name: str, link):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_plan(project, plan_name)
+        return project_permission.add_plan(project, plan_name, link)
 
     def remove_plan(self, project_id: UUID, plan_id: UUID):
         project: Project = self.get_project(project_id)

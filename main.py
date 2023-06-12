@@ -727,7 +727,7 @@ def handle_request_add_plan():
 
     # Call the facade method
     try:
-        result = facade.add_plan(data['project_id'], data['plan_name'], data['username'])
+        result = facade.add_plan(data['project_id'], data['plan_name'], data.get('link', ""), data['username'])
         return jsonify({"result": result})
     except Exception as e:
         print(f"[add_plan] : raised exception {str(e)}")

@@ -230,10 +230,10 @@ class Project:
         self.build_faults[new_building_fault.id] = new_building_fault
         return new_building_fault
 
-    def add_plan(self, plan_name):
+    def add_plan(self, plan_name, link):
         if self.__is_plan_name_exists(plan_name):
             raise DuplicatePlanNameException(plan_name)
-        new_plan: Plan = Plan(plan_name)
+        new_plan: Plan = Plan(plan_name, link)
         self.plans[new_plan.id] = new_plan
         return new_plan
 
