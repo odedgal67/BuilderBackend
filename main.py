@@ -771,19 +771,9 @@ def handle_request_edit_plan_name():
 @app.route("/edit_plan_link", methods=["POST"])
 @require_login
 def handle_request_edit_plan_link():
-    print("\n\nedit plan link request received")
-
-    # Parse JSON payload from the request
-    data = request.get_json()
-    print(f"data : {data}")
-
-    # Call the facade method
-    try:
-        result = facade.edit_plan_link(data['project_id'], data['plan_id'], data['new_link'], data['username'])
-        return jsonify({"result": result})
-    except KnownServerException as e:
-        print(f"[edit_plan_link] : raised exception {str(e)}")
-        return jsonify({"error": str(e)}), ERROR_CODE
+    data, original_file_name, project_id, username = base_file_request_attributes(request)
+    plan_id = request.form.get('plan_id')
+    return wrap_with_try_except("edit_plan_link", facade.edit_plan_link, project_id, plan_id, data.read(), original_file_name, username)
 
 
 @app.route("/edit_mission_link", methods=["POST"])
