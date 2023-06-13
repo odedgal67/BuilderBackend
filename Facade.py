@@ -171,9 +171,9 @@ class Facade:
         # Returns new name
         return {"name": self.controller.edit_plan_name(UUID(project_id), UUID(plan_id), new_plan_name, username)}
 
-    def edit_plan_link(self, project_id: str, plan_id: str, new_link: str, username: str):
+    def edit_plan_link(self, project_id: str, plan_id: str, newfile, original_file_name: str, username: str):
         # Returns new link
-        return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), new_link, username)}
+        return {"link": self.controller.edit_plan_link(UUID(project_id), UUID(plan_id), newfile, original_file_name, username)}
 
     def change_user_permission_in_project(self, project_id: str, new_permission: PermissionType, username_to_change: str, username_changing: str): # Delete
         # Returns Void

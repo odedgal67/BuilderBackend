@@ -445,8 +445,9 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         return user.edit_plan_name(project_id, plan_id, new_plan_name)
 
-    def edit_plan_link(self, project_id: UUID, plan_id: UUID, new_link: str, username: str):
+    def edit_plan_link(self, project_id: UUID, plan_id: UUID, newfile, original_file_name, username: str):
         user: User = self.__get_user_by_user_name(username)
+        new_link = self.fileSystem.add_doc(newfile, original_file_name)
         return user.edit_plan_link(project_id, plan_id, new_link)
 
     def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, username: str, apartment_number: int = None):
