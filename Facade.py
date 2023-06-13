@@ -159,9 +159,9 @@ class Facade:
             plans_dict[str(plan.id)] = plan.to_json()
         return plans_dict
 
-    def add_plan(self, project_id: str, plan_name: str, link, username: str):
+    def add_plan(self, project_id, plan_name, data, original_file_name, username):
         # Returns new plan
-        return self.controller.add_plan(UUID(project_id), plan_name, link, username).to_json()
+        return self.controller.add_plan(UUID(project_id), plan_name, data, original_file_name, username).to_json()
 
     def remove_plan(self, project_id: str, plan_id: str, username: str):
         # Returns removed plan

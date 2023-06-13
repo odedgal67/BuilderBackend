@@ -160,6 +160,18 @@ class User:
         project: Project = self.get_project(project_id)
         return project.check_set_mission_proof(title_id, stage_id, mission_id, apartment_number)
 
+    def set_mission_proof(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_proof(title_id, stage_id, mission_id, link, apartment_number)
+
+    def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_tekken(title_id, stage_id, mission_id, link, apartment_number)
+
+    def set_mission_plan_link(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_plan_link(title_id, stage_id, mission_id, link, apartment_number)
+
     def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str,
                     apartment_number: int = None) -> Mission:
         project: Project = self.get_project(project_id)

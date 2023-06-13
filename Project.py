@@ -283,6 +283,21 @@ class Project:
         title: Title = self.__get_title(title_id)
         return title.check_set_mission_proof(stage_id, mission_id, apartment_number)
 
+    def set_mission_proof(self, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        mission: Mission = title.check_set_mission_proof(stage_id, mission_id, apartment_number)
+        return mission.set_proof(link)
+
+    def set_mission_tekken(self, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        mission: Mission = title.check_set_mission_proof(stage_id, mission_id, apartment_number)
+        return mission.set_tekken(link)
+
+    def set_mission_plan_link(self, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        title: Title = self.__get_title(title_id)
+        mission: Mission = title.check_set_mission_proof(stage_id, mission_id, apartment_number)
+        return mission.set_plan_link(link)
+
     def get_all_building_faults(self):
         building_fault_list = list()
         for build_fault in self.build_faults.values():

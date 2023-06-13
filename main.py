@@ -644,14 +644,19 @@ def handle_request_get_projects():
         print(f"[get_projects] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
-def get_attributes_on_set_file_request(request):
+def base_file_request_attributes(request):
     data = request.files.get('file')
     original_file_name = request.form.get('file_name')
     project_id = request.form.get('project_id')
+    username = request.form.get('username')
+    return data, original_file_name, project_id, username
+
+def get_attributes_on_set_file_request(request):
+    data, original_file_name, project_id, username = base_file_request_attributes(request)
     apartment_number = request.form.get('apartment_number')
     stage_id = request.form.get('stage_id')
     mission_id = request.form.get('mission_id')
-    username = request.form.get('username')
+
     title_id = request.form.get('title_id')
     return data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id
 
@@ -673,7 +678,7 @@ def handle_set_mission_proof():
 @app.route('/set_mission_tekken', methods=['POST'])
 @require_login
 def handle_set_mission_tekken():
-    print("set mission proof request received")
+    print("set mission tekken request received")
     data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
     return wrap_with_try_except("set_mission_tekken", facade.set_mission_tekken, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
 
@@ -721,17 +726,9 @@ def handle_request_get_all_building_faults():
 def handle_request_add_plan():
     print("\n\nadd plan request received")
 
-    # Parse JSON payload from the request
-    data = request.get_json()
-    print(f"data : {data}")
-
-    # Call the facade method
-    try:
-        result = facade.add_plan(data['project_id'], data['plan_name'], data.get('link', ""), data['username'])
-        return jsonify({"result": result})
-    except Exception as e:
-        print(f"[add_plan] : raised exception {str(e)}")
-        return jsonify({"error": str(e)}), ERROR_CODE
+    data, original_file_name, project_id, username = base_file_request_attributes(request)
+    plan_name = request.form.get('plan_name')
+    wrap_with_try_except("add_plan", facade.add_plan, project_id, plan_name, data, original_file_name, username)
 
 
 @app.route("/remove_plan", methods=["POST"])
