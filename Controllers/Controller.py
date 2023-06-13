@@ -41,25 +41,25 @@ class Controller:
     def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
                           data, original_file_name: str, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         proof_link = self.fileSystem.add_image(data, original_file_name)
-        mission.set_proof(proof_link)
+        user.set_mission_proof(project_id, title_id, stage_id, mission_id, proof_link, apartment_number)
         return proof_link
 
     def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
                            apartment_number):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         tekken_link = self.fileSystem.add_doc(data, original_file_name)
-        mission.set_tekken(tekken_link)
+        user.set_mission_tekken(project_id, title_id, stage_id, mission_id, tekken_link, apartment_number)
         return tekken_link
 
     def set_mission_plan_link(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
                            apartment_number):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         plan_link = self.fileSystem.add_doc(data, original_file_name)
-        mission.set_plan_link(plan_link)
+        user.set_mission_plan_link(project_id, title_id, stage_id, mission_id, plan_link, apartment_number)
         return plan_link
 
     def login(self, username: str, password: str) -> UserDTO:

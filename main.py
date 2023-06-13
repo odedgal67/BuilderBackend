@@ -673,7 +673,7 @@ def handle_set_mission_proof():
 @app.route('/set_mission_tekken', methods=['POST'])
 @require_login
 def handle_set_mission_tekken():
-    print("set mission proof request received")
+    print("set mission tekken request received")
     data, original_file_name, project_id, apartment_number, stage_id, mission_id, username, title_id = get_attributes_on_set_file_request(request)
     return wrap_with_try_except("set_mission_tekken", facade.set_mission_tekken, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
 
