@@ -729,7 +729,7 @@ def handle_request_add_plan():
 
     data, original_file_name, project_id, username = base_file_request_attributes(request)
     plan_name = request.form.get('plan_name')
-    wrap_with_try_except("add_plan", facade.add_plan, project_id, plan_name, data, original_file_name, username)
+    return wrap_with_try_except("add_plan", facade.add_plan, project_id, plan_name, data.read(), original_file_name, username)
 
 
 @app.route("/remove_plan", methods=["POST"])
