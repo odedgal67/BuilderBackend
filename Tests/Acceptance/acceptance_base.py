@@ -1,8 +1,12 @@
+import traceback
 import unittest
 import random
 import string
 from typing import Callable
+from pytest_mock_resources import create_mongo_fixture
 
+import db_utils
+from Config import GLOBAL_CONFIG
 from Facade import Facade
 
 
@@ -18,7 +22,12 @@ class AcceptanceBase(unittest.TestCase):
         try:
             return func(*kwargs)
         except Exception as e:
+            traceback.print_exc()
             cls.fail(self=cls, msg=message)
+
+    @classmethod
+    def generate_valid_name(cls):
+        return "oded"
 
     @classmethod
     def _get_user_name(self) -> str:
@@ -59,6 +68,7 @@ class AcceptanceBase(unittest.TestCase):
                 self.facade.register,
                 curr_username,
                 curr_password,
+                self.generate_valid_name(),
             )
             self.assertNotThrows(
                 "failed to setup test, couldn't login the users!",

@@ -10,5 +10,5 @@ class ProjectDTO(DTO):
     def to_json(self):
         return {
             'name': self.name,
-            'id': self.id
+            'id': str(self.id)
         }

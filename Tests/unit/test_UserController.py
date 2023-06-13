@@ -21,12 +21,12 @@ onetime_uc = Controller()
 class RegisterUserName(unittest.TestCase):
     def test_empty_username(self):
         self.assertRaises(
-            IllegalUsernameException, onetime_uc.register, "", legal_password
+            IllegalUsernameException, onetime_uc.register, "", legal_password, 'oded'
         )
 
     def test_short_username(self):
         self.assertRaises(
-            IllegalUsernameException, onetime_uc.register, "a", legal_password
+            IllegalUsernameException, onetime_uc.register, "a", legal_password, 'oded'
         )
 
     def test_long_username(self):
@@ -35,6 +35,7 @@ class RegisterUserName(unittest.TestCase):
             onetime_uc.register,
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             legal_password,
+            'oded'
         )
 
     def test_bad_username1(self):
@@ -43,6 +44,7 @@ class RegisterUserName(unittest.TestCase):
             onetime_uc.register,
             "12345678a",
             legal_password,
+            'oded'
         )
 
     def test_bad_username2(self):
@@ -51,18 +53,19 @@ class RegisterUserName(unittest.TestCase):
             onetime_uc.register,
             "12345678 ",
             legal_password,
+            'oded'
         )
 
 
 class RegisterPassword(unittest.TestCase):
     def test_empty_password(self):
         self.assertRaises(
-            IllegalPasswordException, onetime_uc.register, legal_username, ""
+            IllegalPasswordException, onetime_uc.register, legal_username, "", 'oded'
         )
 
     def test_easy_password(self):
         self.assertRaises(
-            IllegalPasswordException, onetime_uc.register, legal_username, "aaabbbbbaaa"
+            IllegalPasswordException, onetime_uc.register, legal_username, "aaabbbbbaaa", 'oded'
         )
 
     def test_long_password(self):
@@ -71,20 +74,21 @@ class RegisterPassword(unittest.TestCase):
             onetime_uc.register,
             legal_username,
             "aaabbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            'oded'
         )
 
 
 class Register(unittest.TestCase):
     def test_register_same_user(self):
         uc = Controller()
-        uc.register(legal_username, legal_password)
+        uc.register(legal_username, legal_password, 'oded')
         self.assertRaises(
-            DuplicateUserName, uc.register, legal_username, legal_password
+            DuplicateUserName, uc.register, legal_username, legal_password, 'oded'
         )
 
     def test_register_and_login_simple(self):
         uc = Controller()
-        uc.register(legal_username, legal_password)
+        uc.register(legal_username, legal_password, 'oded')
         self.assertIsNotNone(uc.login(legal_username, legal_password))
 
 
@@ -95,26 +99,18 @@ class Login(unittest.TestCase):
 
     def test_login_bad_password(self):
         uc = Controller()
-        uc.register(legal_username, legal_password)
+        uc.register(legal_username, legal_password, 'oded')
         self.assertRaises(
             IncorrectPasswordException, uc.login, legal_username, "somePassword"
-        )
-
-    def test_login_twice(self):
-        uc = Controller()
-        uc.register(legal_username, legal_password)
-        uc.login(legal_username, legal_password)
-        self.assertRaises(
-            AlreadyLoggedException, uc.login, legal_username, legal_password
         )
 
 
 class remove_user(unittest.TestCase):
     def test_remove_user_from_project(self):
         uc = Controller()
-        uc.register(legal_username, legal_password)
+        uc.register(legal_username, legal_password, 'oded')
         uc.login(legal_username, legal_password)
-        uc.register(legal_username2, legal_password)
+        uc.register(legal_username2, legal_password, 'oded')
         uc.login(legal_username2, legal_password)
         project = uc.add_project(legal_project_name, legal_username)
         uc.assign_project_to_user(

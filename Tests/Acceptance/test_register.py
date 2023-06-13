@@ -24,6 +24,7 @@ class Register(AcceptanceBase):
             self.facade.register,
             self._get_user_name(),
             self.valid_password,
+            self.generate_valid_name()
         )
 
     @classmethod
@@ -34,6 +35,7 @@ class Register(AcceptanceBase):
             self.facade.register,
             userName,
             self.valid_password,
+            self.generate_valid_name(),
         )
 
     @classmethod
@@ -44,6 +46,7 @@ class Register(AcceptanceBase):
             self.facade.register,
             self._get_user_name(),
             password,
+            self.generate_valid_name()
         )
 
     def test_register_bad_username(self):
@@ -66,9 +69,9 @@ class Register(AcceptanceBase):
 
     def test_duplicate_register(self):
         username = self._get_user_name()
-        self.facade.register(username, self.valid_password)
+        self.facade.register(username, self.valid_password, self.generate_valid_name())
         self.assertRaises(
-            DuplicateUserName, self.facade.register, username, self.valid_password
+            DuplicateUserName, self.facade.register, username, self.valid_password, self.generate_valid_name(),
         )
 
 

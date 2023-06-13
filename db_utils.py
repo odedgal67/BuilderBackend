@@ -10,6 +10,8 @@ my_collection = my_db[GLOBAL_CONFIG.COLLECTION_NAME]
 
 
 def persist_user(user):
+    if not GLOBAL_CONFIG.DB_ENABLED:
+        return
     existing_user = my_collection.find_one({"username": user.username})
 
     if existing_user is None:
@@ -24,6 +26,9 @@ def persist_user(user):
 
 
 def update_project_methods(cls):
+    if not GLOBAL_CONFIG.DB_ENABLED:
+        return cls
+
     methods = [
         method_name
         for method_name, val in getmembers(cls)
