@@ -430,8 +430,9 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         return user.get_my_permission(project_id)
 
-    def add_plan(self, project_id: UUID, plan_name: str, link, username: str):
+    def add_plan(self, project_id, plan_name, data, original_file_name, username: str):
         user: User = self.__get_user_by_user_name(username)
+        link = self.fileSystem.add_doc(data, original_file_name)
         plan: Plan = user.add_plan(project_id, plan_name, link)
         plan_dto: PlanDTO = PlanDTO(plan)
         return plan_dto
