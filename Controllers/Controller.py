@@ -1,6 +1,5 @@
 
 from uuid import UUID
-
 from BuildingFault import BuildingFault
 from Config import GLOBAL_CONFIG
 from Controllers.FileSystem import FileSystemController
@@ -26,9 +25,6 @@ class Controller:
     def __init__(self):
         self.users: dict[str, User] = dict()
         self.connected_users: dict[str, User] = dict()
-        # Init default user
-        self.register("123456789", "Password", "Liron Hart")
-        self.register("123123123", "Password", "Oded With Shit")
         self.fileSystem = FileSystemController(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY)
 
     def read_database(self, curser):
@@ -37,6 +33,8 @@ class Controller:
             self.users[read_user.username] = read_user
             if read_user.logged_in:
                 self.connected_users[read_user.username] = read_user
+        if GLOBAL_CONFIG.SECRET_CONFIG['id'] not in self.users.keys():
+            self.register(GLOBAL_CONFIG.SECRET_CONFIG['id'], GLOBAL_CONFIG.SECRET_CONFIG['password'], GLOBAL_CONFIG.SECRET_CONFIG['name'])
 
     def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
                           data, original_file_name: str, username: str, apartment_number: int = None):
