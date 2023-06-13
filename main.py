@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from Utils.Exceptions import KnownServerException
 from flask_session import Session
 from typing import Callable
 
@@ -52,7 +53,7 @@ def handle_request_register():
     try:
         result = facade.register(data["username"], data["password"], data["name"])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[register] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -70,7 +71,7 @@ def handle_request_login():
         result = facade.login(data["username"], data["password"])
         session['user_id'] = data["username"]
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[login] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -88,7 +89,7 @@ def handle_request_logout():
         facade.logout(data["username"])
         session.clear()
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[logout] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -106,7 +107,7 @@ def handle_request_add_project():
     try:
         result = facade.add_project(data["project_name"], data["username"])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[add_project] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -130,7 +131,7 @@ def handle_request_add_stage():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[add_stage] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -156,7 +157,7 @@ def handle_request_add_mission():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[add_mission] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -176,7 +177,7 @@ def handle_request_edit_project_name():
             data["project_id"], data["new_project_name"], data["username"]
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_project_name] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -201,7 +202,7 @@ def handle_request_edit_stage_name():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_stage_name] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -227,7 +228,7 @@ def handle_request_edit_mission_name():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_mission_name] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -253,7 +254,7 @@ def handle_request_set_mission_status():
             data.get("apartment_number", None),
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[set_mission_status] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -277,7 +278,7 @@ def handle_request_get_all_missions():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_missions] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -300,7 +301,7 @@ def handle_request_get_all_stages():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_stages] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -324,7 +325,7 @@ def handle_request_assign_project_to_user():
             data["username_to_assign"],
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[assign_project_to_user] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -351,7 +352,7 @@ def handle_request_edit_comment_in_mission():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_comment_in_mission] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -375,7 +376,7 @@ def handle_request_remove_stage():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_stage] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -400,7 +401,7 @@ def handle_request_remove_mission():
             data.get("apartment_number", None),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_mission] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -427,7 +428,7 @@ def handle_request_set_green_building():
             data.get("apartment_number", None),
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[set_green_building] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -451,7 +452,7 @@ def handle_request_set_stage_status():
             data["username"],
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[set_stage_status] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -471,7 +472,7 @@ def handle_request_get_all_assigned_users_in_project():
             data["project_id"], data["username"]
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_assigned_users_in_project] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -494,7 +495,7 @@ def handle_request_set_urgency():
             data["username"],
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[set_urgency] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -519,7 +520,7 @@ def handle_request_add_building_fault():
             data.get("urgency", Urgency.LOW),
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[add_building_fault] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -539,7 +540,7 @@ def handle_request_remove_building_fault():
             data["project_id"], data["build_fault_id"], data["username"]
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_building_fault] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -562,7 +563,7 @@ def handle_request_set_build_fault_status():
             data["username"],
         )
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[set_build_fault_status] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -582,7 +583,7 @@ def handle_request_remove_user_from_project():
             data["project_id"], data["username_to_remove"], data["removing_user"]
         )
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_user_from_project] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -604,7 +605,7 @@ def handle_request_get_my_permission():
         )
         print(jsonify({"result": result}))
         return jsonify({"result": result})
-    except Exception as e:
+    except MyMyException as e:
         print(f"[get_my_permission] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -622,7 +623,7 @@ def handle_request_echo():
     try:
         result = {"echo": data["echo_string"]}
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[echo] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -640,7 +641,7 @@ def handle_request_get_projects():
     try:
         result = facade.get_projects(data["username"])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_projects] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -664,7 +665,7 @@ def wrap_with_try_except(func_name: str, func: Callable, *kwargs):
     try:
         result = func(*kwargs)
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[{func_name}] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -716,7 +717,7 @@ def handle_request_get_all_building_faults():
     try:
         result = facade.get_all_building_faults(data['project_id'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_building_faults] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -744,7 +745,7 @@ def handle_request_remove_plan():
     try:
         result = facade.remove_plan(data['project_id'], data['plan_id'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_plan] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -762,7 +763,7 @@ def handle_request_edit_plan_name():
     try:
         result = facade.edit_plan_name(data['project_id'], data['plan_id'], data['new_plan_name'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_plan_name] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -780,7 +781,7 @@ def handle_request_edit_plan_link():
     try:
         result = facade.edit_plan_link(data['project_id'], data['plan_id'], data['new_link'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_plan_link] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -798,7 +799,7 @@ def handle_request_edit_mission_link():
     try:
         result = facade.edit_mission_link(data['project_id'], data['title_id'], data['stage_id'], data['mission_id'], data['new_link'], data['username'], data.get('apartment_number', None))
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_mission_link] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -816,7 +817,7 @@ def handle_request_change_user_permission_in_project():
     try:
         facade.change_user_permission_in_project(data['project_id'], data['new_permission'], data['username_to_change'], data['username_changing'])
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[change_user_permission_in_project] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -834,7 +835,7 @@ def handle_request_change_user_name():
     try:
         facade.change_user_name(data['new_name'], data['username_to_change'])
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[change_user_name] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -852,7 +853,7 @@ def handle_request_change_user_password():
     try:
         facade.change_user_password(data['new_password'], data['username_to_change'])
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[change_user_password] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -870,7 +871,7 @@ def handle_request_add_apartment():
     try:
         result = facade.add_apartment(data['project_id'], data['apartment_number'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[add_apartment] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -888,7 +889,7 @@ def handle_request_remove_apartment():
     try:
         result = facade.remove_apartment(data['project_id'], data['apartment_number'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[remove_apartment] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -906,7 +907,7 @@ def handle_request_get_all_apartments_in_project():
     try:
         result = facade.get_all_apartments_in_project(data['project_id'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_apartments_in_project] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -924,7 +925,7 @@ def handle_request_get_all_plans():
     try:
         result = facade.get_all_plans(data['project_id'], data['username'])
         return jsonify({"result": result})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[get_all_plans] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
@@ -942,7 +943,7 @@ def handle_request_edit_building_fault():
     try:
         facade.edit_building_fault(data['project_id'], data['building_fault_id'], data['building_fault_name'], data['floor_number'], data['apartment_number'], data['green_building'], data['urgency'], data['proof_fix'], data['tekken'], data['plan_link'], data['status'], data['proof'], data['comment'], data['username'])
         return jsonify({"result": "success"})
-    except Exception as e:
+    except KnownServerException as e:
         print(f"[edit_building_fault] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 

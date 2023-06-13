@@ -24,14 +24,11 @@ def load_plan(json_data):
 
 
 class Plan:
-    def __init__(self, name: str, link: str = "", date: datetime = None):
+    def __init__(self, name: str, link: str = "", date: datetime = datetime.now()):
         self.id = uuid.uuid1()
         self.name = name
         self.link = link
-        if date is None:
-            self.date = datetime.now()
-        else:
-            self.date = date
+        self.data = date
 
     def set_link(self, new_link: str):
         self.link = new_link
