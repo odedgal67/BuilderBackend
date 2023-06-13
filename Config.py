@@ -3,7 +3,6 @@ from dataclasses import dataclass
 import configparser
 import sys
 
-
 @dataclass(init=True, repr=True)
 class AbstractConfig(ABC):
     SERVER_FILE_DIRECTORY: str
@@ -20,6 +19,7 @@ class AbstractConfig(ABC):
         config_obj = configparser.ConfigParser()
         config_obj.read(self.SECRET_CONFIG_FILE_PATH)
         self.SECRET_CONFIG = config_obj['Credentials']
+        self.DB_ENABLED = config_obj['DB']['enabled'] == 'True'
         if self.IP is None:
             self.IP = "0.0.0.0"
         if self.PORT is None:

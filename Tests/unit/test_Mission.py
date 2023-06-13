@@ -1,9 +1,11 @@
 import unittest
 
+from Config import GLOBAL_CONFIG
 from Mission import Mission
 from Utils.Exceptions import *
 from Utils.Status import Status
 
+GLOBAL_CONFIG.DB_ENABLED = False
 mission1 = Mission("mission1")
 mission2 = Mission("mission2")
 
@@ -11,7 +13,7 @@ mission2 = Mission("mission2")
 class EditName(unittest.TestCase):
     def test_illegal_short_name(self):
         self.assertEqual("mission1", mission1.name)
-        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "my")
+        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "m")
         self.assertEqual("mission1", mission1.name)
 
     def test_illegal_empty_name(self):
@@ -21,7 +23,7 @@ class EditName(unittest.TestCase):
 
     def test_illegal_long_name(self):
         self.assertEqual("mission1", mission1.name)
-        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "a" * 26)
+        self.assertRaises(IllegalMissionNameException, mission1.edit_name, "a" * 500)
         self.assertEqual("mission1", mission1.name)
 
     def test_legal_name(self):

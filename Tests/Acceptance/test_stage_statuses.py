@@ -1,6 +1,7 @@
 import unittest
 from uuid import UUID
 
+from DTO.StageDTO import StageDTO
 from Stage import Stage
 from Utils.Status import Status
 from Facade import Facade
@@ -23,27 +24,27 @@ class StageStatuses(AcceptanceBase):
         self.contractor_username = users[0]
         self.project_UUID = self.facade.add_project(
             "project 1", self.contractor_username
-        ).id
+        )["id"]
         self.stage_UUID = self.facade.add_stage(
             project_id=self.project_UUID,
             title_id=self.title,
             stage_name="stage1",
             username=self.contractor_username,
-        ).id
+        )["id"]
         self.mission1_UUID = self.facade.add_mission(
             self.project_UUID,
             self.title,
             self.stage_UUID,
             "mission 1",
             self.contractor_username,
-        ).id
+        )["id"]
         self.mission2_UUID = self.facade.add_mission(
             self.project_UUID,
             self.title,
             self.stage_UUID,
             "mission 2",
             self.contractor_username,
-        ).id
+        )["id"]
 
     @classmethod
     def setMissionStatus(cls, mission_uuid: UUID, new_status: Status):
@@ -62,10 +63,10 @@ class StageStatuses(AcceptanceBase):
     ):
         self.setMissionStatus(self.mission1_UUID, status1)
         self.setMissionStatus(self.mission2_UUID, status2)
-        stage: Stage = self.facade.get_all_stages(
+        stage: dict = list(self.facade.get_all_stages(
             self.project_UUID, self.title, self.contractor_username
-        )[0]
-        self.assertTrue(stage.status == expectedStageStatus, msg)
+        ).values())[0]
+        self.assertTrue(stage["status"] == expectedStageStatus, msg)
 
     def test_all_done(self):
         self.validateStage(

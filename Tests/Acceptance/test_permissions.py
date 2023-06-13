@@ -36,7 +36,7 @@ class PermissionTestsBase(AcceptanceBase, ABC):
         self.some_username = users[1]
         self.project_UUID = self.facade.add_project(
             "project 1", self.contractor_username
-        ).id
+        )["id"]
         self.facade.assign_project_to_user(
             self.project_UUID,
             self.__get_permission_enum(),
@@ -48,27 +48,27 @@ class PermissionTestsBase(AcceptanceBase, ABC):
             title_id=self.title,
             stage_name="stage1",
             username=self.contractor_username,
-        ).id
+        )["id"]
         self.stage_to_remove_UUID = self.facade.add_stage(
             project_id=self.project_UUID,
             title_id=self.title,
             stage_name="stage2",
             username=self.contractor_username,
-        ).id
+        )["id"]
         self.mission_UUID = self.facade.add_mission(
             self.project_UUID,
             self.title,
             self.stage_UUID,
             "mission 1",
             self.contractor_username,
-        ).id
+        )["id"]
         self.invalid_mission_UUID = self.facade.add_mission(
             self.project_UUID,
             self.title,
             self.stage_UUID,
             "mission 2",
             self.contractor_username,
-        ).id
+        )["id"]
         self.facade.set_mission_status(
             self.project_UUID,
             self.title,
@@ -79,7 +79,7 @@ class PermissionTestsBase(AcceptanceBase, ABC):
         )
         self.building_fault_UUID = self.facade.add_building_fault(
             self.project_UUID, "building fault", self.some_username, 1, 1
-        ).id
+        )["id"]
 
     def updateStage(self, success: bool):
         if success:

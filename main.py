@@ -941,5 +941,4 @@ def handle_request_edit_building_fault():
 if __name__ == "__main__":
     print("running with the following configuration:")
     print(GLOBAL_CONFIG)
-    facade.controller.read_database(my_collection.find())
     app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)

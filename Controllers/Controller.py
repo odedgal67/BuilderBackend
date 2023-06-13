@@ -22,19 +22,21 @@ from db_utils import persist_user
 
 
 class Controller:
-    def __init__(self):
+    def __init__(self, curser=None):
         self.users: dict[str, User] = dict()
         self.connected_users: dict[str, User] = dict()
         self.fileSystem = FileSystemController(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY)
+        if curser is not None:
+            self.__read_database(curser)
+        if GLOBAL_CONFIG.SECRET_CONFIG['id'] not in self.users.keys():
+            self.register(GLOBAL_CONFIG.SECRET_CONFIG['id'], GLOBAL_CONFIG.SECRET_CONFIG['password'], GLOBAL_CONFIG.SECRET_CONFIG['name'])
 
-    def read_database(self, curser):
+    def __read_database(self, curser):
         for user_json_data in curser:
             read_user = load_user(user_json_data)  # User read from database
             self.users[read_user.username] = read_user
             if read_user.logged_in:
                 self.connected_users[read_user.username] = read_user
-        if GLOBAL_CONFIG.SECRET_CONFIG['id'] not in self.users.keys():
-            self.register(GLOBAL_CONFIG.SECRET_CONFIG['id'], GLOBAL_CONFIG.SECRET_CONFIG['password'], GLOBAL_CONFIG.SECRET_CONFIG['name'])
 
     def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
                           data, original_file_name: str, username: str, apartment_number: int = None):

@@ -1,13 +1,16 @@
+from Config import GLOBAL_CONFIG
 from Controllers.Controller import Controller
 from uuid import UUID
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
 from Utils.Urgency import Urgency
+from db_utils import my_collection
 
 
 class Facade:
-    def __init__(self):
-        self.controller = Controller()
+    def __init__(self,):
+        curser = my_collection.find() if GLOBAL_CONFIG.DB_ENABLED else None
+        self.controller = Controller(curser=curser)
 
     def login(self, username: str, password: str):
         # return user
