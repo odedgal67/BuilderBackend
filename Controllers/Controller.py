@@ -499,4 +499,16 @@ class Controller:
         if counter <= 1:
             raise Exception("Project has only 1 user left")
 
+    def set_building_fault_proof(self, project_id: UUID, building_fault_id: UUID, data, original_file_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        link = self.fileSystem.add_image(data, original_file_name)
+        user.set_build_fault_proof(project_id, building_fault_id, link)
+        return link
+
+    def set_building_fault_proof_fix(self, project_id: UUID, building_fault_id: UUID, data, original_file_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        link = self.fileSystem.add_image(data, original_file_name)
+        user.set_building_fault_proof_fix(project_id, building_fault_id, link)
+        return link
+
 

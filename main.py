@@ -691,6 +691,23 @@ def handle_set_mission_plan_link():
     return wrap_with_try_except("set_mission_plan_link", facade.set_mission_plan_link, project_id, int(title_id), stage_id, mission_id, data.read(), original_file_name, username, apartment_number)
 
 
+@app.route("/set_building_fault_proof", methods=["POST"])
+@require_login
+def handle_request_set_building_fault_proof():
+    print("set building fault proof received")
+    data, original_file_name, project_id, username = base_file_request_attributes(request)
+    building_fault_id = request.form.get('building_fault_id')
+    return wrap_with_try_except("set_building_fault_proof",facade.set_building_fault_proof, project_id, building_fault_id, data.read(), original_file_name, username)
+
+
+@app.route("/set_building_fault_proof_fix", methods=["POST"])
+@require_login
+def handle_request_set_building_fault_proof():
+    print("set building fault proof received")
+    data, original_file_name, project_id, username = base_file_request_attributes(request)
+    building_fault_id = request.form.get('building_fault_id')
+    return wrap_with_try_except("set_building_fault_proof_fix",facade.set_building_fault_proof_fix, project_id, building_fault_id, data.read(), original_file_name, username)
+
 
 @app.route('/<path:filename>', methods=['GET'])
 # @require_login
