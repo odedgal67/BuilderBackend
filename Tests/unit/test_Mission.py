@@ -1,9 +1,11 @@
 import unittest
 
+from Config import GLOBAL_CONFIG
 from Mission import Mission
 from Utils.Exceptions import *
 from Utils.Status import Status
 
+GLOBAL_CONFIG.DB_ENABLED = False
 mission1 = Mission("mission1")
 mission2 = Mission("mission2")
 

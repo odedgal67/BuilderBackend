@@ -1,5 +1,8 @@
 import unittest
 
+from Config import GLOBAL_CONFIG
+
+GLOBAL_CONFIG.DB_ENABLED = False
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):

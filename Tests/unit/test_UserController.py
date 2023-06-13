@@ -1,5 +1,6 @@
 import unittest
 
+from Config import GLOBAL_CONFIG
 from Controllers.Controller import Controller
 from Utils.Exceptions import (
     IllegalUsernameException,
@@ -15,8 +16,8 @@ legal_password = "QWEasdzxc"
 legal_username = "208542449"
 legal_project_name = "project 1"
 legal_username2 = "318546280"
+GLOBAL_CONFIG.DB_ENABLED = False
 onetime_uc = Controller()
-
 
 class RegisterUserName(unittest.TestCase):
     def test_empty_username(self):

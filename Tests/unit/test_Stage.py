@@ -1,11 +1,12 @@
 import unittest
 import uuid
 
+from Config import GLOBAL_CONFIG
 from Mission import Mission
 from Utils.Exceptions import *
 from Utils.Status import Status
 from Stage import Stage
-
+GLOBAL_CONFIG.DB_ENABLED = False
 stage1 = Stage("stage1")
 stage_with_missions = Stage("stage_with_missions")
 mission1 = Mission("mission1")
