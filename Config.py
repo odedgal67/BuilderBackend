@@ -45,4 +45,4 @@ class LocalConfig(AbstractConfig):
         super().__init__(SERVER_FILE_DIRECTORY="server_files")
 
 
-GLOBAL_CONFIG = DebugConfig()
+GLOBAL_CONFIG = LocalConfig() if sys.platform.startswith('win') else RemoteConfig()
