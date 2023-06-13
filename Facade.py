@@ -146,6 +146,14 @@ class Facade:
         return self.controller.set_mission_plan_link(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), data,
                                                   original_file_name, username, apartment_number)
 
+    def set_building_fault_proof (self, project_id: str, building_fault_id: str, data, original_file_name: str, username: str):
+        #returns string with link
+        return self.controller.set_building_fault_proof(UUID(project_id), UUID(building_fault_id), data, original_file_name, username)
+
+    def set_building_fault_proof (self, project_id: str, building_fault_id: str, data, original_file_name: str, username: str):
+        #returns string with link
+        return self.controller.set_building_fault_proof_fix(UUID(project_id), UUID(building_fault_id), data, original_file_name, username)
+
     def get_all_building_faults(self, project_id: str, username: str):
         # Returns dict [build fault id: build fault dto]
         build_fault_list = self.controller.get_all_building_faults(UUID(project_id), username)
