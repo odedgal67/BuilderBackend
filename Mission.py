@@ -17,7 +17,10 @@ def load_mission(json_data):
     green_building = mission_data['green_building']
     status = mission_data['status']
     proof = mission_data['proof']
-    completion_date = mission_data['completion_date']
+    if mission_data['completion_date'] == "" or mission_data['completion_date'] is None:
+        completion_date = None
+    else:
+        completion_date = datetime.strptime(mission_data['completion_date'], "%m/%d/%Y, %H:%M:%S")
     completing_user = mission_data['completing_user']
     comment = mission_data['comment']
     new_mission = Mission(name, plan_link, green_building)
@@ -55,7 +58,7 @@ class Mission:
             'tekken': self.tekken,
             'status': self.status,
             'proof': self.proof,
-            'completion_date': self.completion_date,
+            'completion_date': self.completion_date.strftime("%m/%d/%Y, %H:%M:%S") if self.completion_date is not None else "",
             'completing_user': self.completing_user,
             'comment': self.comment,
             'id': str(self.id)

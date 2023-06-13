@@ -34,9 +34,15 @@ class RemoteConfig(AbstractConfig):
 
 
 @dataclass()
+class DebugConfig(AbstractConfig):
+    def __init__(self):
+        super().__init__(SERVER_FILE_DIRECTORY="server_files", MONGO_URL="mongodb+srv://odedgal67:o95r88i84D@cluster0.qesnyur.mongodb.net/")
+
+
+@dataclass()
 class LocalConfig(AbstractConfig):
     def __init__(self):
         super().__init__(SERVER_FILE_DIRECTORY="server_files")
 
 
-GLOBAL_CONFIG = LocalConfig() if sys.platform.startswith('win') else RemoteConfig()
+GLOBAL_CONFIG = DebugConfig()

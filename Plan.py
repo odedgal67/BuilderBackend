@@ -11,7 +11,10 @@ def load_plan(json_data):
     plan_data = json_data[1]
     name = plan_data['name']
     link = plan_data['link']
-    date = plan_data['link']
+    if plan_data['date'] == "" or plan_data['date'] is None:
+        date = None
+    else:
+        date = datetime.strptime(plan_data['date'], "%m/%d/%Y, %H:%M:%S")
 
     new_plan = Plan(name, link, date)
 
@@ -64,5 +67,5 @@ class Plan:
             'id': str(self.id),
             'name': self.name,
             'link': self.link,
-            'date': self.date
+            'date': self.date.strftime("%m/%d/%Y, %H:%M:%S") if self.date is not None else ""
         }

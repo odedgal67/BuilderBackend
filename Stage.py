@@ -10,7 +10,10 @@ def load_stage(json_data):
     stage_id = UUID(json_data[0])
     stage_data = json_data[1]
     name = stage_data['name']
-    completion_date = stage_data['completion_date']
+    if stage_data['completion_date'] == "" or stage_data['completion_date'] is None:
+        completion_date = None
+    else:
+        completion_date = datetime.strptime(stage_data['completion_date'], "%m/%d/%Y, %H:%M:%S")
     status = stage_data['status']
     missions = dict()
     new_stage: Stage = Stage(name)
@@ -37,7 +40,7 @@ class Stage:
     def to_json(self):
         return {
             'name': self.name,
-            'completion_date': self.completion_date,
+            'completion_date': self.completion_date.strftime("%m/%d/%Y, %H:%M:%S") if self.completion_date is not None else "",
             'status': self.status,
             'id': str(self.id),
             'missions': self.get_missions_json()

@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 
 from Mission import Mission
@@ -13,7 +14,10 @@ def load_build_fault(json_data):
     green_building = build_fault_data['green_building']
     status = build_fault_data['status']
     proof = build_fault_data['proof']
-    completion_date = build_fault_data['completion_date']
+    if build_fault_data['completion_date'] == "" or build_fault_data['completion_date'] is None:
+        completion_date = None
+    else:
+        completion_date = datetime.strptime(build_fault_data['completion_date'], "%m/%d/%Y, %H:%M:%S")
     completing_user = build_fault_data['completing_user']
     comment = build_fault_data['comment']
     urgency = build_fault_data['urgency']
@@ -70,7 +74,7 @@ class BuildingFault(Mission):
             'tekken': self.tekken,
             'status': self.status,
             'proof': self.proof,
-            'completion_date': self.completion_date,
+            'completion_date': self.completion_date.strftime("%m/%d/%Y, %H:%M:%S") if self.completion_date is not None else "",
             'completing_user': self.completing_user,
             'comment': self.comment,
             'id': str(self.id)
