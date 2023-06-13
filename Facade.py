@@ -103,7 +103,7 @@ class Facade:
 
     def set_urgency(self, project_id: str, building_fault_id: UUID, new_urgency: Urgency, username: str) -> None:
         # Returns void
-        self.controller.set_urgency(UUID(project_id), building_fault_id, new_urgency, username)
+        self.controller.set_urgency(UUID(project_id), UUID(building_fault_id), new_urgency, username)
 
     def add_building_fault(self, project_id: str, name: str, username: str, floor_number: int, apartment_number: int, urgency: Urgency = Urgency.LOW):
         # Returns new building fault
