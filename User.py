@@ -1,12 +1,57 @@
 from uuid import UUID
-
 from Mission import Mission
 from Permissions.Permissions import *
-from Stage import Stage
 from Utils.PasswordHasher import *
 from Utils.Exceptions import *
-from Project import Project
+from Project import Project, load_project
 from Utils.PermissionType import PermissionType
+from db_utils import persist_user
+
+
+def load_project_permission(project_permission_json_data):
+    return UUID(project_permission_json_data[0]), build_permission(int(project_permission_json_data[1]))
+
+
+loaded_projects = dict()
+
+
+def load_user(json_data):
+    username = json_data['username']
+    name = json_data['name']
+    hashed_password = json_data['hashed_password']
+    logged_in = json_data['logged_in']
+    projects = dict()
+    projects_permissions = dict()
+    if 'projects' in json_data:
+        projects_list_json_data = json_data['projects']
+        for project_json_data in projects_list_json_data.items():
+            new_project: Project = load_project(project_json_data)
+            if new_project.id in loaded_projects.keys():
+                new_project = loaded_projects[new_project.id]
+            else:
+                loaded_projects[new_project.id] = new_project
+            projects[new_project.id] = new_project
+    if 'projects_permissions' in json_data:
+        projects_permissions_list_json_data = json_data['projects_permissions']
+        for project_permission_json_data in projects_permissions_list_json_data.items():
+            project_id, project_permission = load_project_permission(project_permission_json_data)
+            projects_permissions[project_id] = project_permission
+    new_user: User = User(username, "TempPass", name)
+    new_user.hashed_password = hashed_password
+    new_user.logged_in = logged_in
+    new_user.projects = projects
+    new_user.projects_permissions = projects_permissions
+    return new_user
+
+
+def build_permission(permission_type):
+    if permission_type == PermissionType.WORK_MANAGER:
+        return WorkManagerPermission()
+    if permission_type == PermissionType.PROJECT_MANAGER:
+        return ProjectManagerPermission()
+    if permission_type == PermissionType.CONTRACTOR:
+        return ContractorPermission()
+    raise Exception("Permission doesn't exist")
 
 
 class User:
@@ -23,6 +68,30 @@ class User:
         ] = (
             dict()
         )  # the permission for each project for this user - dict<project_id, AbstractPermission>
+
+    def to_json(self):
+        return {
+            'username': self.username,
+            'name': self.name,
+            'hashed_password': self.hashed_password,
+            'logged_in': self.logged_in,
+            'projects': self.projects_to_json_dict(),
+            'projects_permissions': self.projects_permissions_to_json_dict()
+        }
+
+    def projects_to_json_dict(self):
+        to_return = dict()
+        for project_uuid in self.projects.keys():
+            project_json = self.projects[project_uuid].to_json()
+            to_return[str(project_uuid)] = project_json
+        return to_return
+
+    def projects_permissions_to_json_dict(self):
+        to_return = dict()
+        for project_permission_uuid in self.projects_permissions.keys():
+            project_permission_json = self.projects_permissions[project_permission_uuid].to_json()
+            to_return[str(project_permission_uuid)] = project_permission_json
+        return to_return
 
     def __check_password(self, password: str) -> str:
         upperandlower = password.isupper() or password.islower()
@@ -42,8 +111,6 @@ class User:
         return False
 
     def login(self, password: str) -> bool:
-        if self.logged_in:
-            raise AlreadyLoggedException(self.username)
         if not compare_password(password, self.hashed_password):
             raise IncorrectPasswordException()
         self.logged_in = True
@@ -61,6 +128,7 @@ class User:
         )  # Default permission for a new project
         self.projects[new_project.id] = new_project
         self.projects_permissions[new_project.id] = new_project_permission
+        persist_user(self)
         return new_project
 
     def get_project(self, project_id: UUID) -> Project:
@@ -68,7 +136,8 @@ class User:
             raise ProjectDoesntExistException
         return self.projects[project_id]
 
-    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str, apartment_number: int = None):
+    def edit_stage_name(self, project_id: UUID, title_id: int, stage_id: UUID, new_stage_name: str,
+                        apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.edit_stage_name(project, title_id, stage_id, new_stage_name, apartment_number)
@@ -79,16 +148,32 @@ class User:
             raise DuplicateProjectNameException(new_project_name)
         project.edit_name(new_project_name)
 
-    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_mission_name: str, apartment_number: int = None):
+    def edit_mission_name(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
+                          new_mission_name: str, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.edit_mission_name(project, title_id, stage_id, mission_id, new_mission_name, apartment_number)
+        return project_permission.edit_mission_name(project, title_id, stage_id, mission_id, new_mission_name,
+                                                    apartment_number)
 
-    def check_set_mission_proof(self, project_id, title_id, stage_id, mission_id, apartment_number: int = None ) -> Mission:
+    def check_set_mission_proof(self, project_id, title_id, stage_id, mission_id,
+                                apartment_number: int = None) -> Mission:
         project: Project = self.get_project(project_id)
         return project.check_set_mission_proof(title_id, stage_id, mission_id, apartment_number)
 
-    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str, apartment_number: int = None) -> Mission:
+    def set_mission_proof(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_proof(title_id, stage_id, mission_id, link, apartment_number)
+
+    def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_tekken(title_id, stage_id, mission_id, link, apartment_number)
+
+    def set_mission_plan_link(self, project_id, title_id, stage_id, mission_id, link, apartment_number: int = None):
+        project: Project = self.get_project(project_id)
+        return project.set_mission_plan_link(title_id, stage_id, mission_id, link, apartment_number)
+
+    def add_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_name: str,
+                    apartment_number: int = None) -> Mission:
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.add_mission(project, title_id, stage_id, mission_name, apartment_number)
@@ -98,12 +183,14 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.add_stage(project, title_id, stage_name, apartment_number)
 
-    def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status, username, apartment_number=None):
+    def set_mission_status(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_status,
+                           username, apartment_number=None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_mission_status(project, title_id, stage_id, mission_id, new_status, username, apartment_number)
+        return project_permission.set_mission_status(project, title_id, stage_id, mission_id, new_status, username,
+                                                     apartment_number)
 
-    def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int =None):
+    def get_all_missions(self, project_id: UUID, title_id: int, stage_id: UUID, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission = self.get_project_permission(project_id)
         return project_permission.get_all_missions(project, title_id, stage_id, apartment_number)
@@ -112,7 +199,7 @@ class User:
         return project_id in self.projects.keys()
 
     def assign_project_to_user(
-        self, project_id, permission_type: PermissionType, user_to_assign
+            self, project_id, permission_type: PermissionType, user_to_assign
     ):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
@@ -126,13 +213,15 @@ class User:
         project_permission.remove_user_from_project(project, user_to_remove)
 
     def assign_project(self, project: Project, permission_type: PermissionType):
-        project_permission: AbstractPermission = self.build_permission(permission_type)
+        project_permission: AbstractPermission = build_permission(permission_type)
         self.projects[project.id] = project
         self.projects_permissions[project.id] = project_permission
+        persist_user(self)
 
     def remove_project(self, project_id: UUID):
         self.projects.pop(project_id)
         self.projects_permissions.pop(project_id)
+        persist_user(self)
 
     def get_project_permission(self, project_id: UUID):
         if not self.__is_project_id_exists_in_permissions(project_id):
@@ -142,19 +231,12 @@ class User:
     def __is_project_id_exists_in_permissions(self, project_id: UUID):
         return project_id in self.projects_permissions.keys()
 
-    def build_permission(self, permission_type):
-        if permission_type == PermissionType.WORK_MANAGER:
-            return WorkManagerPermission()
-        if permission_type == PermissionType.PROJECT_MANAGER:
-            return ProjectManagerPermission()
-        if permission_type == PermissionType.CONTRACTOR:
-            return ContractorPermission()
-        raise Exception("Permission doesn't exist")
-
-    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str, apartment_number: int = None):
+    def edit_comment_in_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, comment: str,
+                                apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.edit_comment_in_mission(project, title_id, stage_id, mission_id, comment, apartment_number)
+        return project_permission.edit_comment_in_mission(project, title_id, stage_id, mission_id, comment,
+                                                          apartment_number)
 
     def get_all_stages(self, project_id, title_id: int, apartment_number: int = None):
         project: Project = self.get_project(project_id)
@@ -176,15 +258,18 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.remove_stage(project, title_id, stage_id, apartment_number)
 
-    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, apartment_number: int = None):
+    def remove_mission(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
+                       apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.remove_mission(project, title_id, stage_id, mission_id, apartment_number)
 
-    def set_green_building(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, is_green_building: bool, apartment_number: int = None):
+    def set_green_building(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
+                           is_green_building: bool, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_green_building(project, title_id, stage_id, mission_id, is_green_building, apartment_number)
+        return project_permission.set_green_building(project, title_id, stage_id, mission_id, is_green_building,
+                                                     apartment_number)
 
     def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status):
         project: Project = self.get_project(project_id)
@@ -238,10 +323,10 @@ class User:
     def get_my_permission(self, project_id: UUID):
         return self.get_project_permission(project_id).get_enum()
 
-    def add_plan(self, project_id: UUID, plan_name: str):
+    def add_plan(self, project_id: UUID, plan_name: str, link):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.add_plan(project, plan_name)
+        return project_permission.add_plan(project, plan_name, link)
 
     def remove_plan(self, project_id: UUID, plan_id: UUID):
         project: Project = self.get_project(project_id)
@@ -258,7 +343,8 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.edit_plan_link(project, plan_id, new_link)
 
-    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str, apartment_number: int = None):
+    def edit_mission_link(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID, new_link: str,
+                          apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.edit_mission_link(project, title_id, stage_id, mission_id, new_link, apartment_number)
@@ -270,7 +356,7 @@ class User:
     def change_permission_in_project(self, project_id, new_permission):
         if not self.__is_project_id_exists(project_id):
             raise ProjectDoesntExistException()
-        self.projects_permissions[project_id] = self.build_permission(new_permission)
+        self.projects_permissions[project_id] = build_permission(new_permission)
 
     def change_name(self, new_name: str):
         self.name = new_name
@@ -294,8 +380,7 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         return project_permission.get_all_apartments_in_project(project)
 
-    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
+    def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
-
+        project_permission.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)

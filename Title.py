@@ -1,11 +1,38 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from Apartment import Apartment
+from Apartment import Apartment, load_apartment
 from BuildingFault import BuildingFault
-from Stage import Stage
+from Stage import Stage, load_stage
 from Utils.Exceptions import *
 
+# if 'titles' in project_data:
+#     for title_json in project_data['titles'].items():
+#         title_number, title = load_title(title_json)
+#         titles[title_number] = title
+
+
+def load_title(json_data):
+    title_number = int(json_data[0])
+    title_data = json_data[1]
+    name = title_data['name']
+    if title_number == 2:
+        new_title = TitleApartments(name)
+        apartments = dict()
+        if 'apartments' in title_data:
+            for apartment_json in title_data['apartments'].items():
+                apartment: Apartment = load_apartment(apartment_json)
+                apartments[apartment.apartment_number] = apartment
+        new_title.apartments = apartments
+    else:
+        new_title = TitleMissionsStages(name)
+        stages = dict()
+        if 'stages' in title_data:
+            for stage_json in title_data['stages'].items():
+                stage: Stage = load_stage(stage_json)
+                stages[stage.id] = stage
+        new_title.stages = stages
+    return title_number, new_title
 
 class Title(ABC):
     def __init__(self, name: str):
@@ -87,6 +114,10 @@ class Title(ABC):
     def get_all_apartments_in_project(self):
         pass
 
+    @abstractmethod
+    def to_json(self):
+        pass
+
 
 class TitleMissionsStages(Title):
     def check_set_mission_proof(self, stage_id, mission_id, apartment_number=None):
@@ -95,6 +126,19 @@ class TitleMissionsStages(Title):
     def __init__(self, name: str):
         super().__init__(name)
         self.stages: dict[UUID, Stage] = dict()  # dict<stage_id, Stage>
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'stages': self.get_stages_json()
+        }
+
+    def get_stages_json(self):
+        to_return = dict()
+        for stage_uuid in self.stages.keys():
+            stage_json = self.stages[stage_uuid].to_json()
+            to_return[str(stage_uuid)] = stage_json
+        return to_return
 
     def __get_stage(self, stage_id: UUID) -> Stage:
         if stage_id not in self.stages.keys():
@@ -209,11 +253,26 @@ class TitleMissionsStages(Title):
         raise Exception("Should not occur - get all apartments from a non apartment title")
 
 
+
+
 class TitleApartments(Title):
 
     def __init__(self, name: str):
         super().__init__(name)
         self.apartments: dict[int, Apartment] = dict()  # dict<apartment_number, Apartment>
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'apartments': self.get_apartments_json()
+        }
+
+    def get_apartments_json(self):
+        to_return = dict()
+        for apartment_number in self.apartments.keys():
+            apartment_json = self.apartments[apartment_number].to_json()
+            to_return[str(apartment_number)] = apartment_json
+        return to_return
 
     def check_set_mission_proof(self, stage_id, mission_id, apartment_number=None):
         if apartment_number is None:
@@ -338,6 +397,8 @@ class TitleApartments(Title):
 
     def get_all_apartments_in_project(self):
         return self.apartments.values()
+
+
 
 
 

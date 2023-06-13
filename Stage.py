@@ -1,9 +1,29 @@
 import uuid
 from datetime import datetime
 from uuid import UUID
-from Mission import Mission
+from Mission import Mission, load_mission
 from Utils.Status import Status
 from Utils.Exceptions import *
+
+
+def load_stage(json_data):
+    stage_id = UUID(json_data[0])
+    stage_data = json_data[1]
+    name = stage_data['name']
+    completion_date = stage_data['completion_date']
+    status = stage_data['status']
+    missions = dict()
+    new_stage: Stage = Stage(name)
+    if 'missions' in stage_data:
+        for mission_json in stage_data['missions'].items():
+            mission = load_mission(mission_json)
+            missions[mission.id] = mission
+    new_stage.missions = missions
+    new_stage.id = stage_id
+    new_stage.completion_date = completion_date
+    new_stage.status = status
+    return new_stage
+
 
 
 class Stage:
@@ -13,6 +33,22 @@ class Stage:
         self.status = Status.TO_DO
         self.missions: dict[UUID, Mission] = dict()  # mission_id, Mission
         self.id = uuid.uuid1()
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'completion_date': self.completion_date,
+            'status': self.status,
+            'id': str(self.id),
+            'missions': self.get_missions_json()
+        }
+
+    def get_missions_json(self):
+        to_return = dict()
+        for mission_uuid in self.missions.keys():
+            mission_json = self.missions[mission_uuid].to_json()
+            to_return[str(mission_uuid)] = mission_json
+        return to_return
 
     def __check_stage_name(self, stage_name: str) -> str:
         if len(stage_name) < 3 or len(stage_name) > 25:
@@ -121,6 +157,9 @@ class Stage:
     def edit_mission_link(self, mission_id, new_link):
         mission: Mission = self.get_mission(mission_id)
         return mission.set_link(new_link)
+
+
+
 
 
 

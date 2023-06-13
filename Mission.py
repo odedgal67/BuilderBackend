@@ -7,6 +7,33 @@ MAX_MISSION_NAME_LENGTH = 100
 MIN_MISSION_NAME_LENGTH = 3
 MAX_COMMENT_LENGTH = 400
 
+
+def load_mission(json_data):
+    mission_id = uuid.UUID(json_data[0])
+    mission_data = json_data[1]
+    name = mission_data['name']
+    tekken = mission_data['tekken']
+    plan_link = mission_data['plan_link']
+    green_building = mission_data['green_building']
+    status = mission_data['status']
+    proof = mission_data['proof']
+    completion_date = mission_data['completion_date']
+    completing_user = mission_data['completing_user']
+    comment = mission_data['comment']
+    new_mission = Mission(name, plan_link, green_building)
+    new_mission.tekken = tekken
+    new_mission.name = name
+    new_mission.plan_link = plan_link
+    new_mission.green_building = green_building
+    new_mission.status = status
+    new_mission.proof = proof
+    new_mission.completion_date = completion_date
+    new_mission.completing_user = completing_user
+    new_mission.comment = comment
+    new_mission.id = mission_id
+    return new_mission
+
+
 class Mission:
     def __init__(self, name: str, plan_link: str = "", green_building: bool = False):
         self.tekken: str = ""   # link to tekken pdf
@@ -19,6 +46,21 @@ class Mission:
         self.completing_user: str = ""
         self.comment: str = ""
         self.id = uuid.uuid1()
+
+    def to_json(self):
+        return {
+            'name': self.name,
+            'plan_link': self.plan_link,
+            'green_building': self.green_building,
+            'tekken': self.tekken,
+            'status': self.status,
+            'proof': self.proof,
+            'completion_date': self.completion_date,
+            'completing_user': self.completing_user,
+            'comment': self.comment,
+            'id': str(self.id)
+        }
+
 
     def __check_mission_name(self, mission_name):
         if len(mission_name) < MIN_MISSION_NAME_LENGTH or len(mission_name) > MAX_MISSION_NAME_LENGTH:

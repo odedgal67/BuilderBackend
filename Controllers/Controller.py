@@ -1,5 +1,5 @@
-from uuid import UUID
 
+from uuid import UUID
 from BuildingFault import BuildingFault
 from Config import GLOBAL_CONFIG
 from Controllers.FileSystem import FileSystemController
@@ -14,42 +14,50 @@ from Mission import Mission
 from Plan import Plan
 from Project import Project
 from Stage import Stage
-from User import User
+from User import User, load_user
 from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
+from db_utils import persist_user
 
 
 class Controller:
     def __init__(self):
         self.users: dict[str, User] = dict()
         self.connected_users: dict[str, User] = dict()
-        # Init default user
-        self.register("123456789", "Password", "Liron Hart")
         self.fileSystem = FileSystemController(GLOBAL_CONFIG.SERVER_FILE_DIRECTORY)
 
+    def read_database(self, curser):
+        for user_json_data in curser:
+            read_user = load_user(user_json_data)  # User read from database
+            self.users[read_user.username] = read_user
+            if read_user.logged_in:
+                self.connected_users[read_user.username] = read_user
+        if GLOBAL_CONFIG.SECRET_CONFIG['id'] not in self.users.keys():
+            self.register(GLOBAL_CONFIG.SECRET_CONFIG['id'], GLOBAL_CONFIG.SECRET_CONFIG['password'], GLOBAL_CONFIG.SECRET_CONFIG['name'])
+
     def set_mission_proof(self, project_id: UUID, title_id: int, stage_id: UUID, mission_id: UUID,
-                          data, original_file_name: str, username: str, apartment_number: int = None, ):
+                          data, original_file_name: str, username: str, apartment_number: int = None):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         proof_link = self.fileSystem.add_image(data, original_file_name)
-        mission.set_proof(proof_link)
+        user.set_mission_proof(project_id, title_id, stage_id, mission_id, proof_link, apartment_number)
         return proof_link
 
     def set_mission_tekken(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
                            apartment_number):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         tekken_link = self.fileSystem.add_doc(data, original_file_name)
-        mission.set_tekken(tekken_link)
+        user.set_mission_tekken(project_id, title_id, stage_id, mission_id, tekken_link, apartment_number)
         return tekken_link
 
     def set_mission_plan_link(self, project_id, title_id, stage_id, mission_id, data, original_file_name, username,
                            apartment_number):
         user: User = self.__get_user_by_user_name(username)
-        mission: Mission = user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
+        user.check_set_mission_proof(project_id, title_id, stage_id, mission_id, apartment_number)
         plan_link = self.fileSystem.add_doc(data, original_file_name)
-        mission.set_plan_link(plan_link)
+        user.set_mission_plan_link(project_id, title_id, stage_id, mission_id, plan_link, apartment_number)
         return plan_link
 
     def login(self, username: str, password: str) -> UserDTO:
@@ -61,8 +69,6 @@ class Controller:
 
     def logout(self, username: str) -> None:
         user: User = self.__get_user_by_user_name(username)
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
         user.logout()
         self.connected_users.pop(username)
 
@@ -70,6 +76,7 @@ class Controller:
         if username in self.users:
             raise DuplicateUserName(username)
         user = User(username, password, name)
+        persist_user(user)
         self.users[username] = user
         user_dto: UserDTO = UserDTO(user)
         return user_dto
@@ -77,6 +84,7 @@ class Controller:
     def add_project(self, project_name: str, username: str) -> ProjectDTO:
         user = self.__get_user_by_user_name(username)
         new_project: Project = user.add_project(project_name)
+        persist_user(user)
         new_project_dto: ProjectDTO = ProjectDTO(new_project)
         return new_project_dto
 
@@ -413,22 +421,17 @@ class Controller:
                     raise Exception("User has no permission in the project")
 
     def get_projects(self, username: str):
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
-        else:
-            user: User = self.__get_user_by_user_name(username)
-            return [ProjectDTO(p) for p in user.get_projects()]
+        user: User = self.__get_user_by_user_name(username)
+        return [ProjectDTO(p) for p in user.get_projects()]
 
     def get_my_permission(self, project_id: UUID, username: str):
-        if username not in self.connected_users.keys():
-            raise UserNotLoggedInException(username)
-        else:
-            user: User = self.__get_user_by_user_name(username)
-            return user.get_my_permission(project_id)
-
-    def add_plan(self, project_id: UUID, plan_name: str, username: str):
         user: User = self.__get_user_by_user_name(username)
-        plan: Plan = user.add_plan(project_id, plan_name)
+        return user.get_my_permission(project_id)
+
+    def add_plan(self, project_id, plan_name, data, original_file_name, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        link = self.fileSystem.add_doc(data, original_file_name)
+        plan: Plan = user.add_plan(project_id, plan_name, link)
         plan_dto: PlanDTO = PlanDTO(plan)
         return plan_dto
 
@@ -481,9 +484,9 @@ class Controller:
             apartment_dto_list.append(apartment_dto)
         return apartment_dto_list
 
-    def edit_building_fault(self, project_id: UUID, building_fault_id: UUID, building_fault_name, floor_number, apartment_number, link, green_building, urgency, username):
+    def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         user: User = self.__get_user_by_user_name(username)
-        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+        user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
     def __check_not_last_user(self, project_id: UUID):
         counter: int = 0

@@ -1,7 +1,20 @@
 from uuid import UUID
 
-from Stage import Stage
+from Stage import Stage, load_stage
 from Utils.Exceptions import *
+
+
+def load_apartment(json_data):
+    apartment_number = int(json_data[0])
+    apartment_data = json_data[1]
+    stages = dict()
+    new_apartment: Apartment = Apartment(apartment_number)
+    if 'stages' in apartment_data:
+        for stage_json in apartment_data['stages'].items():
+            stage = load_stage(stage_json)
+            stages[stage.id] = stage
+    new_apartment.stages = stages
+    return new_apartment
 
 
 class Apartment:
@@ -9,6 +22,19 @@ class Apartment:
     def __init__(self, apartment_number: int):
         self.apartment_number = apartment_number
         self.stages: dict[UUID, Stage] = dict()  # dict<stage_id, Stage>
+
+    def to_json(self):
+        return {
+            'apartment_number': self.apartment_number,
+            'stages': self.get_stages_json()
+        }
+
+    def get_stages_json(self):
+        to_return = dict()
+        for stage_uuid in self.stages.keys():
+            stage_json = self.stages[stage_uuid].to_json()
+            to_return[str(stage_uuid)] = stage_json
+        return to_return
 
     def contains_stage_id(self, stage_id: UUID):
         return stage_id in self.stages.keys()
@@ -86,3 +112,5 @@ class Apartment:
 
     def edit_mission_link(self, stage_id, mission_id, new_link):
         return self.get_stage(stage_id).edit_mission_link(mission_id, new_link)
+
+

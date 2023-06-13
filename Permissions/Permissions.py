@@ -111,7 +111,7 @@ class AbstractPermission(ABC):
     def get_all_building_faults(self, project):
         pass
 
-    def add_plan(self, project, plan_name):
+    def add_plan(self, project, plan_name, link):
         pass
 
     def remove_plan(self, project, plan_id):
@@ -138,17 +138,22 @@ class AbstractPermission(ABC):
     def get_all_apartments_in_project(self, project):
         pass
 
-    def edit_building_fault(self, project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building,
-                            urgency):
+    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         pass
 
     def get_all_plans(self, project):
+        pass
+
+    def to_json(self):
         pass
 
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
         return PermissionType.WORK_MANAGER.value
+
+    def to_json(self):
+        return 1
 
     def remove_user_from_project(self, project: Project, user_to_remove):
         raise PermissionError
@@ -272,8 +277,8 @@ class WorkManagerPermission(AbstractPermission):
     def get_all_plans(self, project: Project):
         return project.get_all_plans()
 
-    def add_plan(self, project: Project, plan_name):
-        return project.add_plan(plan_name)
+    def add_plan(self, project: Project, plan_name, link):
+        return project.add_plan(plan_name, link)
 
     def remove_plan(self, project: Project, plan_id):
         raise PermissionError
@@ -299,14 +304,17 @@ class WorkManagerPermission(AbstractPermission):
     def get_all_apartments_in_project(self, project: Project):
         return project.get_all_apartments_in_project()
 
-    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency):
-        return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, link, green_building, urgency)
+    def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
+        return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
 
 class ProjectManagerPermission(WorkManagerPermission):
 
     def get_enum(self):
         return PermissionType.PROJECT_MANAGER.value
+
+    def to_json(self):
+        return 2
 
     def register(self) -> bool:
         return True
@@ -341,6 +349,9 @@ class ProjectManagerPermission(WorkManagerPermission):
 class ContractorPermission(ProjectManagerPermission):
     def get_enum(self):
         return PermissionType.CONTRACTOR.value
+
+    def to_json(self):
+        return 3
 
     def remove_stage(self, project: Project, title_id, stage_id, apartment_number: int = None):
         return project.remove_stage(title_id, stage_id, apartment_number)
