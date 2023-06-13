@@ -385,12 +385,10 @@ class User:
         project_permission: AbstractPermission = self.get_project_permission(project_id)
         project_permission.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
-    def edit_building_fault_proof(self, project_id: UUID, building_fault_id, link: str):
+    def set_build_fault_proof(self, project_id: UUID, building_fault_id, link: str):
         project: Project = self.get_project(project_id)
-        project.get_build_fault(building_fault_id).proof = link
-        return link
+        project.set_build_fault_proof(building_fault_id, link)
 
-    def edit_building_fault_proof_fix(self, project_id: UUID, building_fault_id, link: str):
+    def set_building_fault_proof_fix(self, project_id: UUID, building_fault_id, link: str):
         project: Project = self.get_project(project_id)
-        project.get_build_fault(building_fault_id).proof_fix = link
-        return link
+        project.set_build_fault_proof_fix(building_fault_id, link)
