@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from Project import Project
+from Utils.Exceptions import UserPermissionError
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
 
@@ -156,7 +157,7 @@ class WorkManagerPermission(AbstractPermission):
         return 1
 
     def remove_user_from_project(self, project: Project, user_to_remove):
-        raise PermissionError
+        raise UserPermissionError
 
     def register(self) -> bool:
         return False
@@ -167,7 +168,7 @@ class WorkManagerPermission(AbstractPermission):
     def assign_project_to_user(
         self, project, permission_type: PermissionType, user_to_assign
     ):
-        raise PermissionError
+        raise UserPermissionError
 
     def set_mission_status(
         self,
@@ -182,7 +183,7 @@ class WorkManagerPermission(AbstractPermission):
         if new_status == Status.DONE and project.is_mission_invalid(
             title_id, stage_id, mission_id
         ):
-            raise PermissionError
+            raise UserPermissionError
         return project.set_mission_status(
             title_id, stage_id, mission_id, new_status, username, apartment_number
         )
@@ -209,12 +210,12 @@ class WorkManagerPermission(AbstractPermission):
         return project.get_all_stages(title_id, apartment_number)
 
     def remove_stage(self, project: Project, title_id, stage_id, apartment_number: int = None):
-        raise PermissionError
+        raise UserPermissionError
 
     def remove_mission(
         self, project: Project, title_id, stage_id, mission_id, apartment_number: int = None
     ):
-        raise PermissionError
+        raise UserPermissionError
 
     def set_green_building(
         self,
@@ -233,7 +234,7 @@ class WorkManagerPermission(AbstractPermission):
         return project.set_stage_status(title_id, stage_id, new_status)
 
     def check_contractor_permission(self, project: Project):
-        raise PermissionError
+        raise UserPermissionError
 
     def add_stage(
         self, project: Project, title_id: int, stage_name: str, apartment_number: int = None
@@ -246,11 +247,11 @@ class WorkManagerPermission(AbstractPermission):
         return project.add_building_fault(name, floor_number, apartment_number, urgency)
 
     def remove_building_fault(self, project: Project, build_fault_id):
-        raise PermissionError
+        raise UserPermissionError
 
     def set_build_fault_status(self, project: Project, build_fault_id, new_status, username):
         if new_status == Status.DONE and project.is_build_fault_invalid(build_fault_id):
-            raise PermissionError
+            raise UserPermissionError
         return project.set_build_fault_status(build_fault_id, new_status, username)
 
     def edit_stage_name(self, project: Project, title_id, stage_id, new_stage_name, apartment_number: int = None):
@@ -263,7 +264,7 @@ class WorkManagerPermission(AbstractPermission):
         return project.add_mission(title_id, mission_name, stage_id, apartment_number)
 
     def check_project_manager_permission(self, project: Project):
-        raise PermissionError()
+        raise UserPermissionError()
 
     def check_work_manager_permission(self, project: Project):
         return True
@@ -281,7 +282,7 @@ class WorkManagerPermission(AbstractPermission):
         return project.add_plan(plan_name, link)
 
     def remove_plan(self, project: Project, plan_id):
-        raise PermissionError
+        raise UserPermissionError
 
     def edit_plan_name(self, project: Project, plan_id, new_plan_name):
         return project.edit_plan_name(plan_id, new_plan_name)
@@ -293,13 +294,13 @@ class WorkManagerPermission(AbstractPermission):
         return project.edit_mission_link(title_id, stage_id, mission_id, new_link, apartment_number)
 
     def check_change_user_permission_in_project(self):
-        raise PermissionError
+        raise UserPermissionError
 
     def add_apartment(self, project: Project, apartment_number: int):
         return project.add_apartment(apartment_number)
 
     def remove_apartment(self, project, apartment_number):
-        raise PermissionError
+        raise UserPermissionError
 
     def get_all_apartments_in_project(self, project: Project):
         return project.get_all_apartments_in_project()
@@ -325,18 +326,18 @@ class ProjectManagerPermission(WorkManagerPermission):
         user_to_assign.assign_project(project, permission_type)
 
     def remove_stage(self, project: Project, title_id, stage_id, apartment_number: int = None):
-        raise PermissionError
+        raise UserPermissionError
 
     def remove_mission(
         self, project: Project, title_id, stage_id, mission_id, apartment_number: int = None
     ):
-        raise PermissionError
+        raise UserPermissionError
 
     def check_project_manager_permission(self, project):
         return True
 
     def check_work_manager_permission(self, project):
-        raise PermissionError()
+        raise UserPermissionError()
 
     def remove_plan(self, project: Project, plan_id):
         return project.remove_plan(plan_id)
@@ -365,7 +366,7 @@ class ContractorPermission(ProjectManagerPermission):
         return True
 
     def check_project_manager_permission(self, project):
-        raise PermissionError()
+        raise UserPermissionError()
 
     def remove_user_from_project(self, project: Project, user_to_remove):
         user_to_remove.remove_project(project.id)
@@ -391,7 +392,7 @@ class ContractorPermission(ProjectManagerPermission):
         return project.set_build_fault_status(build_fault_id, new_status, username)
 
     def check_work_manager_permission(self, project):
-        raise PermissionError()
+        raise UserPermissionError()
 
     def check_change_user_permission_in_project(self):
         return True

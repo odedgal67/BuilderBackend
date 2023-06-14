@@ -187,3 +187,7 @@ class IllegalFileTypeException(KnownServerException):
 class IllegalLink(KnownServerException):
     def __init__(self, link: str):
         super().__init__(f"link doesn't have a valid format: {link}")
+
+class UserPermissionError(KnownServerException):
+    def __init__(self, msg: str):
+        super().__init__(msg)
