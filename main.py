@@ -955,6 +955,24 @@ def handle_request_edit_building_fault():
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
+@app.route("/set_building_fault_comment", methods=["POST"])
+@require_login
+def handle_request_set_building_fault_comment():
+    print("\n\nset build fault comment request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.set_building_fault_comment(data['project_id'], data['building_fault_id'], data['comment'], data['username'])
+        return jsonify({"result": "success"})
+    except KnownServerException as e:
+        print(f"[set_building_fault_comment] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
 if __name__ == "__main__":
     print("running with the following configuration:")
     print(GLOBAL_CONFIG)

@@ -216,3 +216,7 @@ class Facade:
         # Returns Void
         self.controller.edit_building_fault(UUID(project_id), UUID(building_fault_id), building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
+    def set_building_fault_comment(self, project_id: UUID, building_fault_id: UUID, comment: str, username: str):
+        # Returns Void
+        self.controller.set_building_fault_comment(UUID(project_id), UUID(building_fault_id), comment, username)
+

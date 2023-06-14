@@ -491,6 +491,10 @@ class Controller:
         user: User = self.__get_user_by_user_name(username)
         user.edit_building_fault(project_id, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
+    def set_building_fault_comment(self, project_id: UUID, building_fault_id: UUID, comment: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        user.set_building_fault_comment(project_id, building_fault_id, comment)
+
     def __check_not_last_user(self, project_id: UUID):
         counter: int = 0
         for user in self.users.values():

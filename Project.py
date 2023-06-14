@@ -357,6 +357,9 @@ class Project:
     def set_build_fault_proof_fix(self, building_fault_id: UUID, link):
         self.get_build_fault(building_fault_id).proof_fix = link
 
+    def set_building_fault_comment(self, building_fault_id: UUID, comment):
+        self.get_build_fault(building_fault_id).comment = comment
+
     def edit_building_fault(self, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         building_fault: BuildingFault = self.get_build_fault(building_fault_id)
         building_fault.edit_name(building_fault_name)
