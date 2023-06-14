@@ -383,7 +383,7 @@ class User:
     def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        project_permission.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
+        project_permission.edit_building_fault(project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
 
     def set_building_fault_comment(self, project_id: UUID, building_fault_id, comment: str):
         project: Project = self.get_project(project_id)
