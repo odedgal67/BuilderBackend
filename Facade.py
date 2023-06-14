@@ -209,7 +209,7 @@ class Facade:
         apartments_dict = dict()
         apartments_dto_list = self.controller.get_all_apartments_in_project(UUID(project_id), username)
         for apartment_dto in apartments_dto_list:
-            apartments_dict[apartment_dto.apartment_number] = apartment_dto
+            apartments_dict[apartment_dto.apartment_number] = apartment_dto.to_json()
         return apartments_dict
 
     def edit_building_fault(self, project_id: UUID, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username: str):
