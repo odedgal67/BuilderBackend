@@ -8,5 +8,5 @@ class ApartmentDTO(DTO):
 
     def to_json(self):
         return {
-            'apartment_number': self.apartment_number,
+            'apartment_number': self.apartment_number
         }
