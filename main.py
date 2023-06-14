@@ -702,7 +702,7 @@ def handle_request_set_building_fault_proof():
 
 @app.route("/set_building_fault_proof_fix", methods=["POST"])
 @require_login
-def handle_request_set_building_fault_proof():
+def handle_request_set_building_fault_proof_fix():
     print("set building fault proof received")
     data, original_file_name, project_id, username = base_file_request_attributes(request)
     building_fault_id = request.form.get('building_fault_id')
