@@ -334,9 +334,10 @@ class Controller:
             stage_id: UUID,
             new_status: Status,
             username: str,
+            apartment_number: int = None
     ):
         user: User = self.__get_user_by_user_name(username)
-        return user.set_stage_status(project_id, title_id, stage_id, new_status)
+        return user.set_stage_status(project_id, title_id, stage_id, new_status, apartment_number)
 
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
         user: User = self.__get_user_by_user_name(username)

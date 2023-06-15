@@ -424,7 +424,7 @@ def handle_request_set_green_building():
             data["mission_id"],
             data["is_green_building"],
             data["username"],
-            data.get("apartment_number", None),
+            data.get("apartment_number", None)
         )
         return jsonify({"result": "success"})
     except KnownServerException as e:
@@ -449,6 +449,7 @@ def handle_request_set_stage_status():
             data["stage_id"],
             data["new_status"],
             data["username"],
+            data.get("apartment_number", None)
         )
         return jsonify({"result": "success"})
     except KnownServerException as e:

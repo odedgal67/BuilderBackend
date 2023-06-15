@@ -65,7 +65,7 @@ class AbstractPermission(ABC):
     ):
         pass
 
-    def set_stage_status(self, project, title_id, stage_id, new_status):
+    def set_stage_status(self, project, title_id, stage_id, new_status, apartment_number: int = None):
         pass
 
     def get_all_assigned_users(self, project):
@@ -230,8 +230,8 @@ class WorkManagerPermission(AbstractPermission):
             title_id, stage_id, mission_id, is_green_building, apartment_number
         )
 
-    def set_stage_status(self, project: Project, title_id, stage_id, new_status):
-        return project.set_stage_status(title_id, stage_id, new_status)
+    def set_stage_status(self, project: Project, title_id, stage_id, new_status, apartment_number: int = None):
+        return project.set_stage_status(title_id, stage_id, new_status, apartment_number)
 
     def check_contractor_permission(self, project: Project):
         raise UserPermissionError

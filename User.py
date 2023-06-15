@@ -271,10 +271,10 @@ class User:
         return project_permission.set_green_building(project, title_id, stage_id, mission_id, is_green_building,
                                                      apartment_number)
 
-    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status):
+    def set_stage_status(self, project_id: UUID, title_id: int, stage_id: UUID, new_status: Status, apartment_number: int = None):
         project: Project = self.get_project(project_id)
         project_permission: AbstractPermission = self.get_project_permission(project_id)
-        return project_permission.set_stage_status(project, title_id, stage_id, new_status)
+        return project_permission.set_stage_status(project, title_id, stage_id, new_status, apartment_number)
 
     def check_contractor_permission(self, project_id: UUID):
         project: Project = self.get_project(project_id)

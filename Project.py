@@ -211,9 +211,9 @@ class Project:
             stage_id, mission_id, is_green_building, apartment_number
         )
 
-    def set_stage_status(self, title_id: int, stage_id: UUID, new_status):
+    def set_stage_status(self, title_id: int, stage_id: UUID, new_status, apartment_number: int = None):
         title: Title = self.__get_title(title_id)
-        return title.set_stage_status(stage_id, new_status)
+        return title.set_stage_status(stage_id, new_status, apartment_number)
 
     def set_urgency(self, building_fault_id: UUID, new_urgency):
         build_fault_to_edit: BuildingFault = self.get_build_fault(building_fault_id)

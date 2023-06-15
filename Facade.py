@@ -93,9 +93,9 @@ class Facade:
         # Returns void
         self.controller.set_green_building(UUID(project_id), title_id, UUID(stage_id), UUID(mission_id), is_green_building, username, apartment_number)
 
-    def set_stage_status(self, project_id: str, title_id: int, stage_id: str, new_status: Status, username: str) -> None:
+    def set_stage_status(self, project_id: str, title_id: int, stage_id: str, new_status: Status, username: str, apartment_number: int = None) -> None:
         # Returns void
-        self.controller.set_stage_status(UUID(project_id), title_id, UUID(stage_id), new_status, username)
+        self.controller.set_stage_status(UUID(project_id), title_id, UUID(stage_id), new_status, username, apartment_number)
 
     def get_all_assigned_users_in_project(self, project_id: str, username: str):
         # Returns list of dictionaries {'user_dto' : user_dto, 'permission' : PermissionType}

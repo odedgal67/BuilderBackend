@@ -28,7 +28,6 @@ def load_stage(json_data):
     return new_stage
 
 
-
 class Stage:
     def __init__(self, name: str):
         self.name = self.__check_stage_name(name)
