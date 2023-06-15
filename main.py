@@ -32,7 +32,6 @@ ERROR_CODE = None
 REFRESH_TOKEN_ERROR_CODE = 401
 
 
-
 def require_login(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -654,7 +653,7 @@ def base_file_request_attributes(request):
 
 def get_attributes_on_set_file_request(request):
     data, original_file_name, project_id, username = base_file_request_attributes(request)
-    apartment_number = request.form.get('apartment_number')
+    apartment_number = int(request.form.get('apartment_number')) if request.form.get('apartment_number') is not None else None
     stage_id = request.form.get('stage_id')
     mission_id = request.form.get('mission_id')
 
@@ -667,6 +666,7 @@ def wrap_with_try_except(func_name: str, func: Callable, *kwargs):
         return jsonify({"result": result})
     except KnownServerException as e:
         print(f"[{func_name}] : raised exception {str(e)}")
+        traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
 
 @app.route("/set_mission_proof", methods=['POST'])
