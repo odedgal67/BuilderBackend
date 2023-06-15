@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 from Mission import Mission
+from Utils.Status import Status
 from Utils.Urgency import Urgency
 
 
@@ -52,6 +53,7 @@ class BuildingFault(Mission):
         self.floor_number: int = floor_number
         self.apartment_number: int = apartment_number
         self.proof_fix: str = ""
+        self.status = Status.INVALID  # Building fault is invalid by default because it's a fault
 
     def set_urgency(self, new_urgency: Urgency):
         self.urgency = new_urgency
