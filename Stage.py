@@ -53,7 +53,7 @@ class Stage:
         return to_return
 
     def __check_stage_name(self, stage_name: str) -> str:
-        if len(stage_name) < 3 or len(stage_name) > 25:
+        if len(stage_name) < 3 or len(stage_name) > 100:
             raise IllegalStageNameException(stage_name)
         return stage_name
 

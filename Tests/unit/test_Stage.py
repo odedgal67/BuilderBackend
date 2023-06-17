@@ -45,7 +45,7 @@ class EditName(unittest.TestCase):
     def test_edit_illegal_long_name(self):
         self.assertEqual(stage_edit_name.name, "first_name")
         self.assertRaises(
-            IllegalStageNameException, stage_edit_name.edit_name, "a" * 26
+            IllegalStageNameException, stage_edit_name.edit_name, "a" * 500
         )
         self.assertEqual(stage_edit_name.name, "first_name")
 
