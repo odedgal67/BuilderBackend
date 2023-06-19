@@ -94,7 +94,7 @@ class User:
         return to_return
 
     def __check_password(self, password: str) -> str:
-        upperandlower = password.isupper() or password.islower()
+        upperandlower = password.isupper() or password.islower() or password.isnumeric()
         if len(password) < 8 or len(password) > 20 or upperandlower:
             raise IllegalPasswordException()
         return password
