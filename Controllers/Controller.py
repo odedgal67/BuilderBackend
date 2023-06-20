@@ -19,6 +19,7 @@ from Utils.Exceptions import *
 from Utils.PermissionType import PermissionType
 from Utils.Status import Status
 from db_utils import persist_user
+ADMIN_USERNAME = "123456789"
 
 
 class Controller:
@@ -515,5 +516,20 @@ class Controller:
         link = self.fileSystem.add_image(data, original_file_name)
         user.set_building_fault_proof_fix(project_id, building_fault_id, link)
         return link
+
+    def reset_password_for_user(self, username_to_reset: str, username_resetting: str):
+        user_to_reset: User = self.__get_user_by_user_name(username_to_reset)
+        if not self.is_admin(username_resetting):
+            raise PermissionError
+        user_to_reset.reset_password()
+
+    def is_admin(self, username: str):
+        return username == ADMIN_USERNAME
+
+    def add_empty_plan(self, project_id: UUID, plan_name: str, username: str):
+        user: User = self.__get_user_by_user_name(username)
+        plan: Plan = user.add_empty_plan(project_id, plan_name)
+        plan_dto: PlanDTO = PlanDTO(plan)
+        return plan_dto
 
 

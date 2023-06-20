@@ -174,6 +174,10 @@ class Facade:
         # Returns new plan
         return self.controller.add_plan(UUID(project_id), plan_name, data, original_file_name, username).to_json()
 
+    def add_empty_plan(self, project_id, plan_name, username):
+        # Returns new plan
+        return self.controller.add_empty_plan(UUID(project_id), plan_name, username).to_json()
+
     def remove_plan(self, project_id: str, plan_id: str, username: str):
         # Returns removed plan
         return self.controller.remove_plan(UUID(project_id), UUID(plan_id), username).to_json()
@@ -219,4 +223,11 @@ class Facade:
     def set_building_fault_comment(self, project_id: UUID, building_fault_id: UUID, comment: str, username: str):
         # Returns Void
         self.controller.set_building_fault_comment(UUID(project_id), UUID(building_fault_id), comment, username)
+
+    def reset_password_for_user(self, username_to_reset: str, username_resetting: str):
+        self.controller.reset_password_for_user(username_to_reset, username_resetting)
+
+    def is_admin(self, username: str):
+        return self.controller.is_admin(username)
+
 

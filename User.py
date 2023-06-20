@@ -6,6 +6,7 @@ from Utils.Exceptions import *
 from Project import Project, load_project
 from Utils.PermissionType import PermissionType
 from db_utils import persist_user
+DEFAULT_PASSWORD = "Password"
 
 
 def load_project_permission(project_permission_json_data):
@@ -396,3 +397,11 @@ class User:
     def set_building_fault_proof_fix(self, project_id: UUID, building_fault_id, link: str):
         project: Project = self.get_project(project_id)
         project.set_build_fault_proof_fix(building_fault_id, link)
+
+    def reset_password(self):
+        self.hashed_password = hash_password(DEFAULT_PASSWORD)
+
+    def add_empty_plan(self, project_id, plan_name):
+        project: Project = self.get_project(project_id)
+        project_permission: AbstractPermission = self.get_project_permission(project_id)
+        return project_permission.add_empty_plan(project, plan_name)
