@@ -463,14 +463,17 @@ class Controller:
         user_changing.check_change_user_permission_in_project(project_id)  # Check the user has permission to do that action in that project
         user_to_change: User = self.__get_user_by_user_name(username_to_change)
         user_to_change.change_permission_in_project(project_id, new_permission)
+        persist_user(user_to_change)
 
     def change_user_name(self, new_name: str, username_to_change: str):
         user_to_change: User = self.__get_user_by_user_name(username_to_change)
         user_to_change.change_name(new_name)
+        persist_user(user_to_change)
 
     def change_user_password(self, new_password: str, username_to_change: str):
         user_to_change: User = self.__get_user_by_user_name(username_to_change)
         user_to_change.change_password(new_password)
+        persist_user(user_to_change)
 
     def add_apartment(self, project_id: UUID, apartment_number: int, username: str):
         user: User = self.__get_user_by_user_name(username)
@@ -522,6 +525,7 @@ class Controller:
         if not self.is_admin(username_resetting):
             raise PermissionError
         user_to_reset.reset_password()
+        persist_user(user_to_reset)
 
     def is_admin(self, username: str):
         return username == ADMIN_USERNAME
