@@ -148,6 +148,9 @@ class AbstractPermission(ABC):
     def to_json(self):
         pass
 
+    def add_empty_plan(self, project, plan_name):
+        pass
+
 
 class WorkManagerPermission(AbstractPermission):
     def get_enum(self):
@@ -307,6 +310,9 @@ class WorkManagerPermission(AbstractPermission):
 
     def edit_building_fault(self, project: Project, building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username):
         return project.edit_building_fault(building_fault_id, building_fault_name, floor_number, apartment_number, green_building, urgency, proof_fix, tekken, plan_link, status, proof, comment, username)
+
+    def add_empty_plan(self, project: Project, plan_name):
+        return project.add_empty_plan(plan_name)
 
 
 class ProjectManagerPermission(WorkManagerPermission):

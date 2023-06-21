@@ -237,6 +237,13 @@ class Project:
         self.plans[new_plan.id] = new_plan
         return new_plan
 
+    def add_empty_plan(self, plan_name: str):
+        if self.__is_plan_name_exists(plan_name):
+            raise DuplicatePlanNameException(plan_name)
+        new_plan: Plan = Plan(plan_name)
+        self.plans[new_plan.id] = new_plan
+        return new_plan
+
     def remove_building_fault(self, build_fault_id: UUID):
         if not self.__is_build_fault_id_exists(build_fault_id):
             raise BuildFaultDoesntExistException()
@@ -373,4 +380,5 @@ class Project:
         building_fault.set_status(status, username)
         building_fault.set_proof(proof)
         building_fault.set_comment(comment)
+
 

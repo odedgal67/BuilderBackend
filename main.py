@@ -605,7 +605,7 @@ def handle_request_get_my_permission():
         )
         print(jsonify({"result": result}))
         return jsonify({"result": result})
-    except MyMyException as e:
+    except KnownServerException as e:
         print(f"[get_my_permission] : raised exception {str(e)}")
         traceback.print_exc()
         return jsonify({"error": str(e)}), ERROR_CODE
@@ -748,6 +748,24 @@ def handle_request_add_plan():
     data, original_file_name, project_id, username = base_file_request_attributes(request)
     plan_name = request.form.get('plan_name')
     return wrap_with_try_except("add_plan", facade.add_plan, project_id, plan_name, data.read(), original_file_name, username)
+
+
+@app.route("/add_empty_plan", methods=["POST"])
+@require_login
+def handle_request_add_empty_plan():
+    print("add empty plan request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.add_empty_plan(data['project_id'], data['plan_name'], data['username'])
+        return jsonify({"result": result})
+    except KnownServerException as e:
+        print(f"[add_empty_plan] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
 
 
 @app.route("/remove_plan", methods=["POST"])
@@ -971,6 +989,42 @@ def handle_request_set_building_fault_comment():
         return jsonify({"result": "success"})
     except KnownServerException as e:
         print(f"[set_building_fault_comment] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/reset_password_for_user", methods=["POST"])
+@require_login
+def handle_request_reset_password_for_user():
+    print("\n\nreset password or user request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        facade.reset_password_for_user(data['username_to_reset'], data['username_resetting'])
+        return jsonify({"result": "success"})
+    except KnownServerException as e:
+        print(f"[reset_password_for_user] : raised exception {str(e)}")
+        return jsonify({"error": str(e)}), ERROR_CODE
+
+
+@app.route("/is_admin", methods=["POST"])
+@require_login
+def handle_request_is_admin():
+    print("\n\nis admin request received")
+
+    # Parse JSON payload from the request
+    data = request.get_json()
+    print(f"data : {data}")
+
+    # Call the facade method
+    try:
+        result = facade.is_admin(data['username'])
+        return jsonify({"result": result})
+    except KnownServerException as e:
+        print(f"[is_admin] : raised exception {str(e)}")
         return jsonify({"error": str(e)}), ERROR_CODE
 
 
