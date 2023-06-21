@@ -73,7 +73,6 @@ class Controller:
     def logout(self, username: str) -> None:
         user: User = self.__get_user_by_user_name(username)
         user.logout()
-        self.connected_users.pop(username)
 
     def register(self, username: str, password: str, name: str) -> UserDTO:
         if username in self.users:
@@ -342,7 +341,7 @@ class Controller:
 
     def get_all_assigned_users_in_project(self, project_id: UUID, username: str):
         user: User = self.__get_user_by_user_name(username)
-        user.check_contractor_permission(project_id)
+        user.check_project_manager_permission(project_id)
         result = list()
         for current_user in self.users.values():
             if current_user.is_project_exist(project_id):
@@ -528,7 +527,7 @@ class Controller:
         persist_user(user_to_reset)
 
     def is_admin(self, username: str):
-        return username == ADMIN_USERNAME
+        return username == GLOBAL_CONFIG.SECRET_CONFIG['id']
 
     def add_empty_plan(self, project_id: UUID, plan_name: str, username: str):
         user: User = self.__get_user_by_user_name(username)

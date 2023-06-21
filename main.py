@@ -10,9 +10,7 @@ from flask import Flask, request, jsonify, abort, send_from_directory, session
 import traceback
 
 from Config import GLOBAL_CONFIG
-from DTO.UserDTO import UserDTO
 from Facade import Facade
-from User import User
 from Utils.Urgency import Urgency
 import os
 import secrets
@@ -25,7 +23,7 @@ app.config.from_object(__name__)
 secret_key = secrets.token_hex(32)  # Generate a 32-byte secret key
 app.secret_key = secret_key
 Session(app)
-app.permanent_session_lifetime = timedelta(minutes=10)
+app.permanent_session_lifetime = timedelta(minutes=30)
 facade: Facade = Facade()
 
 ERROR_CODE = None

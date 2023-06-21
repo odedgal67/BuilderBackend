@@ -9,7 +9,6 @@ class AbstractConfig(ABC):
     IP: str = None
     PORT: int = None
     SECRET_CONFIG: dict = None
-    LIRON_ID: str = None
     MONGO_URL: str = "mongodb://localhost:27017"
     DB_NAME: str = "Builder"
     COLLECTION_NAME: str = "builder"

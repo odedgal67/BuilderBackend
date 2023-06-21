@@ -371,8 +371,6 @@ class ContractorPermission(ProjectManagerPermission):
     def check_contractor_permission(self, project):
         return True
 
-    def check_project_manager_permission(self, project):
-        raise UserPermissionError()
 
     def remove_user_from_project(self, project: Project, user_to_remove):
         user_to_remove.remove_project(project.id)
