@@ -4,7 +4,6 @@ import traceback
 
 class KnownServerException(Exception):
     def __init__(self, *kwargs):
-        traceback.print_exc()
         super().__init__(*kwargs)
 
 
