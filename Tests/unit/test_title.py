@@ -24,14 +24,13 @@ class TitleMissionsStagesTests(unittest.TestCase):
     def test_set_stage_status(self):
         new_status = Status.Status.DONE
         stage = MagicMock(spec=Stage)
-        self.title.__get_stage = Mock(return_value=stage)
         self.title._TitleMissionsStages__get_stage = Mock(return_value=stage)
         self.title.set_stage_status(self.stage_id, new_status)
         stage.set_status.assert_called_once_with(new_status)
 
     def test_add_stage_with_apartment_throws(self):
         apartment_number = 1
-        with self.assertRaises(ApartmentNumberNotNeededException):  # Replace "Exception" with the actual exception type you expect to be thrown
+        with self.assertRaises(ApartmentNumberNotNeededException):
             self.title.add_stage("some name", apartment_number)
 
 
