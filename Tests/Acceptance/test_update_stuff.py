@@ -111,7 +111,7 @@ class UpdateStageStuff(UpdateStuffBase):
             Exception,
             self.facade.edit_stage_name,
             *self.getStageArgs(),
-            "bla" * 30,
+            "bla" * 500,
             self.contractor_username,
         )
 
