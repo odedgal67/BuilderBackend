@@ -1029,4 +1029,4 @@ def handle_request_is_admin():
 if __name__ == "__main__":
     print("running with the following configuration:")
     print(GLOBAL_CONFIG)
-    app.run(host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)
+    app.run(ssl_context='adhoc', host=GLOBAL_CONFIG.IP, port=GLOBAL_CONFIG.PORT)

@@ -15,6 +15,7 @@ pymongo = "^4.3.3"
 flask-session = "^0.5.0"
 redis = "^4.5.5"
 pytest-mock-resources = "^2.7.0"
+pyopenssl = "^23.2.0"
 
 
 [build-system]
